@@ -1,0 +1,115 @@
+{
+  "repository": "https://github.com/openboard-team/openboard",
+  "commit": "6c7582aae8577f2953a597a547924bbea3d832f4",
+  "license_note": "Distributed under the pinned upstream repository GPL-3.0 license. Corresponding wordlists are included under data/dictionaries. Portuguese uses the upstream OpenBoard data; the separately patched unlicensed variant is excluded.",
+  "files": {
+    "hu.dict": {
+      "upstream_path": "app/src/main/res/raw/main_hu.dict",
+      "bytes": 426867,
+      "sha256": "e7b8bdb40871257c24e4741ade0ebfbc940a5e5264a8adb5682ad6c8d2e78249",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/hu_wordlist.combined.gz",
+        "upstream_path": "dictionaries/hu_wordlist.combined.gz",
+        "sha256": "a1d275f91b6bf05764224a201c32738972d8c7b0007985c4ed4e4880c086ce33"
+      }
+    },
+    "en.dict": {
+      "upstream_path": "app/src/main/res/raw/main_en.dict",
+      "bytes": 2956881,
+      "sha256": "bd950ef4b57655120eee65cee62a5d216a63f721d9a8bb759ce2022437840443",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/en_wordlist.combined.gz",
+        "upstream_path": "dictionaries/en_wordlist.combined.gz",
+        "sha256": "3a9d7c4dca624ea70ea70c8fccf717a195675f48f194bbb175cd39d180d6c9d4"
+      }
+    },
+    "de.dict": {
+      "upstream_path": "app/src/main/res/raw/main_de.dict",
+      "bytes": 1606286,
+      "sha256": "ee5de04b6a93af67d2095a68ac1a8709ecdbf838cc5c98795f0b4ad2d192c2c7",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/de_wordlist.combined.gz",
+        "upstream_path": "dictionaries/de_wordlist.combined.gz",
+        "sha256": "58841f047644ef8472378271de08d30ad80fa08f1902991159db7dc2018a0398"
+      }
+    },
+    "fr.dict": {
+      "upstream_path": "app/src/main/res/raw/main_fr.dict",
+      "bytes": 1328933,
+      "sha256": "d7d80eaafe52dcdba057cdd7bed279f966c6e16ba501d46bb343ffa67732d62f",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/fr_wordlist.combined.gz",
+        "upstream_path": "dictionaries/fr_wordlist.combined.gz",
+        "sha256": "cc917a0a81acab0ea12089c2fb06b5c6be98c75f23a7605bfdbbeb698abfd65e"
+      }
+    },
+    "es.dict": {
+      "upstream_path": "app/src/main/res/raw/main_es.dict",
+      "bytes": 1377071,
+      "sha256": "beb2fda8a3bbaeeec95c301c5cce3e40474e01677a4412fb070eee2040c391d3",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/es_wordlist.combined.gz",
+        "upstream_path": "dictionaries/es_wordlist.combined.gz",
+        "sha256": "889ad52bce2933e2a30a0560b8d5a76f5334500e776a7db7c7cb3e9e79fc2652"
+      }
+    },
+    "it.dict": {
+      "upstream_path": "app/src/main/res/raw/main_it.dict",
+      "bytes": 1143338,
+      "sha256": "e89f2927c84d0d12d6b6509cd532a86ff2721747b0f4536c8c4f6e3995dd2b2e",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/it_wordlist.combined.gz",
+        "upstream_path": "dictionaries/it_wordlist.combined.gz",
+        "sha256": "4ac1fa3b112130416843f5abc2a61fdbd2395a41fb6a719790cd7c45934218ec"
+      }
+    },
+    "pt.dict": {
+      "upstream_path": "app/src/main/res/raw/main_pt_br.dict",
+      "bytes": 1092054,
+      "sha256": "df554eb58ba6cfdc8017ea1cf71e61a65bdd36be6ad58ffb1a2c7cf02126e108",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/pt_BR_wordlist.combined.gz",
+        "upstream_path": "dictionaries/pt_BR_wordlist.combined.gz",
+        "sha256": "f9b7c2f610eacebc782c7d24e64d8ad2620b449defbac326507dfb5702c6c48b"
+      }
+    },
+    "pl.dict": {
+      "upstream_path": "app/src/main/res/raw/main_pl.dict",
+      "bytes": 1193157,
+      "sha256": "5b2d08c14128bcfb9d62db3cd5df8f0af8f7c2e653d9913f72f9f87d64648864",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/pl_wordlist.combined.gz",
+        "upstream_path": "dictionaries/pl_wordlist.combined.gz",
+        "sha256": "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
+      }
+    },
+    "nl.dict": {
+      "upstream_path": "app/src/main/res/raw/main_nl.dict",
+      "bytes": 1407361,
+      "sha256": "537078e3ba369c87063031f03051d80a0ee121a5459f8192811ca254fc959d19",
+      "license": "GPL-3.0-only",
+      "license_basis": "Repository LICENSE at the pinned OpenBoard commit; no per-file exception found.",
+      "source": {
+        "path": "data/dictionaries/nl_wordlist.combined.gz",
+        "upstream_path": "dictionaries/nl_wordlist.combined.gz",
+        "sha256": "a647ed5fdd846d3240572c9cb10fb8c30880df2ebefea6184a378adb713cd0cd"
+      }
+    }
+  }
+}

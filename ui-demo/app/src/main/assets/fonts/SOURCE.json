@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/google/fonts",
+  "upstream_path": "ofl/inter/Inter[opsz,wght].ttf",
+  "git_blob": "047c92f6e2212473dc436020afed689527076d44",
+  "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+  "license": "OFL-1.1",
+  "copyright": "Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)"
+}

@@ -1,0 +1,22 @@
+plugins { id 'com.android.library' }
+android {
+    namespace 'hu.keyboard.engine'
+    compileSdk 36
+    ndkVersion '27.2.12479018'
+    if (providers.gradleProperty('latinimeNdkPath').isPresent()) {
+        ndkPath providers.gradleProperty('latinimeNdkPath').get()
+    }
+    defaultConfig {
+        minSdk 33
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        ndk { abiFilters.addAll(providers.gradleProperty('engineAbis').orElse('arm64-v8a').get().split(',')) }
+        externalNativeBuild { ndkBuild { arguments 'NDK_APPLICATION_MK:=src/main/cpp/Application.mk' } }
+    }
+    externalNativeBuild { ndkBuild { path file('src/main/cpp/Android.mk') } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+
+dependencies {
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+}

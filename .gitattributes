@@ -1,0 +1,5 @@
+# Keep upstream Windows launcher line endings and license texts unchanged.
+ui-demo/gradlew.bat text eol=crlf whitespace=cr-at-eol
+LICENSES/OFL-1.1.txt -whitespace
+ui-demo/app/src/main/assets/fonts/OFL.txt -whitespace
+ui-demo/app/src/main/assets/licenses/OFL-1.1.txt -whitespace

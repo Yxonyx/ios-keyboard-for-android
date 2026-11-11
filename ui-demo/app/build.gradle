@@ -1,0 +1,24 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'hu.keyboard.proof'
+    compileSdk 36
+    ndkVersion '27.2.12479018'
+    if (providers.gradleProperty('latinimeNdkPath').isPresent()) { ndkPath providers.gradleProperty('latinimeNdkPath').get() }
+    defaultConfig {
+        applicationId 'hu.keyboard.proof'
+        minSdk 33
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        targetSdk 36
+        versionCode 8
+        versionName '0.8.0-preview'
+    }
+    buildTypes { debug { applicationIdSuffix '.debug' } }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies { implementation project(':engine'); testImplementation 'junit:junit:4.13.2' }
+
+dependencies { androidTestImplementation 'androidx.test:runner:1.6.2'; androidTestImplementation 'androidx.test.ext:junit:1.2.1' }

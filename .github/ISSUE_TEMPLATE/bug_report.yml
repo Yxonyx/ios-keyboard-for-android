@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible keyboard problem.
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Use synthetic text. Do not include passwords or private conversations.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: APK version, device, Android/ROM and host app
+    validations:
+      required: true

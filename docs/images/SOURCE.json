@@ -1,0 +1,15 @@
+{
+  "source": "Project-owner supplied screenshots, approved for README inclusion on 2026-11-11",
+  "host_application": "Grok",
+  "captured_build": "Private development preview before public-source renderer changes",
+  "files": {
+    "keyboard-dark.png": {
+      "bytes": 582657,
+      "sha256": "a157ccc8a7d6bb0ac65d445883bb6202fdb5697dab3ee4564e8f8da45a572d6c"
+    },
+    "keyboard-light.png": {
+      "bytes": 527295,
+      "sha256": "d47c56b046811bba3c9902a773c982d8184b1b34bef3cc94f41a30d0bb44bb94"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+.DS_Store
+.gradle/
+**/build/
+local.properties
+*.jks
+*.keystore
+.env
+.env.*
+__pycache__/
+*.pyc
+release/*.apk
+benchmark/audio/
+benchmark/private/
+
+.taste-skill/
+
+**/.cxx/
+*.idsig
+
+# Local verification output and external toolchains
+validation-local/
+.worktrees/
+*.hprof

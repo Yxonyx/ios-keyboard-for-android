@@ -1,0 +1,83 @@
+{
+  "emoji_source": "https://unicode.org/Public/emoji/latest/emoji-test.txt",
+  "version": "18.0",
+  "sha256": "8f3735cda1f92a779d78af67cf86066bb1f07143dc22f2ac29394d9bc57ab21a",
+  "entries": 3972,
+  "annotations": "unicode-org/cldr common/annotations/<lang>.xml and annotationsDerived/<lang>.xml for hu, en, de, fr, es, it, pt, pl, nl",
+  "generated": "2026-11-11",
+  "cldr_commit": "ba1b0a5a42af337b2ae879abe8971333b06c1f91",
+  "cldr_sources": {
+    "hu.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/hu.xml",
+      "sha256": "25727079e3328262e72beed62d1a4a574bbc1fbb88778eadbf2e8dcb194f47c1"
+    },
+    "hu-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/hu.xml",
+      "sha256": "6aec7f7ebca4a6b18125fb395218da524611c630f38246bbda996e5697f853cc"
+    },
+    "en.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/en.xml",
+      "sha256": "14d0e9bb5003c085250df4ac7bd7ba1e26d92e74174d7a3a2f42dc16e07fb155"
+    },
+    "en-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/en.xml",
+      "sha256": "a4a6c1a4c341d94179cb116623c5f44c47400a5bc55da483423ef7430ecf622e"
+    },
+    "de.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/de.xml",
+      "sha256": "af724a245fc334274db3f6c0b15189d54d1fb339bc60599407baab6079925b88"
+    },
+    "de-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/de.xml",
+      "sha256": "d2b2d279c353cd2b0e29c908339b5536e665436c3fe362e38554ee3a2d15f7d8"
+    },
+    "fr.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/fr.xml",
+      "sha256": "0260cb3610c3c3a0aea24093f679f18e8e8f4bb42c8093aac7608ebbde70a6d5"
+    },
+    "fr-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/fr.xml",
+      "sha256": "68162c5d006c308b1ed99c6dfc8cdebe611e55ccd0addddfe375dce2510d0fcc"
+    },
+    "es.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/es.xml",
+      "sha256": "af090fb0b18517b5692a710e74ff52dcbffe1c18ff5de54e35d8e5f3ba97edd7"
+    },
+    "es-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/es.xml",
+      "sha256": "f436e202a35e123c53afce849662bb6ac8b14bc4225a378394cc00502c5c4aa8"
+    },
+    "it.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/it.xml",
+      "sha256": "80488694c4a6428d725de005a875fb8dd199f1c5d290522648a988a724aaf1ff"
+    },
+    "it-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/it.xml",
+      "sha256": "4da3e936bf05488b07139ba6f67703c53de2a53e5393c50a4f7b035a4689c5fd"
+    },
+    "pt.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/pt.xml",
+      "sha256": "aa680b9ef75ac15843cb39cada6b7fd7f0bb1a8084bd237252bbc79fe1a8a336"
+    },
+    "pt-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/pt.xml",
+      "sha256": "253bfeefb239a8b92d6987abc2c9ea29b254123679e30b98a4045dedd7e47ab0"
+    },
+    "pl.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/pl.xml",
+      "sha256": "eeec2511a6552995f294ed113fe977f8fdc66df34410ed0463380d14ad0376a6"
+    },
+    "pl-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/pl.xml",
+      "sha256": "c40d0eb42e699fcf739e775775dfc680912dd7210f635ed6d439d72c8e65104b"
+    },
+    "nl.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotations/nl.xml",
+      "sha256": "3a5cb016c557a2175855c392d753eb7d28a2b11f817d6c0e151a0bba50cfa162"
+    },
+    "nl-derived.xml": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr/ba1b0a5a42af337b2ae879abe8971333b06c1f91/common/annotationsDerived/nl.xml",
+      "sha256": "0dfd098f7358030d96046bf005b90a1e7f146456934fb40a93e29ff1c9f712d2"
+    }
+  }
+}
