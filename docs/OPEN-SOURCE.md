@@ -23,8 +23,8 @@ history, not a branch intended to be merged back over private development.
    It starts with a fresh history. The private development repository remains
    private because it contains historical screenshot assets and earlier releases.
 3. GitHub private vulnerability reporting is enabled on the public repository.
-4. Run the hosted workflow on the new remote and confirm both jobs finish. A
-   checked-in workflow is not proof of a hosted pass.
+4. Both hosted CI jobs passed for the initial source commit. See
+   [validation evidence](VALIDATION.md) and require these checks on future code changes.
 
 Public source may be released as a development preview. Completing nine-language
 UI integration, full accessibility, broader correction accuracy measurement,

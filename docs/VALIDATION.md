@@ -9,6 +9,7 @@ programmatic renderer, Inter labels, OpenBoard Portuguese dictionary and new nam
 | Debug and release Android lint | Completed successfully; existing warnings remain |
 | Visual renderer smoke check | Opened the public debug build on the API 36 emulator; inspected light and dark keyboard previews and the full new title |
 | Offline license screen | Opened from Settings → Karbantartás → Nyílt forráskódú licencek on the emulator; notice text and source links rendered |
+| Hosted CI | Both jobs passed for `c915003c072055fa3c03285042ae4f305de8bb8a`: [run 43106862109](https://github.com/Yxonyx/ios-keyboard-for-android/actions/runs/43106862109), including API 35 x86_64 instrumentation |
 | JVM unit tests | 19 passed, 0 failures |
 | App integration on ARM64 API 36 emulator | 1 passed, 0 failures |
 | Native engine on ARM64 API 36 emulator | 5 passed, 0 failures; includes opening all nine dictionaries and recognizing common words |
