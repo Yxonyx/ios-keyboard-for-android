@@ -53,6 +53,14 @@ public final class KeyboardSettings {
     return result;
   }
 
+  /** Selecting a typing language also keeps it in the globe cycle after later switches. */
+  public void setLanguage(String code) {
+    if (Languages.get(code) == null) throw new IllegalArgumentException("Unsupported language");
+    List<String> enabled = languages();
+    if (!enabled.contains(code)) enabled.add(code);
+    prefs.edit().putString("languages", String.join(",", enabled)).putString("language", code).apply();
+  }
+
   /** Persist a nonempty, deduplicated globe cycle and keep its active language valid. */
   public void setLanguages(List<String> codes) {
     List<String> valid = new ArrayList<>();

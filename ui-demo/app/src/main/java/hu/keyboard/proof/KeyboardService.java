@@ -413,7 +413,7 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     super.onCurrentInputMethodSubtypeChanged(subtype);
     Languages.Language language =
         subtype == null ? null : Languages.forLocale(subtype.getLanguageTag());
-    if (language != null) settings.prefs.edit().putString("language", language.code()).apply();
+    if (language != null) settings.setLanguage(language.code());
   }
 
   private String action() {
@@ -773,7 +773,7 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       return;
     }
     String language = enabled.get((enabled.indexOf(settings.language()) + 1) % enabled.size());
-    settings.prefs.edit().putString("language", language).apply();
+    settings.setLanguage(language);
     Toast.makeText(this, Languages.get(language).name(), Toast.LENGTH_SHORT).show();
   }
 

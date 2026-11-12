@@ -749,7 +749,8 @@ public final class SettingsActivity extends Activity {
                     names,
                     current,
                     (dialog, which) -> {
-                      settings.prefs.edit().putString(key, values[which]).apply();
+                      if (key.equals("language")) settings.setLanguage(values[which]);
+                      else settings.prefs.edit().putString(key, values[which]).apply();
                       dialog.dismiss();
                       scrollPosition = scroll.getScrollY();
                       build();

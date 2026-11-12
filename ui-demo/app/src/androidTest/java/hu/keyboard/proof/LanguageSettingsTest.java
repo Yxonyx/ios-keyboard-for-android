@@ -86,11 +86,17 @@ public final class LanguageSettingsTest {
       assertEquals("AZERTY", settings.layout());
       prefs.edit().putString("language", "de").commit();
       assertEquals("QWERTZ", settings.layout());
+      settings.setLanguage("pl");
+      assertEquals("pl", settings.language());
+      assertEquals(Arrays.asList("fr", "de", "pl"), settings.languages());
+      settings.setLanguage("de");
+      assertEquals("QWERTZ", settings.layout());
+      assertEquals(Arrays.asList("fr", "de", "pl"), settings.languages());
       try {
         settings.setLanguages(List.of("unsupported"));
         fail("An empty cycle was accepted");
       } catch (IllegalArgumentException expected) {
-        assertEquals(Arrays.asList("fr", "de"), settings.languages());
+        assertEquals(Arrays.asList("fr", "de", "pl"), settings.languages());
         assertEquals("de", settings.language());
       }
     } finally { target.deleteSharedPreferences(name); }
