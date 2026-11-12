@@ -52,7 +52,11 @@ Preferences store settings and recent emoji. Dictionary assets are copied into
 private app storage for native access. An optional imported emoji font is also
 stored there. The clipboard suggestion feature is off by default; when enabled,
 it reads the system clipboard while the keyboard is active and offers eligible
-plain text. It does not keep a clipboard-history database. Android application
+plain text. The clipboard reader is not called while the offer is disabled, the
+input view is hidden, or the editor is a password/no-learning field. Pending offers
+are dropped on hiding the keyboard or revoking eligibility, and expire after 90
+seconds. A sensitive-marked clipboard clears the previous offer. The application
+does not keep a clipboard-history database. Android application
 backup is disabled in the manifest. Clearing application storage or uninstalling
 removes the application's private files and preferences.
 

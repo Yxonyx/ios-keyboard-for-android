@@ -51,7 +51,8 @@ The app tests exercise all nine language definitions/layouts in light/dark modes
 small-phone, high-density-phone, landscape and tablet dimensions. An emulator-only,
 explicitly opted-in test selects the actual IME, types into a host activity, checks
 deletion/selection replacement, numeric input, the search action, emoji insertion
-and literal password input, and restores the original IME afterward. Privacy tests
+literal password input and clipboard suppression in a no-learning editor, and
+restores the original IME afterward. Privacy tests
 check the installed permission boundary and rejection of speech without approval.
 The native tests open all nine dictionaries and exercise correction and lifecycle.
 

@@ -212,6 +212,13 @@ public final class ImeCompatibilityTest {
     instrumentation.waitForIdleSync();
   }
 
+  private void screenshot(String name) throws IOException {
+    shell("mkdir -p /sdcard/Download/ime-compat");
+    shell("screencap -p /sdcard/Download/ime-compat/" + name + ".png");
+    System.out.println("IME diagnostics " + name + ": " + keyboardBounds()
+        + "; windows=" + instrumentation.getUiAutomation().getWindows());
+  }
+
   private void key(String label, boolean numbers) throws Exception {
     if (!numbers) {
       if (label.equals("Y")) label = "Z";
@@ -238,6 +245,45 @@ public final class ImeCompatibilityTest {
       SystemClock.sleep(30);
     } while (SystemClock.uptimeMillis() < deadline);
     assertEquals(expected, actual.get());
+  }
+
+  @Test
+  public void noLearningEditorSuppressesTheClipboardOfferAndSuggestionStrip() throws Exception {
+    EditText message = focus("Üzenet");
+    ClipboardManager clipboard = context.getSystemService(ClipboardManager.class);
+    AtomicReference<ClipData> previous = new AtomicReference<>();
+    instrumentation.runOnMainSync(() -> {
+      previous.set(clipboard.getPrimaryClip());
+      clipboard.setPrimaryClip(ClipData.newPlainText("synthetic test", "SYNTHETIC_CLIPBOARD"));
+    });
+    prefs.edit().putBoolean("suggestions", true).putBoolean("clipboard_suggest", true).commit();
+    try {
+      focus("Üzenet");
+      int offeredHeight = keyboardBounds().height();
+      screenshot("clipboard-normal-field");
+      focus("Jelszópróba");
+      int privateHeight = keyboardBounds().height();
+      assertTrue("Positive control: normal field did not show its clipboard strip",
+          offeredHeight > privateHeight);
+      instrumentation.runOnMainSync(() -> {
+        message.setImeOptions(message.getImeOptions()
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING);
+        message.setText("synthetic");
+        message.setSelection(message.length());
+      });
+      focus("Üzenet");
+      screenshot("clipboard-private-field");
+      assertEquals("No-learning field must hide suggestions and clipboard", privateHeight,
+          keyboardBounds().height());
+      key("A", false);
+      expect(message, "synthetica");
+    } finally {
+      prefs.edit().putBoolean("clipboard_suggest", false).commit();
+      instrumentation.runOnMainSync(() -> {
+        if (previous.get() == null) clipboard.clearPrimaryClip();
+        else clipboard.setPrimaryClip(previous.get());
+      });
+    }
   }
 
   @Test
@@ -300,9 +346,16 @@ public final class ImeCompatibilityTest {
     for (char ch : "HOGZ".toCharArray()) key(String.valueOf(ch), false);
     key("space", false);
     expect(field, "hogz ");
+    screenshot("password-before-mic");
     tap(1072, 2436);
+    instrumentation.getUiAutomation().waitForIdle(200, 3000);
     assertFalse(new KeyboardSettings(context).enabled(MicPermissionActivity.CONSENT_KEY, false));
-    assertTrue("Password field lost focus", field.hasFocus());
+    for (AccessibilityWindowInfo window : instrumentation.getUiAutomation().getWindows())
+      if (window.getType() == AccessibilityWindowInfo.TYPE_APPLICATION)
+        assertNull("Password field opened external speech approval",
+            findNode(window.getRoot(), context.getString(R.string.speech_consent_title)));
+    screenshot("password-after-mic");
+    expect(field, "hogz ");
     keyboardBounds();
   }
 }

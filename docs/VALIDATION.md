@@ -2,9 +2,12 @@
 
 ## Compatibility and privacy update, 2026-11-12
 
-The compatibility candidate passed 19 JVM unit tests, 10 app instrumentation tests
+The compatibility candidate passed 24 JVM unit tests, 11 app instrumentation tests
 and 6 native instrumentation tests locally on the ARM64 API 36 emulator. No tests
-were skipped. The app tests include actual IME/editor interaction and declining
+were skipped. Clipboard tests verify that denied access never invokes the reader and that
+revoked, expired, consumed or sensitive offers are discarded. A host-editor test
+checks suppression in an IME_FLAG_NO_PERSONALIZED_LEARNING field with a positive
+clipboard control in a normal field. The app tests include actual IME/editor interaction and declining
 external speech approval without losing local typing. All nine language/layout
 definitions rendered at four screen geometries in both themes; this exposed and
 fixed the missing M key in AZERTY.
