@@ -126,11 +126,11 @@ public final class ImeCompatibilityTest {
     return null;
   }
 
-  private EditText focus(String description) {
+  private EditText focus(int id) {
     AtomicReference<EditText> result = new AtomicReference<>();
     instrumentation.runOnMainSync(() -> {
-      EditText field = find(activity.findViewById(android.R.id.content), description);
-      assertNotNull(description, field);
+      EditText field = activity.findViewById(id);
+      assertNotNull("Missing editor " + id, field);
       field.requestFocus();
       context.getSystemService(InputMethodManager.class).showSoftInput(field, 0);
       result.set(field);
@@ -191,7 +191,7 @@ public final class ImeCompatibilityTest {
 
   private Rect keyboardBounds() {
     Rect rect = new Rect();
-    imeNode("iOS Keyboard for Android billentyűzet").getBoundsInScreen(rect);
+    imeNode(context.getString(R.string.keyboard_description)).getBoundsInScreen(rect);
     assertTrue("Keyboard width", rect.width() > 0);
     assertTrue("Keyboard height", rect.height() > 0);
     return rect;
@@ -249,7 +249,7 @@ public final class ImeCompatibilityTest {
 
   @Test
   public void noLearningEditorSuppressesTheClipboardOfferAndSuggestionStrip() throws Exception {
-    EditText message = focus("Üzenet");
+    EditText message = focus(R.id.test_message);
     ClipboardManager clipboard = context.getSystemService(ClipboardManager.class);
     AtomicReference<ClipData> previous = new AtomicReference<>();
     instrumentation.runOnMainSync(() -> {
@@ -258,10 +258,10 @@ public final class ImeCompatibilityTest {
     });
     prefs.edit().putBoolean("suggestions", true).putBoolean("clipboard_suggest", true).commit();
     try {
-      focus("Üzenet");
+      focus(R.id.test_message);
       int offeredHeight = keyboardBounds().height();
       screenshot("clipboard-normal-field");
-      focus("Jelszópróba");
+      focus(R.id.test_password);
       int privateHeight = keyboardBounds().height();
       assertTrue("Positive control: normal field did not show its clipboard strip",
           offeredHeight > privateHeight);
@@ -271,7 +271,7 @@ public final class ImeCompatibilityTest {
         message.setText("synthetic");
         message.setSelection(message.length());
       });
-      focus("Üzenet");
+      focus(R.id.test_message);
       screenshot("clipboard-private-field");
       assertEquals("No-learning field must hide suggestions and clipboard", privateHeight,
           keyboardBounds().height());
@@ -288,7 +288,7 @@ public final class ImeCompatibilityTest {
 
   @Test
   public void decliningSpeechApprovalKeepsTypingLocal() throws Exception {
-    EditText field = focus("Üzenet");
+    EditText field = focus(R.id.test_message);
     int microphoneBefore = context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO);
     tap(1072, 2436);
     appNode(context.getString(R.string.speech_consent_title));
@@ -299,14 +299,14 @@ public final class ImeCompatibilityTest {
     instrumentation.waitForIdleSync();
     assertFalse(new KeyboardSettings(context).enabled(MicPermissionActivity.CONSENT_KEY, false));
     assertEquals(microphoneBefore, context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO));
-    focus("Üzenet");
+    focus(R.id.test_message);
     key("A", false);
     expect(field, "a");
   }
 
   @Test
   public void literalTypingDeleteAndSelectionReplacement() throws Exception {
-    EditText field = focus("Üzenet");
+    EditText field = focus(R.id.test_message);
     for (char ch : "HELLO".toCharArray()) key(String.valueOf(ch), false);
     key("space", false);
     expect(field, "hello ");
@@ -319,10 +319,10 @@ public final class ImeCompatibilityTest {
 
   @Test
   public void numericSearchActionAndEmojiInsertion() throws Exception {
-    EditText numeric = focus("Szám");
+    EditText numeric = focus(R.id.test_number);
     key("1", true); key("2", true); key("3", true);
     expect(numeric, "123");
-    EditText search = focus("Keresés");
+    EditText search = focus(R.id.test_search);
     AtomicBoolean submitted = new AtomicBoolean();
     instrumentation.runOnMainSync(() -> search.setOnEditorActionListener((view, action, event) -> {
       submitted.set(action == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH);
@@ -332,7 +332,7 @@ public final class ImeCompatibilityTest {
     long deadline = SystemClock.uptimeMillis() + 3000;
     while (!submitted.get() && SystemClock.uptimeMillis() < deadline) SystemClock.sleep(30);
     assertTrue("Search editor action was not delivered", submitted.get());
-    EditText message = focus("Üzenet");
+    EditText message = focus(R.id.test_message);
     tap(127.5f, 2436);
     AccessibilityNodeInfo emoji = imeNode("😀");
     assertTrue(emoji.performAction(AccessibilityNodeInfo.ACTION_CLICK));
@@ -342,7 +342,7 @@ public final class ImeCompatibilityTest {
   @Test
   public void passwordStaysLiteralAndDoesNotOpenSpeechConsent() throws Exception {
     prefs.edit().putBoolean("autocorrect", true).putBoolean("suggestions", true).commit();
-    EditText field = focus("Jelszópróba");
+    EditText field = focus(R.id.test_password);
     for (char ch : "HOGZ".toCharArray()) key(String.valueOf(ch), false);
     key("space", false);
     expect(field, "hogz ");
