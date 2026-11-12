@@ -18,6 +18,30 @@ optional microphone/portrait hardware declarations. These packaging checks are
 not a physical 32-bit ARM runtime result. See [COMPATIBILITY.md](COMPATIBILITY.md)
 for the hosted matrix and the explicitly untested manufacturer/device cases.
 
+### Hosted results and offline proof
+
+All seven jobs passed for `a47977a640e255339240d0d8b5236ed8bf002fe0` in
+[run 43295566207](https://github.com/Yxonyx/ios-keyboard-for-android/actions/runs/43295566207).
+The tested source was merged through [PR #1](https://github.com/Yxonyx/ios-keyboard-for-android/pull/1).
+
+| Configuration | Result |
+| --- | --- |
+| Build, lint, 24 JVM tests, provenance and APK inspection | Passed |
+| Android 13 / API 33, x86_64 phone, 4 KB | 11 app + 6 native tests passed |
+| Android 14 / API 34, x86_64 phone, 4 KB | 11 app + 6 native tests passed |
+| Android 15 / API 35, x86_64 phone, 4 KB | 11 app + 6 native tests passed |
+| Android 16 / API 36, x86_64 tablet, 4 KB | 11 app + 6 native tests passed |
+| Android 15 / API 35, x86_64 phone, asserted 16 KB | 11 app + 6 native tests passed |
+| Android TV 13 / API 33, asserted 32-bit x86 process | 6 native tests passed; no app UI certification |
+
+The final ARM64 API 36 instrumentation run also passed all 17 tests with airplane
+mode enabled, Wi-Fi and mobile data disabled, and `dumpsys connectivity` reporting
+`Active default network: none` and `mDefaultNetwork=null` before execution.
+This establishes offline operation of the tested typing/correction/editor paths;
+external speech recognition was declined or blocked by the consent gate, not
+validated as offline speech. The emulator's previous network settings were restored.
+Synthetic editor screenshots and detailed local logs were retained separately.
+
 ## Initial source preview, 2026-11-11
 
 These results apply to the public-source 0.8.0-preview candidate, including the

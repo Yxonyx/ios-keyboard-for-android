@@ -21,8 +21,10 @@ most active devices, all Android releases, or every manufacturer's ROM.
 ## Automated matrix
 
 The GitHub workflow uses separate jobs and preserves each result independently.
-The table below describes the configurations; inspect the linked workflow results
-and the validation record for actual passes. A configured row is not a passing test.
+All rows below passed for `a47977a640e255339240d0d8b5236ed8bf002fe0` in
+[run 43295566207](https://github.com/Yxonyx/ios-keyboard-for-android/actions/runs/43295566207):
+11 app plus 6 native tests on each 64-bit profile, and 6 native tests on the
+32-bit fixture. These are configuration-specific emulator results.
 
 | Android | API | Emulator and native process | Screen/profile | Page size |
 | --- | --- | --- | --- | --- |
@@ -50,7 +52,7 @@ mapping uses the runtime page size rather than a fixed 4 KB assumption. See Andr
 The app tests exercise all nine language definitions/layouts in light/dark modes at
 small-phone, high-density-phone, landscape and tablet dimensions. An emulator-only,
 explicitly opted-in test selects the actual IME, types into a host activity, checks
-deletion/selection replacement, numeric input, the search action, emoji insertion
+deletion/selection replacement, numeric input, the search action, emoji insertion,
 literal password input and clipboard suppression in a no-learning editor, and
 restores the original IME afterward. Privacy tests
 check the installed permission boundary and rejection of speech without approval.
