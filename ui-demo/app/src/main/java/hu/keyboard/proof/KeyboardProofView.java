@@ -322,8 +322,9 @@ public final class KeyboardProofView extends View {
     }
     if (extra != null) {
       for (int i = 0; i < 10; i++) {
-        String label = i < middle.size() ? middle.get(i).label : extra;
-        label = moves.getOrDefault(label, label);
+        String label = i < middle.size()
+            ? moves.getOrDefault(middle.get(i).label, middle.get(i).label)
+            : extra;
         RectF rect =
             new RectF(top.get(i).rect.left, middle.get(0).rect.top, top.get(i).rect.right,
                 middle.get(0).rect.bottom);

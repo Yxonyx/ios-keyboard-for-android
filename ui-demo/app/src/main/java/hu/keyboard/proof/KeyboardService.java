@@ -27,10 +27,10 @@ public final class KeyboardService extends InputMethodService implements Keyboar
   private TextView queryLabel;
   private CompositionSession.Suggestions shown = CompositionSession.Suggestions.NONE;
   private ClipboardManager clipboard;
-  // Offered once in the strip; kept in memory only and dropped after CLIP_OFFER_MS.
-  private String clipText;
-  private long clipTime, lastSpace;
-  private static final long CLIP_OFFER_MS = 90_000, DOUBLE_SPACE_MS = 700;
+  private final ClipboardOffer clipboardOffer = new ClipboardOffer();
+  private boolean inputViewActive;
+  private long lastSpace;
+  private static final long DOUBLE_SPACE_MS = 700;
   private final ClipboardManager.OnPrimaryClipChangedListener clipListener = this::clipChanged;
   private Dictation dictation;
   private final java.util.function.Consumer<Boolean> blurListener = enabled -> applyWindowTheme();
@@ -39,9 +39,13 @@ public final class KeyboardService extends InputMethodService implements Keyboar
   private boolean dictationCaps;
   private final android.content.SharedPreferences.OnSharedPreferenceChangeListener listener =
       (p, k) -> {
-        if (!k.equals("emoji_recent") && !k.equals("emoji_category") && root != null)
+        if (!"emoji_recent".equals(k) && !"emoji_category".equals(k) && root != null)
           root.post(
               () -> {
+                if (!settings.enabled("dictation", true)
+                    || !settings.enabled(MicPermissionActivity.CONSENT_KEY, false))
+                  endDictation();
+                if (k == null || "clipboard_suggest".equals(k)) clipChanged();
                 applyWindowTheme();
                 if (composition != null) {
                   composition.finish();
@@ -143,9 +147,11 @@ public final class KeyboardService extends InputMethodService implements Keyboar
 
   @Override
   public void onDestroy() {
+    inputViewActive = false;
     WindowManager wm = getSystemService(WindowManager.class);
     if (wm != null) wm.removeCrossWindowBlurEnabledListener(blurListener);
     if (dictation != null) dictation.cancel();
+    clipboardOffer.clear();
     if (clipboard != null) clipboard.removePrimaryClipChangedListener(clipListener);
     settings.prefs.unregisterOnSharedPreferenceChangeListener(listener);
     if (correction != null) correction.close();
@@ -187,52 +193,63 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     searching = false;
     popupVisible = false;
     sensitive = isSensitive(info);
+    clipboardOffer.clear();
     composition.reset(correctionAllowed(info));
   }
 
   @Override
   public void onStartInputView(EditorInfo info, boolean restarting) {
     super.onStartInputView(info, restarting);
+    inputViewActive = true;
     applyWindowTheme();
     if (root != null) showLetters(true);
-    refreshStrip();
+    clipChanged();
   }
 
   private boolean stripEnabled() {
     return settings.enabled("suggestions", true);
   }
 
+  private boolean privateEditor(EditorInfo info) {
+    return info == null || isSensitive(info)
+        || (info.imeOptions & EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) != 0;
+  }
+
+  private boolean clipboardAllowed() {
+    return inputViewActive && !searching && !privateEditor(getCurrentInputEditorInfo())
+        && settings.enabled("clipboard_suggest", false);
+  }
+
+  private String readClipboardText() {
+    if (clipboard == null) return null;
+    try {
+      ClipData clip = clipboard.getPrimaryClip();
+      if (clip == null || clip.getItemCount() == 0) return null;
+      ClipDescription description = clip.getDescription();
+      if (description.getExtras() != null
+          && description.getExtras().getBoolean(ClipDescription.EXTRA_IS_SENSITIVE)) return null;
+      CharSequence value = clip.getItemAt(0).getText();
+      return value == null ? null : value.toString();
+    } catch (SecurityException denied) {
+      return null;
+    }
+  }
+
   private void clipChanged() {
-    ClipData clip = clipboard.getPrimaryClip();
-    if (clip == null || clip.getItemCount() == 0) return;
-    ClipDescription description = clip.getDescription();
-    if (description.getExtras() != null
-        && description.getExtras().getBoolean(ClipDescription.EXTRA_IS_SENSITIVE)) return;
-    CharSequence value = clip.getItemAt(0).getText();
-    if (value == null || value.toString().isBlank()) return;
-    clipText = value.toString();
-    clipTime = SystemClock.elapsedRealtime();
+    clipboardOffer.refresh(clipboardAllowed(), SystemClock.elapsedRealtime(), this::readClipboardText);
     refreshStrip();
   }
 
   private void refreshStrip() {
     if (keyboard == null) return;
-    String preview = null;
-    if (clipText != null && SystemClock.elapsedRealtime() - clipTime > CLIP_OFFER_MS)
-      clipText = null;
-    if (clipText != null
-        && !sensitive
-        && !searching
-        && settings.enabled("clipboard_suggest", false)) {
-      preview = clipText.strip().replaceAll("\\s+", " ");
-      if (preview.length() > 40) preview = preview.substring(0, 40);
-    }
-    InputConnection ic = getCurrentInputConnection();
+    String preview = clipboardOffer.preview(clipboardAllowed(), SystemClock.elapsedRealtime());
+    boolean privateField = !inputViewActive || privateEditor(getCurrentInputEditorInfo());
+    InputConnection ic = privateField ? null : getCurrentInputConnection();
     CharSequence before = ic == null ? null : ic.getTextBeforeCursor(1, 0);
     CharSequence after = ic == null ? null : ic.getTextAfterCursor(1, 0);
     keyboard.setEditorHasText(
         (before != null && before.length() > 0) || (after != null && after.length() > 0));
-    keyboard.showSuggestions(shown, preview);
+    keyboard.showSuggestions(privateField ? CompositionSession.Suggestions.NONE : shown, preview);
     applyHeight();
   }
 
@@ -281,11 +298,16 @@ public final class KeyboardService extends InputMethodService implements Keyboar
 
   @Override
   public void onFinishInputView(boolean finishing) {
+    inputViewActive = false;
+    clipboardOffer.clear();
     endDictation();
     if (composition != null) composition.finish();
     searching = false;
     query = "";
-    if (keyboard != null) keyboard.startEditor(false, false, true, "");
+    if (keyboard != null) {
+      keyboard.startEditor(false, false, true, "");
+      keyboard.showSuggestions(CompositionSession.Suggestions.NONE, null);
+    }
     super.onFinishInputView(finishing);
   }
 
@@ -446,7 +468,7 @@ public final class KeyboardService extends InputMethodService implements Keyboar
               && (cls == InputType.TYPE_CLASS_NUMBER
                   || cls == InputType.TYPE_CLASS_PHONE
                   || cls == InputType.TYPE_CLASS_DATETIME);
-      keyboard.startEditor(capitalsAtCursor(), numbers, sensitive, action());
+      keyboard.startEditor(capitalsAtCursor(), numbers, privateEditor(info), action());
       refreshStrip();
     }
   }
@@ -542,10 +564,10 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       return;
     }
     InputConnection ic = getCurrentInputConnection();
-    if (clipText == null || ic == null) return;
+    String clip = clipboardOffer.take(clipboardAllowed(), SystemClock.elapsedRealtime());
+    if (clip == null || ic == null) return;
     composition.finish();
-    ic.commitText(clipText, 1);
-    clipText = null;
+    ic.commitText(clip, 1);
     refreshStrip();
   }
 
@@ -644,7 +666,8 @@ public final class KeyboardService extends InputMethodService implements Keyboar
           .show();
       return;
     }
-    if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+    if (!settings.enabled(MicPermissionActivity.CONSENT_KEY, false)
+        || checkSelfPermission(Manifest.permission.RECORD_AUDIO)
         != PackageManager.PERMISSION_GRANTED) {
       askMicrophone();
       return;

@@ -8,8 +8,9 @@ Licensed under **GPL-3.0-only**, with separately licensed components listed in
 [third-party notices](THIRD_PARTY_NOTICES.md).
 
 This is a **development preview**, not a stable release. Android 13 or newer is
-required. The default native build targets ARM64; an x86_64 build is available for
-emulator testing. It does not bundle Apple fonts, Apple emoji, reference screenshots,
+required. The default APK includes ARM64 and 32-bit ARM libraries; x86/x86_64 builds are
+available for emulator testing. See the [compatibility matrix](docs/COMPATIBILITY.md)
+for tested configurations and physical-device gaps. It does not bundle Apple fonts, Apple emoji, reference screenshots,
 or traced screenshot artwork. Letter labels use Inter; key rectangles are generated
 from row rules and icons are drawn in code.
 
@@ -41,6 +42,21 @@ version, rather than the separately patched variant used in private development.
 Light and dark modes, shown in the Grok app. Captured from the private development
 build before the public-source artwork changes; the publication candidate uses
 Inter labels and code-drawn icons. Grok's interface is shown only as the host app.
+
+## Privacy and the Android keyboard warning
+
+Typing, autocorrection and emoji search run locally. There is no account, analytics,
+phone-to-developer server or background GitHub connection. GitHub hosts the source;
+it is not a runtime backend. **Optional external dictation may upload audio to the
+installed recognizer, usually Google**, and needs separate first-use approval plus
+microphone permission. Local typing continues if you decline it.
+
+Android warns when enabling a third-party keyboard because an input method can
+receive typed text. That standard warning alone is not a malware verdict. It also
+does not prove that any APK with this name is safe: verify the download source and
+the exact warning. Play Protect alerts and signature mismatches must be assessed
+separately. See [privacy and warning explanations](PRIVACY.md), also available
+inside application settings.
 
 ## Build and contribute
 

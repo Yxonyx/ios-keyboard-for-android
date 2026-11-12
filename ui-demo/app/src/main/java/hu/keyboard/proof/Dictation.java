@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * One utterance through Google's speech recognizer. The audio leaves the phone: the user chose
- * Google over local processing (2026-11-11). The keyboard itself stores neither audio nor text.
+ * One utterance through an installed Android recognizer, preferring Google when available.
+ * The provider may upload audio. Explicit approval is required; this keyboard stores no recording.
  */
 final class Dictation {
   interface Listener {
@@ -66,6 +66,8 @@ final class Dictation {
   /** Returns false when no recognizer is installed. */
   /** @param tag a BCP 47 locale such as hu-HU */
   boolean start(String tag) {
+    if (!new KeyboardSettings(context).enabled(MicPermissionActivity.CONSENT_KEY, false))
+      throw new IllegalStateException("External speech recognition has not been approved");
     cancel();
     ComponentName component = service(context);
     if (component == null && !SpeechRecognizer.isRecognitionAvailable(context)) return false;

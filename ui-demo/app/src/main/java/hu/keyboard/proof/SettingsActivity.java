@@ -346,6 +346,8 @@ public final class SettingsActivity extends Activity {
         false);
     row("Emoji", "", "Keresés, legutóbbiak és bőrszín", () -> open("emoji"), false);
     section("Alkalmazás");
+    row("Adatvédelem és Android-figyelmeztetések", "", "Helyi gépelés, külső diktálás és engedélyek",
+        () -> startActivity(new Intent(this, PrivacyActivity.class)), false);
     row(
         "Fejlesztés alatt",
         "",
@@ -426,16 +428,25 @@ public final class SettingsActivity extends Activity {
         microphone() ? null : () -> requestPermissions(
             new String[] {android.Manifest.permission.RECORD_AUDIO}, 31),
         false);
+    row("Külső beszédfelismerés jóváhagyása",
+        settings.enabled(MicPermissionActivity.CONSENT_KEY, false) ? "Jóváhagyva" : "Nincs jóváhagyva",
+        "Koppints a jóváhagyás visszavonásához; a helyi gépelés tovább működik",
+        () -> {
+          settings.prefs.edit().remove(MicPermissionActivity.CONSENT_KEY).apply();
+          build();
+        }, false);
     row(
         "Felismerő",
-        Dictation.available(this) ? "Google" : "Nincs telepítve",
-        "Google beszédszolgáltatás",
+        Dictation.available(this)
+            ? (Dictation.service(this) != null ? "Google" : "Rendszer alapértelmezett")
+            : "Nincs telepítve",
+        "Külső beszédfelismerő szolgáltatás",
         null,
         false);
     note(
         "Koppints a mikrofonra, és beszélj; a felismert szöveg rögtön a mezőbe kerül. Újabb"
-            + " koppintásra vagy rövid csend után leáll. A hangot a Google beszédfelismerője"
-            + " dolgozza fel, ehhez az a Google-nek kerül elküldésre. A billentyűzet nem ment"
+            + " koppintásra vagy rövid csend után leáll. A kiválasztott beszédfelismerő"
+            + " (gyakran Google) a hangot külső szerverre is elküldheti. A billentyűzet nem ment"
             + " hangot és szöveget. Jelszómezőben a diktálás nem indul el.");
   }
 
@@ -576,8 +587,8 @@ public final class SettingsActivity extends Activity {
                 }),
         true);
     note(
-        "iOS Keyboard for Android · 0.8.0-preview\nHálózati engedély nélkül; diktáláskor a hangot a"
-            + " Google beszédfelismerője dolgozza fel");
+        "iOS Keyboard for Android · 0.8.0-preview\nA gépelés helyben fut. A választható diktálás"
+            + " külső beszédfelismerőt használhat, amely a hangot feltöltheti.");
   }
 
   private boolean selected() {
@@ -589,6 +600,10 @@ public final class SettingsActivity extends Activity {
 
   private void setup() {
     heading("Billentyűzet bekapcsolása", "Egyszeri beállítás a telefon Android rendszerében");
+    note("Az Android minden külső billentyűzetnél figyelmeztethet a beírt szöveghez való hozzáférésre. "
+        + "A gépelés és a szójavítás helyben fut. A választható diktálás külső beszédfelismerőt használhat.");
+    row(getString(R.string.privacy_title), "", "Helyi működés, diktálás és Android-figyelmeztetések",
+        () -> startActivity(new Intent(this, PrivacyActivity.class)), false);
     section("Beállítás");
     row(
         "1. Billentyűzet engedélyezése",

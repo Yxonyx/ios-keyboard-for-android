@@ -65,5 +65,17 @@ when gathering screenshots or logs.
 ```
 
 For an x86_64 emulator, add `-PengineAbis=x86_64` to both build and test commands.
-The default is ARM64. Use a dedicated emulator for automated tests; do not switch
+The default APK includes ARM64 and 32-bit ARM. Use a dedicated emulator for automated tests; do not switch
 someone's everyday keyboard during unattended testing.
+
+## Packaged ABI and page-size checks
+
+```sh
+python3 tools/verify_apk_compatibility.py ui-demo/app/build/outputs/apk/debug/app-debug.apk
+python3 tools/verify_apk_compatibility.py ui-demo/app/build/outputs/apk/release/app-release-unsigned.apk
+```
+
+These commands run from the repository root and inspect the built ELF files and
+ZIP alignment. For an x86_64-only APK, append `--abis x86_64`. See
+[the compatibility matrix](COMPATIBILITY.md) for the opt-in IME/editor tests and
+physical-device validation gaps.

@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
@@ -36,6 +37,10 @@ jobs:
       - name: Compile, lint and test
         working-directory: ui-demo
         run: ./gradlew --no-daemon :app:assembleDebug :app:assembleRelease :app:lintRelease :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug :engine:assembleDebugAndroidTest
+      - name: Verify packaged CPU architectures and 16 KB alignment
+        run: |
+          python3 tools/verify_apk_compatibility.py ui-demo/app/build/outputs/apk/debug/app-debug.apk
+          python3 tools/verify_apk_compatibility.py ui-demo/app/build/outputs/apk/release/app-release-unsigned.apk
       - name: Preserve test and lint reports
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -47,7 +52,18 @@ jobs:
           if-no-files-found: warn
 
   instrumentation:
-    name: Android instrumentation (API 35, x86_64)
+    name: Android API ${{ matrix.api }} (${{ matrix.variant }})
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        include:
+          - {api: 33, variant: phone-64bit, target: google_apis, abi: x86_64, process64: true, page-size: 4096, profile: pixel_7, emulator-arch: x86_64, app-tests: true, ram: 2048M}
+          - {api: 34, variant: phone-64bit, target: google_apis, abi: x86_64, process64: true, page-size: 4096, profile: pixel_7, emulator-arch: x86_64, app-tests: true, ram: 2048M}
+          - {api: 35, variant: phone-64bit, target: google_apis, abi: x86_64, process64: true, page-size: 4096, profile: pixel_7, emulator-arch: x86_64, app-tests: true, ram: 2048M}
+          - {api: 36, variant: tablet-64bit, target: google_apis, abi: x86_64, process64: true, page-size: 4096, profile: pixel_c, emulator-arch: x86_64, app-tests: true, ram: 2048M}
+          - {api: 35, variant: phone-16kb, target: google_apis_ps16k, abi: x86_64, process64: true, page-size: 16384, profile: pixel_7, emulator-arch: x86_64, app-tests: true, ram: 4096M}
+          - {api: 33, variant: engine-32bit-tv, target: android-tv, abi: x86, process64: false, page-size: 4096, profile: tv_1080p, emulator-arch: x86, app-tests: false, ram: 2048M}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -77,23 +93,27 @@ jobs:
       - name: Run native and app integration tests
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
-          api-level: 35
-          arch: x86_64
-          target: google_apis
+          api-level: ${{ matrix.api }}
+          arch: ${{ matrix.emulator-arch }}
+          target: ${{ matrix.target }}
+          profile: ${{ matrix.profile }}
           disk-size: 2048M
-          ram-size: 2048M
+          ram-size: ${{ matrix.ram }}
           emulator-boot-timeout: 300
           disable-animations: true
           working-directory: ui-demo
-          script: ./gradlew --no-daemon -PengineAbis=x86_64 :engine:connectedDebugAndroidTest :app:connectedDebugAndroidTest
+          script: |
+            test "$(adb shell getconf PAGE_SIZE | tr -d '\r')" = "${{ matrix.page-size }}"
+            ../tools/run_emulator_checks.sh -PengineAbis=${{ matrix.abi }} -Pandroid.testInstrumentationRunnerArguments.allowImeSwitch=true -Pandroid.testInstrumentationRunnerArguments.expectedProcess64=${{ matrix.process64 }} :engine:connectedDebugAndroidTest ${{ matrix.app-tests && ':app:connectedDebugAndroidTest' || '' }}
       - name: Preserve instrumentation results
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: instrumentation-reports
+          name: instrumentation-api${{ matrix.api }}-${{ matrix.variant }}
           path: |
             ui-demo/app/build/reports/androidTests/
             ui-demo/engine/build/reports/androidTests/
             ui-demo/app/build/outputs/androidTest-results/
+            ui-demo/app/build/outputs/device-diagnostics/
             ui-demo/engine/build/outputs/androidTest-results/
           if-no-files-found: warn
