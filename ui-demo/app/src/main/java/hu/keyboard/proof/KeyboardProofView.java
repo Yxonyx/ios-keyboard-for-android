@@ -511,6 +511,7 @@ public final class KeyboardProofView extends View {
     }
     if (settings.enabled("emoji", true) && !privateEditor) drawEmoji(c);
     drawMicrophone(c);
+    if (imeMode) drawGlobe(c);
     if (pressed != null && popupKey == null) drawKeyPreview(c, pressed, dark);
   }
 
@@ -753,6 +754,17 @@ public final class KeyboardProofView extends View {
     p.quadTo(-21, 30, -24, 7);
     c.drawPath(p, paint);
     c.drawArc(new RectF(-24, -6, 24, 27), 12, 156, false, paint);
+    c.restore();
+  }
+
+  private void drawGlobe(Canvas c) {
+    c.save();
+    c.translate(285, 2433);
+    stroke(4.2f);
+    c.drawCircle(0, 0, 30, paint);
+    c.drawOval(new RectF(-13, -30, 13, 30), paint);
+    c.drawLine(-28, -10, 28, -10, paint);
+    c.drawLine(-28, 10, 28, 10, paint);
     c.restore();
   }
 
@@ -1013,7 +1025,10 @@ public final class KeyboardProofView extends View {
         return true;
       }
       if (y >= 2370) {
-        if (x > 970 && imeMode) output.dictate();
+        if (imeMode && x >= 220 && x <= 400) {
+          pressed = null;
+          output.next();
+        } else if (x > 970 && imeMode) output.dictate();
         else if (x > 970)
           Toast.makeText(
                   getContext(), getContext().getString(R.string.preview_no_dictation), Toast.LENGTH_SHORT)

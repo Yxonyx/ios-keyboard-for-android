@@ -248,6 +248,32 @@ public final class ImeCompatibilityTest {
   }
 
   @Test
+  public void globeKeyCyclesAllNineLanguagesAndPreservesPerLanguageLayouts() {
+    EditText field = focus(R.id.test_message);
+    KeyboardSettings settings = new KeyboardSettings(context);
+    instrumentation.runOnMainSync(() -> {
+      settings.prefs.edit().putString("language", "en")
+          .putString("layout_hu", "QWERTY").putString("layout_fr", "AZERTY").commit();
+      java.util.List<String> codes = new java.util.ArrayList<>();
+      for (Languages.Language language : Languages.ALL) codes.add(language.code());
+      settings.setLanguages(codes);
+    });
+    instrumentation.waitForIdleSync();
+    for (int i = 1; i <= Languages.ALL.size(); i++) {
+      focus(R.id.test_message);
+      tap(285, 2433);
+      String expected = Languages.ALL.get(i % Languages.ALL.size()).code();
+      long deadline = SystemClock.uptimeMillis() + 2000;
+      while (!expected.equals(settings.language()) && SystemClock.uptimeMillis() < deadline)
+        SystemClock.sleep(20);
+      assertEquals(expected, settings.language());
+      if (expected.equals("hu")) assertEquals("QWERTY", settings.layout());
+      if (expected.equals("fr")) assertEquals("AZERTY", settings.layout());
+    }
+    expect(field, "");
+  }
+
+  @Test
   public void noLearningEditorSuppressesTheClipboardOfferAndSuggestionStrip() throws Exception {
     EditText message = focus(R.id.test_message);
     ClipboardManager clipboard = context.getSystemService(ClipboardManager.class);
