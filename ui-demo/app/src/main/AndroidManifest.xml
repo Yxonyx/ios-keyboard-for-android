@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Dictation: Google's recognizer records on our behalf; the app itself has no network access. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false"/>
     <queries><intent><action android:name="android.speech.RecognitionService"/></intent></queries>
     <application android:theme="@style/AppTheme" android:label="iOS Keyboard for Android" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:allowBackup="false" android:supportsRtl="false">
         <service android:name=".KeyboardService" android:label="@string/ime_name" android:permission="android.permission.BIND_INPUT_METHOD" android:exported="true"><intent-filter><action android:name="android.view.InputMethod"/></intent-filter><meta-data android:name="android.view.im" android:resource="@xml/input_method"/></service>
         <activity android:name=".LicensesActivity" android:exported="false"/>
+        <activity android:name=".PrivacyActivity" android:exported="false"/>
         <activity android:name=".TypingActivity" android:exported="true"/>
         <activity android:name=".MicPermissionActivity" android:exported="false" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:excludeFromRecents="true"/>
         <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="portrait" android:launchMode="singleTask">

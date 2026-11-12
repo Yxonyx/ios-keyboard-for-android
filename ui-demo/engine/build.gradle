@@ -9,7 +9,7 @@ android {
     defaultConfig {
         minSdk 33
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        ndk { abiFilters.addAll(providers.gradleProperty('engineAbis').orElse('arm64-v8a').get().split(',')) }
+        ndk { abiFilters.addAll(providers.gradleProperty('engineAbis').orElse('arm64-v8a,armeabi-v7a').get().split(',')) }
         externalNativeBuild { ndkBuild { arguments 'NDK_APPLICATION_MK:=src/main/cpp/Application.mk' } }
     }
     externalNativeBuild { ndkBuild { path file('src/main/cpp/Android.mk') } }

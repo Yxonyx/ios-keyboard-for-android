@@ -1,4 +1,21 @@
-# Validation, 2026-11-11
+# Validation
+
+## Compatibility and privacy update, 2026-11-12
+
+The compatibility candidate passed 19 JVM unit tests, 10 app instrumentation tests
+and 5 native instrumentation tests locally on the ARM64 API 36 emulator. No tests
+were skipped. The app tests include actual IME/editor interaction and declining
+external speech approval without losing local typing. All nine language/layout
+definitions rendered at four screen geometries in both themes; this exposed and
+fixed the missing M key in AZERTY.
+
+Debug/release builds and lint passed. The packaged APKs include ARM64 and 32-bit
+ARM, with 16 KB ELF and uncompressed-ZIP alignment, no Internet permission, and
+optional microphone/portrait hardware declarations. These packaging checks are
+not a physical 32-bit ARM runtime result. See [COMPATIBILITY.md](COMPATIBILITY.md)
+for the hosted matrix and the explicitly untested manufacturer/device cases.
+
+## Initial source preview, 2026-11-11
 
 These results apply to the public-source 0.8.0-preview candidate, including the
 programmatic renderer, Inter labels, OpenBoard Portuguese dictionary and new name.

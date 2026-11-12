@@ -39,9 +39,12 @@ public final class KeyboardService extends InputMethodService implements Keyboar
   private boolean dictationCaps;
   private final android.content.SharedPreferences.OnSharedPreferenceChangeListener listener =
       (p, k) -> {
-        if (!k.equals("emoji_recent") && !k.equals("emoji_category") && root != null)
+        if (!"emoji_recent".equals(k) && !"emoji_category".equals(k) && root != null)
           root.post(
               () -> {
+                if (!settings.enabled("dictation", true)
+                    || !settings.enabled(MicPermissionActivity.CONSENT_KEY, false))
+                  endDictation();
                 applyWindowTheme();
                 if (composition != null) {
                   composition.finish();
@@ -644,7 +647,8 @@ public final class KeyboardService extends InputMethodService implements Keyboar
           .show();
       return;
     }
-    if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+    if (!settings.enabled(MicPermissionActivity.CONSENT_KEY, false)
+        || checkSelfPermission(Manifest.permission.RECORD_AUDIO)
         != PackageManager.PERMISSION_GRANTED) {
       askMicrophone();
       return;
