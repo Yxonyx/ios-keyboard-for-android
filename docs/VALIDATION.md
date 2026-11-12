@@ -3,7 +3,7 @@
 ## Compatibility and privacy update, 2026-11-12
 
 The compatibility candidate passed 19 JVM unit tests, 10 app instrumentation tests
-and 5 native instrumentation tests locally on the ARM64 API 36 emulator. No tests
+and 6 native instrumentation tests locally on the ARM64 API 36 emulator. No tests
 were skipped. The app tests include actual IME/editor interaction and declining
 external speech approval without losing local typing. All nine language/layout
 definitions rendered at four screen geometries in both themes; this exposed and

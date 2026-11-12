@@ -53,6 +53,12 @@ public final class LatinImeEngineTest {
   }
 
   @Test
+  public void nativeRunnerUsesRequestedArchitecture() {
+    String expected = InstrumentationRegistry.getArguments().getString("expectedProcess64");
+    if (expected != null) assertEquals(Boolean.parseBoolean(expected), android.os.Process.is64Bit());
+  }
+
+  @Test
   public void hungarianDictionaryAndDecoder() throws Exception {
     try (var e = open("hu")) {
       assertTrue("Hungarian common word missing", e.contains("hogy"));

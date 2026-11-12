@@ -31,7 +31,15 @@ and the validation record for actual passes. A configured row is not a passing t
 | 15 | 35 | x86_64 | Pixel 7 phone | 4 KB |
 | 16 | 36 | x86_64 | Pixel C tablet | 4 KB |
 | 15 | 35 | x86_64, official experimental 16 KB image | Pixel 7 phone | 16 KB, asserted before tests |
-| 13 | 33 | 32-bit x86 process on an x86_64 emulator | Pixel 7 phone | 4 KB |
+| Android TV 13 | 33 | 32-bit x86 native-engine fixture only | 1080p TV | 4 KB |
+
+The 32-bit row exercises the native engine, not a telephone UI. The regular
+Android 13 Google x86_64 image rejected a 32-bit APK with
+`INSTALL_FAILED_NO_MATCHING_ABIS`; zero tests ran in that attempt. Android documents
+[regular emulator images from API 31 onward as 64-bit only](https://developer.android.com/google/play/requirements/64-bit).
+The SDK catalog still provides an actual x86 Android TV image, which is used as a
+bounded 32-bit runtime fixture. Its result cannot be presented as 32-bit ARM phone
+or Android TV application certification.
 
 The instrumentation runner verifies the requested process bitness. The packaging
 check verifies the actual APK's ABI inventory and every ELF load segment and
