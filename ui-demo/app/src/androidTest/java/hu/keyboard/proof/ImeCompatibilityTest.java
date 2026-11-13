@@ -132,9 +132,25 @@ public final class ImeCompatibilityTest {
       EditText field = activity.findViewById(id);
       assertNotNull("Missing editor " + id, field);
       field.requestFocus();
-      context.getSystemService(InputMethodManager.class).showSoftInput(field, 0);
       result.set(field);
     });
+    // Android 14 may deliver focus before this editor is served by the input method.
+    // A premature showSoftInput is ignored, so wait for the real window/editor connection.
+    instrumentation.waitForIdleSync();
+    AtomicBoolean served = new AtomicBoolean();
+    long serveDeadline = SystemClock.uptimeMillis() + 5000;
+    do {
+      instrumentation.runOnMainSync(() -> {
+        EditText field = result.get();
+        InputMethodManager manager = context.getSystemService(InputMethodManager.class);
+        boolean ready = field.hasWindowFocus() && field.hasFocus() && manager.isActive(field);
+        served.set(ready);
+        if (ready) manager.showSoftInput(field, 0);
+      });
+      if (served.get()) break;
+      SystemClock.sleep(30);
+    } while (SystemClock.uptimeMillis() < serveDeadline);
+    assertTrue("Editor did not connect to the input method", served.get());
     // The window can be accessible while the IME/scroll animation is still moving it.
     // Send touches only after the actual on-screen bounds have remained stable.
     Rect previous = keyboardBounds();
