@@ -21,10 +21,17 @@ labels use Inter and all UI icons are drawn in application code or original vect
 resources. `tools/build_emoji_catalog.py` generates emoji metadata from the included
 Unicode and CLDR sources. The device or a user-imported font supplies emoji glyphs.
 
-The nine language definitions are ahead of the current settings UI: only Hungarian
-and English are exposed in its picker and Android subtype metadata. Translation
-and settings integration are unfinished. Accuracy and harmful-correction rates
-have not been established across all nine dictionaries.
+All nine typing languages are exposed in settings and Android subtype metadata.
+Each language remembers its own layout; the globe cycles through a nonempty user
+selection. Interface text uses English default Android resources plus eight locale
+packs. Android 13+ LocaleManager persists the independent interface language and
+exposes it in system app-language settings; first-use typing follows the system
+locale, independently from the interface override. Accuracy and harmful-correction
+rates have not been established across all nine dictionaries.
+
+Run `python3 tools/verify_translations.py` to check complete locale-key coverage,
+format placeholders, declared app locales and input subtypes. Native-speaker
+editorial review of the translations remains welcome.
 
 Dictation uses an external Android speech recognizer and may upload audio. No
 speech-recognition library or audio model is bundled. See [privacy](../PRIVACY.md).

@@ -160,12 +160,12 @@ public final class SettingsActivity extends Activity {
     shell.addView(toolbar, new LinearLayout.LayoutParams(-1, dp(56)));
     if (!screen.equals("home")) {
       Icon back = new Icon("back");
-      back.setContentDescription("Vissza a beállításokhoz");
+      back.setContentDescription(getString(R.string.back_settings));
       back.setBackground(press(GROUND, 8));
       toolbar.addView(back, new LinearLayout.LayoutParams(dp(44), dp(48)));
       back.setOnClickListener(v -> navigateBack());
     }
-    TextView brand = text(screen.equals("home") ? "iOS Keyboard for Android" : "Beállítások", 16, INK, true);
+    TextView brand = text(screen.equals("home") ? "iOS Keyboard for Android" : getString(R.string.settings), 16, INK, true);
     toolbar.addView(brand, new LinearLayout.LayoutParams(0, -2, 1));
     if (screen.equals("home")) {
       TextView version = text("0.8", 13, SECONDARY, false);
@@ -254,7 +254,7 @@ public final class SettingsActivity extends Activity {
       TextView detail = text(value, 14, SECONDARY, false);
       detail.setPadding(dp(12), 0, dp(12), 0);
       detail.setGravity(Gravity.END);
-      row.addView(detail);
+      row.addView(detail, new LinearLayout.LayoutParams(0, -2, 1));
     }
     if (action != null) {
       Icon chevron = new Icon("chevron");
@@ -269,7 +269,7 @@ public final class SettingsActivity extends Activity {
   }
 
   private void home() {
-    heading("Beállítások", "A billentyűzeted, a saját ritmusodban");
+    heading(getString(R.string.settings), getString(R.string.settings_intro));
     LinearLayout preview = new LinearLayout(this);
     preview.setGravity(Gravity.CENTER_VERTICAL);
     preview.setPadding(dp(16), dp(16), dp(16), dp(16));
@@ -281,135 +281,174 @@ public final class SettingsActivity extends Activity {
     LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(0, -2, 1);
     cp.setMargins(dp(16), 0, dp(12), 0);
     preview.addView(copy, cp);
-    addText(copy, "Billentyűzet kipróbálása", 16, INK, true, 0, 6);
+    addText(copy, getString(R.string.try_keyboard), 16, INK, true, 0, 6);
     addText(
         copy,
-        (settings.text("language", "hu").equals("hu") ? "Magyar" : "English")
-            + " · "
-            + (settings.qwerty() ? "QWERTY" : "QWERTZ"),
+        settings.current().name() + " · " + settings.layout(),
         13,
         SECONDARY,
         false,
         0,
         0);
     preview.addView(new Icon("arrow"), new LinearLayout.LayoutParams(dp(20), dp(20)));
-    preview.setContentDescription("Billentyűzet kipróbálása");
+    preview.setContentDescription(getString(R.string.try_keyboard));
     preview.setFocusable(true);
     preview.setOnClickListener(v -> startActivity(new Intent(this, TypingActivity.class)));
     note(
         selected()
-            ? "Az iOS Keyboard for Android az aktív rendszerbillentyűzet"
-            : "Kapcsold be és válaszd ki az iOS Keyboard for Android billentyűzetet");
-    section("Használat");
+            ? getString(R.string.keyboard_active)
+            : getString(R.string.keyboard_activate));
+    section(getString(R.string.usage));
     row(
-        "Billentyűzet bekapcsolása",
-        selected() ? "Aktív" : "Beállítás",
+        getString(R.string.enable_keyboard),
+        selected() ? getString(R.string.active) : getString(R.string.setup),
         "",
         () -> open("setup"),
         false);
-    section("Gépelés");
+    section(getString(R.string.typing));
     row(
-        "Nyelvek és kiosztás",
-        settings.text("language", "hu").equals("hu") ? "Magyar" : "English",
+        getString(R.string.languages_layout),
+        settings.current().name(),
         "",
         () -> open("language"),
         false);
     row(
-        "Javítás és javaslatok",
-        "Offline",
-        "Javaslatsáv, szójavítás és beillesztés",
+        getString(R.string.correction),
+        getString(R.string.offline),
+        getString(R.string.correction_summary),
         () -> open("correction"),
         false);
     row(
-        "Gépelési kényelem",
+        getString(R.string.typing_comfort),
         "",
-        "Nagybetű, dupla szóköz és előnézet",
+        getString(R.string.typing_summary),
         () -> open("typing"),
         false);
     row(
-        "Diktálás",
-        !settings.enabled("dictation", true) ? "Ki" : microphone() ? "Google" : "Engedély kell",
-        "Beszédfelismerés a mikrofongombbal",
+        getString(R.string.dictation),
+        !settings.enabled("dictation", true) ? getString(R.string.off) : microphone() ? "Google" : getString(R.string.permission_needed),
+        getString(R.string.dictation_summary),
         () -> open("dictation"),
         false);
     row(
-        "Időzítések",
+        getString(R.string.timings),
         settings.number("long_press", 360) + " ms",
-        "Hosszú nyomás és ismétlés",
+        getString(R.string.timing_summary),
         () -> open("timing"),
         false);
     row(
-        "Megjelenés és visszajelzés",
+        getString(R.string.appearance_feedback),
         "",
-        "Magasság, téma, rezgés és hang",
+        getString(R.string.appearance_summary),
         () -> open("appearance"),
         false);
-    row("Emoji", "", "Keresés, legutóbbiak és bőrszín", () -> open("emoji"), false);
-    section("Alkalmazás");
-    row("Adatvédelem és Android-figyelmeztetések", "", "Helyi gépelés, külső diktálás és engedélyek",
+    row("Emoji", "", getString(R.string.emoji_summary), () -> open("emoji"), false);
+    section(getString(R.string.application));
+    row(getString(R.string.privacy_title), "", getString(R.string.privacy_short),
         () -> startActivity(new Intent(this, PrivacyActivity.class)), false);
     row(
-        "Fejlesztés alatt",
+        getString(R.string.development),
         "",
-        "Tanulás és további funkciók",
+        getString(R.string.development_summary),
         () -> open("pending"),
         false);
-    row("Karbantartás", "", "Előzmények és alapbeállítások", () -> open("maintenance"), false);
-    note("A változtatások automatikusan mentődnek");
+    row(getString(R.string.maintenance), "", getString(R.string.maintenance_summary), () -> open("maintenance"), false);
+    note(getString(R.string.autosaved));
   }
 
   private void language() {
-    heading("Nyelvek és kiosztás", "A nyelvek külön megjegyzik a kiválasztott kiosztást");
-    section("Nyelv");
-    choice(
-        "Aktív nyelv",
-        "language",
-        new String[] {"Magyar", "English"},
-        new String[] {"hu", "en"},
-        "hu",
-        true);
-    String lang = settings.text("language", "hu");
-    section(lang.equals("hu") ? "Magyar kiosztás" : "English layout");
-    choice(
-        "Kiosztás",
-        "layout_" + lang,
-        new String[] {"QWERTZ", "QWERTY"},
-        new String[] {"QWERTZ", "QWERTY"},
-        lang.equals("hu") ? "QWERTZ" : "QWERTY",
-        false);
-    note("A nyelvhez tartozó offline szótár automatikusan vált.");
+    heading(getString(R.string.languages_layout), getString(R.string.language_intro));
+    section(getString(R.string.interface_language));
+    interfaceLanguage();
+    section(getString(R.string.language));
+    choice(getString(R.string.active_language), "language", languageNames(), languageCodes(),
+        settings.language(), true);
+    row(getString(R.string.enabled_languages), enabledLanguageNames(), "", this::enabledLanguages, false);
+    note(getString(R.string.globe_note));
+    section(settings.current().name());
+    String[] layouts = settings.current().layouts().toArray(new String[0]);
+    choice(getString(R.string.layout), "layout_" + settings.language(), layouts, layouts,
+        settings.layout(), false);
+    note(getString(R.string.dictionary_switch));
+  }
+
+  private String[] languageNames() {
+    return Languages.ALL.stream().map(Languages.Language::name).toArray(String[]::new);
+  }
+
+  private String[] languageCodes() {
+    return Languages.ALL.stream().map(Languages.Language::code).toArray(String[]::new);
+  }
+
+  private String enabledLanguageNames() {
+    return String.join(", ", settings.languages().stream().map(code -> Languages.get(code).name()).collect(java.util.stream.Collectors.toList()));
+  }
+
+  private void enabledLanguages() {
+    boolean[] checked = new boolean[Languages.ALL.size()];
+    for (int i = 0; i < checked.length; i++) checked[i] = settings.languages().contains(Languages.ALL.get(i).code());
+    AlertDialog dialog = new AlertDialog.Builder(this)
+        .setTitle(R.string.enabled_languages)
+        .setMultiChoiceItems(languageNames(), checked, (d, which, value) -> checked[which] = value)
+        .setNegativeButton(R.string.cancel, null)
+        .setPositiveButton(R.string.save, null).create();
+    dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+      java.util.List<String> codes = new java.util.ArrayList<>();
+      for (int i = 0; i < checked.length; i++) if (checked[i]) codes.add(Languages.ALL.get(i).code());
+      if (codes.isEmpty()) {
+        Toast.makeText(this, R.string.select_one_language, Toast.LENGTH_SHORT).show();
+        return;
+      }
+      settings.setLanguages(codes);
+      dialog.dismiss();
+      build();
+    }));
+    dialog.show();
+  }
+
+  private void interfaceLanguage() {
+    LocaleManager manager = getSystemService(LocaleManager.class);
+    android.os.LocaleList selected = manager.getApplicationLocales();
+    java.util.List<String> names = new java.util.ArrayList<>();
+    names.add(getString(R.string.follow_system));
+    names.addAll(java.util.Arrays.asList(languageNames()));
+    int current = 0;
+    if (!selected.isEmpty()) {
+      Languages.Language language = Languages.forLocale(selected.get(0).toLanguageTag());
+      if (language != null) current = Languages.ALL.indexOf(language) + 1;
+    }
+    final int chosen = current;
+    row(getString(R.string.interface_language), names.get(current), "", () ->
+        new AlertDialog.Builder(this).setTitle(R.string.interface_language)
+            .setSingleChoiceItems(names.toArray(new String[0]), chosen, (dialog, which) -> {
+              dialog.dismiss();
+              String tag = which == 0 ? "" : Languages.ALL.get(which - 1).speech();
+              manager.setApplicationLocales(android.os.LocaleList.forLanguageTags(tag));
+            }).setNegativeButton(R.string.cancel, null).show(), false);
   }
 
   private void correction() {
-    heading("Javítás és javaslatok", "Helyben futó magyar és angol motor");
-    section("Javaslatsáv");
-    toggle("Javaslatok a billentyűk felett", "suggestions", true);
-    toggle("Másolt szöveg felajánlása", "clipboard_suggest", false);
+    heading(getString(R.string.correction), getString(R.string.correction_intro));
+    section(getString(R.string.suggestion_strip));
+    toggle(getString(R.string.show_suggestions), "suggestions", true);
+    toggle(getString(R.string.offer_clipboard), "clipboard_suggest", false);
     note(
-        "A sáv akkor jelenik meg, ha a mezőben már van szöveg: bal oldalon a beírt szó, középen"
-            + " a javítás vagy a legjobb találat, jobbra egy további szó. Koppintásra a szó szóközzel"
-            + " együtt bekerül."
-            + " Bekapcsolt felajánlásnál a frissen másolt szöveg 90 másodpercig a sávból is"
-            + " beilleszthető; a billentyűzet nem menti el.");
-    section("Automatikus javítás");
-    toggle("Óvatos szójavítás", "autocorrect", true);
+        getString(R.string.suggestions_note));
+    section(getString(R.string.autocorrection));
+    toggle(getString(R.string.conservative_correction), "autocorrect", true);
     note(
-        "Szóköznél vagy írásjelnél javít; a sávban kiemelt szó kerül be. Az első törlés"
-            + " visszaállítja az eredeti szót. Jelszó-, e-mail- és webcímmezőben, illetve privát"
-            + " bevitelnél kikapcsol. Nem tanul és nem ment beírt szöveget.");
+        getString(R.string.correction_note));
   }
 
   private void typing() {
-    heading("Gépelési kényelem", "Amit a telefonos billentyűzetek alapból tudnak");
-    section("Szöveg");
-    toggle("Automatikus nagybetű", "auto_caps", true);
-    toggle("Dupla szóköz: pont", "double_space", true);
-    section("Billentyűk");
-    toggle("Billentyű-előnézet", "key_preview", true);
+    heading(getString(R.string.typing_comfort), getString(R.string.typing_intro));
+    section(getString(R.string.text));
+    toggle(getString(R.string.auto_caps), "auto_caps", true);
+    toggle(getString(R.string.double_space), "double_space", true);
+    section(getString(R.string.keys));
+    toggle(getString(R.string.key_preview), "key_preview", true);
     note(
-        "Mondat elején a Shift magától bekapcsol, ha a szövegmező ezt kéri. Két gyors szóköz pontot"
-            + " és szóközt ír. Hosszan nyomva tartott törlésnél néhány betű után egész szavak"
-            + " törlődnek. A 123-as oldalon a szóköz visszavált a betűkre.");
+        getString(R.string.typing_note));
   }
 
   private boolean microphone() {
@@ -418,36 +457,33 @@ public final class SettingsActivity extends Activity {
   }
 
   private void dictation() {
-    heading("Diktálás", "A mikrofongombbal magyarul vagy angolul diktálhatsz");
-    section("Beszédfelismerés");
-    toggle("Diktálás a mikrofongombbal", "dictation", true);
+    heading(getString(R.string.dictation), getString(R.string.dictation_intro));
+    section(getString(R.string.speech_recognition));
+    toggle(getString(R.string.microphone_dictation), "dictation", true);
     row(
-        "Mikrofon-engedély",
-        microphone() ? "Megadva" : "Megadás",
+        getString(R.string.microphone_permission),
+        microphone() ? getString(R.string.granted) : getString(R.string.grant),
         "",
         microphone() ? null : () -> requestPermissions(
             new String[] {android.Manifest.permission.RECORD_AUDIO}, 31),
         false);
-    row("Külső beszédfelismerés jóváhagyása",
-        settings.enabled(MicPermissionActivity.CONSENT_KEY, false) ? "Jóváhagyva" : "Nincs jóváhagyva",
-        "Koppints a jóváhagyás visszavonásához; a helyi gépelés tovább működik",
+    row(getString(R.string.speech_approval),
+        settings.enabled(MicPermissionActivity.CONSENT_KEY, false) ? getString(R.string.approved) : getString(R.string.unapproved),
+        getString(R.string.revoke_approval),
         () -> {
           settings.prefs.edit().remove(MicPermissionActivity.CONSENT_KEY).apply();
           build();
         }, false);
     row(
-        "Felismerő",
+        getString(R.string.recognizer),
         Dictation.available(this)
-            ? (Dictation.service(this) != null ? "Google" : "Rendszer alapértelmezett")
-            : "Nincs telepítve",
-        "Külső beszédfelismerő szolgáltatás",
+            ? (Dictation.service(this) != null ? "Google" : getString(R.string.system_default))
+            : getString(R.string.not_installed),
+        getString(R.string.external_service),
         null,
         false);
     note(
-        "Koppints a mikrofonra, és beszélj; a felismert szöveg rögtön a mezőbe kerül. Újabb"
-            + " koppintásra vagy rövid csend után leáll. A kiválasztott beszédfelismerő"
-            + " (gyakran Google) a hangot külső szerverre is elküldheti. A billentyűzet nem ment"
-            + " hangot és szöveget. Jelszómezőben a diktálás nem indul el.");
+        getString(R.string.dictation_note));
   }
 
   @Override
@@ -457,138 +493,133 @@ public final class SettingsActivity extends Activity {
   }
 
   private void timings() {
-    heading("Időzítések", "Állítsd be, hogyan reagáljon a billentyűzet a nyomva tartásra");
-    section("Nyomva tartás");
+    heading(getString(R.string.timings), getString(R.string.timing_intro));
+    section(getString(R.string.hold));
     timing(
-        "Ékezetválasztó",
+        getString(R.string.accent_picker),
         "long_press",
         360,
         150,
         1200,
         "ms",
-        "Ennyi ideig tartsd nyomva a betűt az ékezetekhez");
+        getString(R.string.accent_delay_note));
     timing(
-        "Törlés indulása",
+        getString(R.string.delete_delay),
         "delete_delay",
         380,
         150,
         1500,
         "ms",
-        "Ennyi idő után kezdődik az ismételt törlés");
+        getString(R.string.delete_delay_note));
     timing(
-        "Törlés ismétlése", "delete_repeat", 65, 30, 300, "ms", "Két ismételt törlés közötti idő");
+        getString(R.string.delete_repeat), "delete_repeat", 65, 30, 300, "ms", getString(R.string.delete_repeat_note));
     section("Shift");
     timing(
-        "Dupla Shift",
+        getString(R.string.double_shift),
         "shift_double",
         330,
         150,
         800,
         "ms",
-        "Két koppintás megengedett időköze a Caps Lockhoz");
-    note("A normál billentyűleütés azonnali");
+        getString(R.string.shift_delay_note));
+    note(getString(R.string.instant_keys));
   }
 
   private void appearance() {
-    heading("Megjelenés", "Méret és visszajelzés gépelés közben");
-    section("Billentyűzet");
-    timing("Magasság", "height", 100, 75, 115, "%", "Az alapmagassághoz viszonyítva");
+    heading(getString(R.string.appearance), getString(R.string.appearance_intro));
+    section(getString(R.string.keyboard));
+    timing(getString(R.string.height), "height", 100, 75, 115, "%", getString(R.string.height_note));
     choice(
-        "Téma",
+        getString(R.string.theme),
         "theme",
-        new String[] {"Világos", "Sötét", "Rendszer szerint"},
+        new String[] {getString(R.string.light), getString(R.string.dark), getString(R.string.follow_system)},
         new String[] {"light", "dark", "system"},
         "system",
         false);
-    section("Visszajelzés");
-    toggle("Rezgés", "haptic", true);
-    toggle("Billentyűhang", "sound", false);
-    note("A rezgés és a hang a telefon rendszerbeállításait is követi");
+    section(getString(R.string.feedback));
+    toggle(getString(R.string.vibration), "haptic", true);
+    toggle(getString(R.string.key_sound), "sound", false);
+    note(getString(R.string.feedback_note));
   }
 
   private void emoji() {
-    heading("Emoji", "A telefon saját emoji-megjelenítésével");
-    section("Panel");
-    toggle("Emoji gomb", "emoji", true);
-    toggle("Vissza a betűkhöz beszúrás után", "emoji_return", false);
+    heading("Emoji", getString(R.string.emoji_intro));
+    section(getString(R.string.emoji_panel));
+    toggle(getString(R.string.emoji_button), "emoji", true);
+    toggle(getString(R.string.emoji_return), "emoji_return", false);
     choice(
-        "Bőrszín",
+        getString(R.string.skin_tone),
         "skin",
-        new String[] {"Alap", "Világos", "Középvilágos", "Közepes", "Középsötét", "Sötét"},
+        new String[] {getString(R.string.skin_default), getString(R.string.light), getString(R.string.medium_light), getString(R.string.medium), getString(R.string.medium_dark), getString(R.string.dark)},
         new String[] {"", "🏻", "🏼", "🏽", "🏾", "🏿"},
         "",
         false);
-    section("Keresés");
+    section(getString(R.string.search));
     row(
-        "Emojipanel megnyitása",
+        getString(R.string.open_emoji),
         "",
-        "Kategóriák és legutóbbiak",
+        getString(R.string.categories_recent),
         () ->
             EmojiPanel.show(
                 this,
                 settings,
-                value -> Toast.makeText(this, "Kiválasztva: " + value, Toast.LENGTH_SHORT).show()),
+                value -> Toast.makeText(this, getString(R.string.selected_prefix) + value, Toast.LENGTH_SHORT).show()),
         false);
-    note(
-        EmojiCatalog.get(this).count()
-            + " Unicode "
-            + EmojiCatalog.get(this).version
-            + " emoji és változat magyar kereséssel. A rajzolatot a kiválasztott betűkészlet"
-            + " adja.");
-    section("Emoji megjelenítése");
+    note(getString(R.string.emoji_count, EmojiCatalog.get(this).count(), EmojiCatalog.get(this).version));
+    section(getString(R.string.emoji_display));
     row(
-        "Emoji-betűkészlet",
-        new java.io.File(getFilesDir(), "emoji-font.ttf").exists() ? "Saját" : "Rendszer",
-        "TTF vagy OTF fájl importálása",
+        getString(R.string.emoji_font),
+        new java.io.File(getFilesDir(), "emoji-font.ttf").exists() ? getString(R.string.custom) : getString(R.string.system),
+        getString(R.string.import_font_note),
         this::fontOptions,
         false);
   }
 
   private void pending() {
-    heading("Fejlesztés alatt", "Ezek a funkciók ebben a verzióban még nem használhatók");
-    section("Bevitel");
-    row("Tanulás", "", "Személyes szótár és következő szó ajánlása", null, false);
-    section("További funkciók");
-    row("Gesztusok", "", "Csúsztatásos gépelés és kurzormozgatás", null, false);
-    row("Kiegészítők", "", "Vágólap-előzmények, fekvő mód és további nyelvek", null, false);
+    heading(getString(R.string.development), getString(R.string.pending_intro));
+    section(getString(R.string.typing));
+    row(getString(R.string.learning), "", getString(R.string.learning_note), null, false);
+    section(getString(R.string.more_features));
+    row(getString(R.string.gestures), "", getString(R.string.gestures_note), null, false);
+    row(getString(R.string.extras), "", getString(R.string.extras_note), null, false);
   }
 
   private void maintenance() {
-    heading("Karbantartás", "A beállításokat és az emoji-előzményeket helyben tároljuk");
-    section("Előzmények");
+    heading(getString(R.string.maintenance), getString(R.string.maintenance_intro));
+    section(getString(R.string.history));
     row(
-        "Legutóbbi emojik törlése",
+        getString(R.string.clear_recent),
         "",
-        "A panel előzményei kiürülnek",
+        getString(R.string.clear_recent_note),
         () ->
             confirm(
-                "Emoji-előzmények törlése?",
-                "A legutóbb használt emojik listája kiürül.",
+                getString(R.string.clear_recent_title),
+                getString(R.string.clear_recent_message),
                 () -> {
                   settings.prefs.edit().remove("emoji_recent").apply();
-                  Toast.makeText(this, "Emoji-előzmények törölve", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(this, getString(R.string.recent_cleared), Toast.LENGTH_SHORT).show();
                 }),
         false);
-    section("Licencek");
-    row("Nyílt forráskódú licencek", "GPL-3.0", "A projekt és a felhasznált összetevők licencei",
+    section(getString(R.string.licenses));
+    row(getString(R.string.open_source_licenses), "GPL-3.0", getString(R.string.licenses_note),
         () -> startActivity(new Intent(this, LicensesActivity.class)), false);
-    section("Alapbeállítások");
+    section(getString(R.string.defaults));
     row(
-        "Minden beállítás visszaállítása",
+        getString(R.string.reset_all),
         "",
-        "Kiosztások, időzítések és előzmények",
+        getString(R.string.reset_all_note),
         () ->
             confirm(
-                "Minden beállítás visszaállítása?",
-                "Az egyéni beállítások és az emoji-előzmények törlődnek.",
+                getString(R.string.reset_all_title),
+                getString(R.string.reset_all_message),
                 () -> {
                   settings.prefs.edit().clear().apply();
+                  getSystemService(LocaleManager.class).setApplicationLocales(android.os.LocaleList.getEmptyLocaleList());
                   build();
                 }),
         true);
     note(
-        "iOS Keyboard for Android · 0.8.0-preview\nA gépelés helyben fut. A választható diktálás"
-            + " külső beszédfelismerőt használhat, amely a hangot feltöltheti.");
+        getString(R.string.version_privacy));
   }
 
   private boolean selected() {
@@ -599,49 +630,47 @@ public final class SettingsActivity extends Activity {
   }
 
   private void setup() {
-    heading("Billentyűzet bekapcsolása", "Egyszeri beállítás a telefon Android rendszerében");
-    note("Az Android minden külső billentyűzetnél figyelmeztethet a beírt szöveghez való hozzáférésre. "
-        + "A gépelés és a szójavítás helyben fut. A választható diktálás külső beszédfelismerőt használhat.");
-    row(getString(R.string.privacy_title), "", "Helyi működés, diktálás és Android-figyelmeztetések",
+    heading(getString(R.string.enable_keyboard), getString(R.string.setup_intro));
+    note(getString(R.string.setup_warning));
+    row(getString(R.string.privacy_title), "", getString(R.string.privacy_link_note),
         () -> startActivity(new Intent(this, PrivacyActivity.class)), false);
-    section("Beállítás");
+    section(getString(R.string.setup));
     row(
-        "1. Billentyűzet engedélyezése",
+        getString(R.string.setup_step_enable),
         "",
-        "Az Android beviteli beállításaiban",
+        getString(R.string.setup_step_note),
         () -> startActivity(new Intent(android.provider.Settings.ACTION_INPUT_METHOD_SETTINGS)),
         false);
     row(
-        "2. iOS Keyboard for Android kiválasztása",
-        selected() ? "Aktív" : "",
+        getString(R.string.setup_step_select),
+        selected() ? getString(R.string.active) : "",
         "",
         () ->
             ((android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
                 .showInputMethodPicker(),
         false);
-    section("Kipróbálás");
+    section(getString(R.string.try_it));
     row(
-        "Gépelés és szerkesztés",
+        getString(R.string.typing_editing),
         "",
-        "Valódi szöveg-, kereső- és jelszómező",
+        getString(R.string.typing_fields),
         () -> startActivity(new Intent(this, TypingActivity.class)),
         false);
     row(
-        "Vizuális próba",
+        getString(R.string.visual_preview),
         "",
-        "A billentyűzet előnézete",
+        getString(R.string.keyboard_preview),
         () -> startActivity(new Intent(this, MainActivity.class).putExtra("preview", "letters")),
         false);
     note(
-        "Diktáláshoz koppints a mikrofonra. A szójavítás a beállításokban kapcsolható. A Váltás gombbal"
-            + " bármikor másik billentyűzet választható.");
+        getString(R.string.setup_note));
   }
 
   private void fontOptions() {
     new AlertDialog.Builder(this)
-        .setTitle("Emoji megjelenítése")
+        .setTitle(getString(R.string.emoji_display))
         .setItems(
-            new String[] {"Betűkészlet importálása (TTF / OTF)", "Rendszer betűkészlet használata"},
+            new String[] {getString(R.string.import_font), getString(R.string.system_font)},
             (d, which) -> {
               if (which == 0) {
                 Intent pick = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -659,7 +688,7 @@ public final class SettingsActivity extends Activity {
                 build();
               }
             })
-        .setNegativeButton("Mégse", null)
+        .setNegativeButton(getString(R.string.cancel), null)
         .show();
   }
 
@@ -675,7 +704,7 @@ public final class SettingsActivity extends Activity {
       while ((count = in.read(buffer)) != -1) {
         total += count;
         if (total > 64 * 1024 * 1024)
-          throw new java.io.IOException("A fájl legfeljebb 64 MB lehet");
+          throw new java.io.IOException(getString(R.string.font_size_error));
         out.write(buffer, 0, count);
       }
       out.flush();
@@ -685,11 +714,11 @@ public final class SettingsActivity extends Activity {
           new java.io.File(getFilesDir(), "emoji-font.ttf").toPath(),
           java.nio.file.StandardCopyOption.REPLACE_EXISTING);
       settings.prefs.edit().putLong("emoji_font_changed", System.currentTimeMillis()).apply();
-      Toast.makeText(this, "Emoji-betűkészlet importálva", Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.font_imported), Toast.LENGTH_SHORT).show();
       build();
     } catch (Exception ex) {
       temp.delete();
-      Toast.makeText(this, "Nem sikerült betölteni a betűkészletet", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, getString(R.string.font_failed), Toast.LENGTH_LONG).show();
     }
   }
 
@@ -697,9 +726,9 @@ public final class SettingsActivity extends Activity {
     new AlertDialog.Builder(this)
         .setTitle(title)
         .setMessage(message)
-        .setNegativeButton("Mégse", null)
+        .setNegativeButton(getString(R.string.cancel), null)
         .setPositiveButton(
-            title.startsWith("Minden") ? "Visszaállítás" : "Törlés", (d, w) -> action.run())
+            title.equals(getString(R.string.reset_all_title)) ? getString(R.string.reset) : getString(R.string.delete), (d, w) -> action.run())
         .show();
   }
 
@@ -720,12 +749,13 @@ public final class SettingsActivity extends Activity {
                     names,
                     current,
                     (dialog, which) -> {
-                      settings.prefs.edit().putString(key, values[which]).apply();
+                      if (key.equals("language")) settings.setLanguage(values[which]);
+                      else settings.prefs.edit().putString(key, values[which]).apply();
                       dialog.dismiss();
                       scrollPosition = scroll.getScrollY();
                       build();
                     })
-                .setNegativeButton("Mégse", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show(),
         false);
   }
@@ -797,12 +827,12 @@ public final class SettingsActivity extends Activity {
     block.addView(footer);
     TextView range = text(min + "–" + max + " " + unit, 12, SECONDARY, false);
     footer.addView(range, new LinearLayout.LayoutParams(0, -2, 1));
-    TextView reset = text("Alapérték", 12, SECONDARY, false);
+    TextView reset = text(getString(R.string.default_value), 12, SECONDARY, false);
     reset.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
     reset.setMinHeight(dp(44));
     reset.setMinWidth(dp(80));
     reset.setBackground(press(CARD, 6));
-    reset.setContentDescription(title + " alapértéke: " + fallback + " " + unit);
+    reset.setContentDescription(getString(R.string.default_accessibility, title, fallback, unit));
     footer.addView(reset);
     reset.setOnClickListener(v -> number.setText(String.valueOf(fallback)));
     slider.setOnSeekBarChangeListener(
@@ -832,7 +862,7 @@ public final class SettingsActivity extends Activity {
               settings.prefs.edit().putInt(key, value).apply();
               slider.setProgress(value);
             } catch (NumberFormatException ex) {
-              number.setError("Adj meg egy számot");
+              number.setError(getString(R.string.enter_number));
             }
           }
         });

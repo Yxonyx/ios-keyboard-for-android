@@ -37,15 +37,15 @@ public final class EmojiPanel {
     final Consumer<String> insert;
     final Runnable erase, closed;
     final String[] names = {
-      "Legutóbbi",
-      "Arcok és emberek",
-      "Állatok és természet",
-      "Étel és ital",
-      "Tevékenységek",
-      "Utazás",
-      "Tárgyak",
-      "Jelek",
-      "Zászlók"
+      getContext().getString(R.string.emoji_recent),
+      getContext().getString(R.string.emoji_people),
+      getContext().getString(R.string.emoji_nature),
+      getContext().getString(R.string.emoji_food),
+      getContext().getString(R.string.emoji_activities),
+      getContext().getString(R.string.emoji_travel),
+      getContext().getString(R.string.emoji_objects),
+      getContext().getString(R.string.emoji_symbols),
+      getContext().getString(R.string.emoji_flags)
     };
     LinearLayout grid, categories;
     EditText search;
@@ -102,8 +102,8 @@ public final class EmojiPanel {
       search.setTextSize(16);
       search.setTextColor(ink);
       search.setHintTextColor(dark ? 0xffb0b3bb : 0xff737780);
-      search.setHint("Emojik keresése");
-      search.setContentDescription("Emojik keresése");
+      search.setHint(context.getString(R.string.search_emoji));
+      search.setContentDescription(context.getString(R.string.search_emoji));
       search.setBackgroundColor(Color.TRANSPARENT);
       search.setPadding(dp(8), 0, 0, 0);
       searchRow.addView(search, new LinearLayout.LayoutParams(0, -1, 1));
@@ -126,16 +126,16 @@ public final class EmojiPanel {
       abc.setGravity(Gravity.CENTER_VERTICAL);
       abc.setMinHeight(dp(44));
       abc.setMinWidth(dp(56));
-      abc.setContentDescription("Vissza a betűkhöz");
+      abc.setContentDescription(context.getString(R.string.back_letters));
       bottom.addView(abc);
       abc.setOnClickListener(v -> dismiss());
       View space = new View(context);
       bottom.addView(space, new LinearLayout.LayoutParams(0, 1, 1));
       CategoryIcon microphone = new CategoryIcon(context, "mic", ink);
-      microphone.setContentDescription("Diktálás, még nem elérhető");
+      microphone.setContentDescription(context.getString(R.string.preview_microphone));
       bottom.addView(microphone, new LinearLayout.LayoutParams(dp(44), dp(44)));
       microphone.setOnClickListener(
-          v -> Toast.makeText(context, "A diktálás még nem érhető el", Toast.LENGTH_SHORT).show());
+          v -> Toast.makeText(context, context.getString(R.string.preview_speech_unavailable), Toast.LENGTH_SHORT).show());
       setContentView(root);
       setOnDismissListener(d -> closed.run());
       Window w = getWindow();
@@ -181,7 +181,7 @@ public final class EmojiPanel {
       List<String[]> filtered = new ArrayList<>();
       if (category == 0 && query.isEmpty()) {
         for (String value : settings.text("emoji_recent", "").split("\\|"))
-          if (!value.isEmpty()) filtered.add(new String[] {value, "legutóbbi", ""});
+          if (!value.isEmpty()) filtered.add(new String[] {value, context.getString(R.string.emoji_recent), ""});
       } else
         for (String[] item : EmojiCatalog.get(context).legacy(settings))
           if ((!query.isEmpty() && normalize(item[0] + " " + item[1]).contains(query))
@@ -203,8 +203,6 @@ public final class EmojiPanel {
           if (index >= filtered.size()) continue;
           String[] item = filtered.get(index);
           String value = item[0];
-          if (item[2].equals("Kéz") && !value.equals("🤝"))
-            value = value.replace("️", "") + settings.text("skin", "");
           final String emoji = value;
           cell.setText(emoji);
           cell.setContentDescription(emoji + " " + item[1]);
@@ -242,7 +240,7 @@ public final class EmojiPanel {
       }
       if (filtered.isEmpty()) {
         TextView empty = new TextView(context);
-        empty.setText(query.isEmpty() ? "Még nincsenek legutóbbi emojik" : "Nincs találat");
+        empty.setText(query.isEmpty() ? context.getString(R.string.no_recent_emoji) : context.getString(R.string.no_results));
         empty.setTextColor(ink);
         empty.setGravity(Gravity.CENTER);
         grid.removeAllViews();
@@ -266,7 +264,7 @@ public final class EmojiPanel {
             });
       }
       CategoryIcon backspace = new CategoryIcon(context, "delete", ink);
-      backspace.setContentDescription("Törlés");
+      backspace.setContentDescription(context.getString(R.string.delete));
       categories.addView(backspace, new LinearLayout.LayoutParams(dp(40), dp(44)));
       backspace.setEnabled(erase != null);
       backspace.setAlpha(erase == null ? 0.45f : 1);

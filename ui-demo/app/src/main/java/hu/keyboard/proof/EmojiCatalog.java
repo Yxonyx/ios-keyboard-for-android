@@ -125,7 +125,7 @@ public final class EmojiCatalog {
   }
 
   public List<Entry> filter(KeyboardSettings settings, int group, String query) {
-    return filter(settings, group, query, "hu");
+    return filter(settings, group, query, settings.language());
   }
 
   public List<Entry> filter(KeyboardSettings settings, int group, String query, String language) {

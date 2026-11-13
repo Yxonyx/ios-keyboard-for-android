@@ -48,8 +48,8 @@ public final class MicPermissionActivity extends Activity {
     Toast.makeText(
             this,
             granted
-                ? "Mikrofon engedélyezve. Koppints újra a mikrofonra."
-                : "Mikrofon nélkül nem lehet diktálni.",
+                ? getString(R.string.microphone_granted)
+                : getString(R.string.microphone_denied),
             Toast.LENGTH_SHORT)
         .show();
     finish();

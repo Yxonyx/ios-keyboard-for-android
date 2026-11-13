@@ -27,7 +27,6 @@ history, not a branch intended to be merged back over private development.
    See the exact commits, configurations and counts in [validation evidence](VALIDATION.md);
    future source changes should retain these checks.
 
-Public source may be released as a development preview. Completing nine-language
-UI integration, full accessibility, broader correction accuracy measurement,
+Public source may be released as a development preview. Full accessibility, broader correction accuracy measurement,
 offline speech, production signing and an update channel remain separate product
 work. An unsigned release build is not a production APK.

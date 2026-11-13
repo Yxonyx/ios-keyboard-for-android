@@ -130,7 +130,7 @@ public final class KeyboardProofView extends View {
   public void setOutput(Output value) {
     output = value;
     imeMode = value != null;
-    setContentDescription("iOS Keyboard for Android billentyűzet");
+    setContentDescription(getContext().getString(R.string.keyboard_description));
   }
 
   public void startEditor(boolean capitals, boolean numbers, boolean sensitive, String action) {
@@ -390,7 +390,7 @@ public final class KeyboardProofView extends View {
                     ? 140
                     : getRootWindowInsets().getDisplayCutout().getSafeInsetTop() / scale + 80);
     text(c, "iOS Keyboard for Android", 56, top + 35, 65, Color.BLACK);
-    text(c, "Billentyűzet · interaktív UI-próba", 58, top + 102, 32, Color.rgb(112, 112, 120));
+    text(c, getContext().getString(R.string.interactive_preview), 58, top + 102, 32, Color.rgb(112, 112, 120));
     for (int i = 0; i < CONTROLS.length; i++) {
       RectF r = controlRect(i);
       boolean active =
@@ -409,10 +409,10 @@ public final class KeyboardProofView extends View {
       paint.setTextAlign(Paint.Align.CENTER);
       c.drawText(CONTROLS[i], r.centerX(), r.centerY() + 12, paint);
     }
-    text(c, "Próbáld ki a gombokat és a hosszú nyomást.", 58, 605, 31, Color.rgb(108, 108, 118));
+    text(c, getContext().getString(R.string.preview_instruction), 58, 605, 31, Color.rgb(108, 108, 118));
     text(
         c,
-        "⚙ Beállítások  ·  "
+        "⚙ " + getContext().getString(R.string.settings) + " · "
             + settings.language().toUpperCase(Locale.ROOT)
             + " · "
             + settings.layout(),
@@ -427,7 +427,7 @@ public final class KeyboardProofView extends View {
     paint.setStyle(Paint.Style.STROKE);
     paint.setStrokeWidth(1.5f);
     c.drawRoundRect(new RectF(36, composerY, 1143, composerY + 180), 48, 48, paint);
-    String value = input.length() == 0 ? "Írj ide…" : input.toString();
+    String value = input.length() == 0 ? getContext().getString(R.string.type_here) : input.toString();
     fill(input.length() == 0 ? Color.rgb(150, 150, 158) : Color.BLACK);
     paint.setTypeface(font);
     paint.setTextSize(43);
@@ -511,6 +511,7 @@ public final class KeyboardProofView extends View {
     }
     if (settings.enabled("emoji", true) && !privateEditor) drawEmoji(c);
     drawMicrophone(c);
+    if (imeMode) drawGlobe(c);
     if (pressed != null && popupKey == null) drawKeyPreview(c, pressed, dark);
   }
 
@@ -518,7 +519,7 @@ public final class KeyboardProofView extends View {
     if (privateEditor) return new String[3];
     if (dictation != null) return new String[] {null, dictation, null};
     if (suggestions.typed().isEmpty())
-      return new String[] {null, clipPreview == null ? null : "Beillesztés: " + clipPreview, null};
+      return new String[] {null, clipPreview == null ? null : getContext().getString(R.string.paste_preview, clipPreview), null};
     List<String> rest = new ArrayList<>(suggestions.others());
     String middle =
         suggestions.correction() != null
@@ -756,6 +757,17 @@ public final class KeyboardProofView extends View {
     c.restore();
   }
 
+  private void drawGlobe(Canvas c) {
+    c.save();
+    c.translate(285, 2433);
+    stroke(4.2f);
+    c.drawCircle(0, 0, 30, paint);
+    c.drawOval(new RectF(-13, -30, 13, 30), paint);
+    c.drawLine(-28, -10, 28, -10, paint);
+    c.drawLine(-28, 10, 28, 10, paint);
+    c.restore();
+  }
+
   private void drawMicrophone(Canvas c) {
     if (dictation != null) {
       fill(0xffff3b30);
@@ -908,7 +920,7 @@ public final class KeyboardProofView extends View {
 
   private void updateDescription() {
     setContentDescription(
-        imeMode ? "iOS Keyboard for Android billentyűzet" : "Magyar billentyűzet. Beírt szöveg: " + input);
+        imeMode ? getContext().getString(R.string.keyboard_description) : getContext().getString(R.string.preview_input_description, input));
   }
 
   private void commit(Key key) {
@@ -1013,10 +1025,13 @@ public final class KeyboardProofView extends View {
         return true;
       }
       if (y >= 2370) {
-        if (x > 970 && imeMode) output.dictate();
+        if (imeMode && x >= 220 && x <= 400) {
+          pressed = null;
+          output.next();
+        } else if (x > 970 && imeMode) output.dictate();
         else if (x > 970)
           Toast.makeText(
-                  getContext(), "A diktálás ebben a UI-próbában még nem aktív.", Toast.LENGTH_SHORT)
+                  getContext(), getContext().getString(R.string.preview_no_dictation), Toast.LENGTH_SHORT)
               .show();
         else if (x < 220 && settings.enabled("emoji", true) && !privateEditor) {
           if (imeMode) {

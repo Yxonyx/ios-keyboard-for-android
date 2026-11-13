@@ -79,3 +79,25 @@ These commands run from the repository root and inspect the built ELF files and
 ZIP alignment. For an x86_64-only APK, append `--abis x86_64`. See
 [the compatibility matrix](COMPATIBILITY.md) for the opt-in IME/editor tests and
 physical-device validation gaps.
+
+## Interface languages and typing languages
+
+Settings → Languages and layout exposes nine typing languages, each with its own
+supported layouts. The globe-key list must contain at least one language; removing
+the active language selects the first remaining one. Choosing another active
+language includes it in the cycle. Layout choices are remembered per language.
+
+The independent interface selector uses Android 13+ application locales, including
+“Follow system”. It changes settings, privacy/consent, editor actions and emoji
+panel labels; it does not change the chosen typing dictionary or speech locale.
+Android Settings also exposes the same nine application languages. Portuguese is
+Brazilian Portuguese. Emoji keywords follow the typing language.
+
+```sh
+python3 tools/verify_translations.py
+```
+
+This verifies complete resource coverage and format arguments in English,
+Hungarian, German, French, Spanish, Italian, Brazilian Portuguese, Polish and Dutch.
+Bundled third-party legal texts retain their original language. Native-speaker
+review is welcome; translation completeness is not an independent editorial review.
