@@ -158,9 +158,13 @@ public final class ImeCompatibilityTest {
             + ", active=" + context.getSystemService(InputMethodManager.class).isActive(field));
       });
       System.out.println("Editor connection timeout: " + state.get());
-      System.out.println(shell("dumpsys input_method"));
-      System.out.println(shell("dumpsys window windows"));
-      shell("screencap -p /sdcard/Download/ime-compat/editor-connect-failed.png");
+      try {
+        System.out.println(shell("dumpsys input_method"));
+        System.out.println(shell("dumpsys window windows"));
+        shell("screencap -p /sdcard/Download/ime-compat/editor-connect-failed.png");
+      } catch (IOException diagnosticFailure) {
+        System.out.println("Could not capture editor diagnostics: " + diagnosticFailure);
+      }
       fail("Editor did not connect to the input method: " + state.get());
     }
     // The window can be accessible while the IME/scroll animation is still moving it.
