@@ -2,6 +2,9 @@
 
 ## Unreleased — development preview
 
+- Wait for writable emulator storage before starting diagnostics, including on the
+  Android 15 16 KB image, whose boot flag can precede storage readiness.
+
 - Fix emoji-grid gestures so horizontal swipes page in both directions without
   selecting a crossed cell. Add an IME gesture regression test.
 - Show matching emoji while typing a search; page result batches and support the

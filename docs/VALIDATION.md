@@ -27,6 +27,13 @@ checklist. The font-specific 19 unsupported sequences remain documented under
 update channel was created. Hosted matrix results for earlier commits remain
 historical; the changed candidate must obtain its own hosted results.
 
+The first hosted run of this cleanup exposed a startup race on the API 35 16 KB
+image: `sys.boot_completed` was set before `/sdcard` was writable. Zero tests ran
+in that job. The emulator wrapper now waits up to 30 seconds for its diagnostics
+directory to become writable and fails explicitly if storage never becomes ready;
+it continues to refuse physical devices. The wrapper passed a local ready-storage
+run; the hosted matrix is rerun for the correction.
+
 ## Compatibility and privacy update, 2026-11-12
 
 The compatibility candidate passed 24 JVM unit tests, 11 app instrumentation tests
