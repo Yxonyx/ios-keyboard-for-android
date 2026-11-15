@@ -18,14 +18,19 @@ from row rules and icons are drawn in code.
 
 ## Try the preview
 
-Build from source using the [pinned toolchain](docs/BUILD.md). The debug APK is
-installed separately from other versions; enable it in Android keyboard settings,
-then choose it in the system keyboard picker. Hold the space bar to cycle through
-the typing languages selected in settings.
+1. Download the signed APK from [GitHub Releases](https://github.com/Yxonyx/ios-keyboard-for-android/releases).
+2. Install it, open the app, and enable it in Android keyboard settings.
+3. Choose it in the system keyboard picker. Hold the space bar to cycle through
+   the typing languages selected in settings.
 
-There is no stable signed APK or automatic update channel yet. Do not interpret an
-unsigned `assembleRelease` artifact as an installable maintainer release. Signing
-and verification requirements are recorded in the [release guide](docs/RELEASE.md).
+The release is a **development preview**. Verify the APK checksum and signing
+certificate using the [release guide](docs/RELEASE.md). Updates signed with the same
+release key retain settings. A debug-signed development installation has a different
+identity and cannot be updated in place by the release APK. Export or record your
+settings before choosing to replace a development build; do not uninstall merely
+to bypass an unexplained signature error. The `.debug` package installs separately.
+
+To build it yourself, follow the [pinned toolchain instructions](docs/BUILD.md).
 
 ## What works
 
@@ -61,6 +66,8 @@ Inter labels and code-drawn icons. Grok's interface is shown only as the host ap
 ## Known limitations
 
 - Android 13 or newer; physical validation across manufacturers is still incomplete.
+- The experimental Android 15 16 KB emulator currently fails app-test editor
+  connection preparation. Native tests passed there; full IME validation is pending.
 - Emoji metadata covers 3,972 records. The nine component-only records are not
   standalone keys; the other 3,963 sequences are reachable through categories and
   variant selection. Rendering still depends on the installed emoji font. A check

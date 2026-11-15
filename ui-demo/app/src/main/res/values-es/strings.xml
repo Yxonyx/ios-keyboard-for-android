@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Distribuciones, tiempos e historial"</string>
     <string name="reset_all_title">"¿Restablecer todos los ajustes?"</string>
     <string name="reset_all_message">"Se borrarán los ajustes personalizados y emojis recientes. El idioma de la interfaz volverá a seguir al sistema."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.0-preview\nLa escritura es local. El reconocimiento de voz externo opcional puede subir audio."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nLa escritura es local. El reconocimiento de voz externo opcional puede subir audio."</string>
     <string name="setup_intro">"Configuración inicial en Android"</string>
     <string name="setup_warning">"Android advierte que los teclados externos pueden recibir el texto escrito. La escritura y corrección son locales. El dictado opcional puede usar un servicio externo."</string>
     <string name="privacy_link_note">"Procesamiento local, dictado y avisos de Android"</string>

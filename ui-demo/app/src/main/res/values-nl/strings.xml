@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Indelingen, timing en geschiedenis"</string>
     <string name="reset_all_title">"Alle instellingen herstellen?"</string>
     <string name="reset_all_message">"Aangepaste instellingen en recente emoji worden verwijderd. De interfacetaal volgt weer het systeem."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.0-preview\nTypen is lokaal. Optionele externe spraakherkenning kan audio uploaden."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nTypen is lokaal. Optionele externe spraakherkenning kan audio uploaden."</string>
     <string name="setup_intro">"Eenmalig instellen in Android"</string>
     <string name="setup_warning">"Android waarschuwt dat toetsenborden van derden getypte tekst kunnen ontvangen. Typen en correctie blijven lokaal. Optioneel dicteren kan een externe spraakherkenner gebruiken."</string>
     <string name="privacy_link_note">"Lokale verwerking, dicteren en Android-waarschuwingen"</string>

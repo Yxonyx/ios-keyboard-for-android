@@ -2,11 +2,22 @@
 
 ## Current distribution status
 
-This repository publishes source for a development preview. It does not currently
-provide a stable signed APK, a published production signing-certificate fingerprint,
-or a verified reproducible signed release. The Gradle release task produces an
-unsigned APK. Debug builds use a development key and must not be advertised as
-production releases.
+Signed development-preview APKs are published on
+[GitHub Releases](https://github.com/Yxonyx/ios-keyboard-for-android/releases).
+They are prereleases, not stable releases. Source is identified by the release tag;
+APK SHA-256 checksums accompany each artifact. Bit-for-bit reproducible signed APKs
+are not currently claimed.
+
+The dedicated release signing certificate SHA-256 is:
+
+```text
+98:EE:C0:60:2F:2B:80:A7:41:99:BC:AA:C3:A7:BF:33:FB:4B:A2:1A:23:62:B5:28:18:D6:5F:0B:9C:A4:D8:ED
+```
+
+This public fingerprint is safe to share. The private keystore and its credentials
+are not part of the repository, source archive or release attachments. Existing
+debug-signed builds have a different signing identity; they are not in-place update
+targets for this release. Release-to-release updates must preserve this identity.
 
 ## Candidate checks
 
@@ -48,7 +59,7 @@ shasum -a 256 keyboard.apk
 
 A successful signature check only establishes that the APK has a valid signature.
 Compare its certificate fingerprint with one published through a trusted maintainer
-channel. No production fingerprint is published yet for this project.
+channel. The expected preview-release fingerprint is published above.
 
 Reproducible APK equality must be tested separately. Do not claim bit-for-bit
 reproducibility merely because generated dictionaries and layout assets reproduce.

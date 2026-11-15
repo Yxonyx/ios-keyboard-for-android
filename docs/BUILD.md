@@ -45,8 +45,10 @@ cd ui-demo
 
 The debug APK is `app/build/outputs/apk/debug/app-debug.apk`, with application ID
 `hu.keyboard.proof.debug`. It is debug-signed. Release output is unsigned and has
-application ID `hu.keyboard.proof`; there is no public production signing key or
-update channel. Keep any future signing keys outside the repository.
+application ID `hu.keyboard.proof`. Maintainer preview APKs use a dedicated signing
+key, whose public certificate fingerprint is in [RELEASE.md](RELEASE.md). Private
+signing material stays outside the repository. Without an explicit signing
+configuration, release builds remain unsigned.
 
 For local maintenance only, `-PupdateOriginal` removes the debug application-ID
 suffix. This still produces a debug-signed build, not a production release. Use it
@@ -108,3 +110,18 @@ This verifies complete resource coverage and format arguments in English,
 Hungarian, German, French, Spanish, Italian, Brazilian Portuguese, Polish and Dutch.
 Bundled third-party legal texts retain their original language. Native-speaker
 review is welcome; translation completeness is not an independent editorial review.
+
+## Signed maintainer build
+
+Create a private properties file **outside this checkout**, readable only by its
+owner, containing `storeFile` (absolute keystore path), `storePassword`, `keyAlias`
+and `keyPassword`. Do not commit it or upload it as a build artifact. Then run:
+
+```sh
+cd ui-demo
+./gradlew --no-daemon -PsigningPropertiesFile=/absolute/private/release.properties :app:assembleRelease
+```
+
+The signed output is `app/build/outputs/apk/release/app-release.apk`. Without that
+property, the output remains `app-release-unsigned.apk`. Keep the same release key
+for updates, and back it up securely. A debug key is not the release key.

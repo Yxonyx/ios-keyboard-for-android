@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Dispositions, délais et historique"</string>
     <string name="reset_all_title">"Réinitialiser tous les réglages ?"</string>
     <string name="reset_all_message">"Les réglages personnalisés et emojis récents seront supprimés. La langue de l’interface suivra à nouveau le système."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.0-preview\nLa saisie est locale. La reconnaissance vocale externe facultative peut envoyer l’audio."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nLa saisie est locale. La reconnaissance vocale externe facultative peut envoyer l’audio."</string>
     <string name="setup_intro">"Configuration initiale dans Android"</string>
     <string name="setup_warning">"Android avertit qu’un clavier tiers peut recevoir le texte saisi. La saisie et la correction restent locales. La dictée facultative peut utiliser un service externe."</string>
     <string name="privacy_link_note">"Traitement local, dictée et avertissements Android"</string>

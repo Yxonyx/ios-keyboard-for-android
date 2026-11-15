@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Layouts, Zeitverhalten und Verlauf"</string>
     <string name="reset_all_title">"Alle Einstellungen zurücksetzen?"</string>
     <string name="reset_all_message">"Eigene Einstellungen und zuletzt verwendete Emoji werden gelöscht. Die Oberflächensprache folgt wieder dem System."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.0-preview\nTippen bleibt lokal. Optionale externe Spracherkennung kann Audio hochladen."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nTippen bleibt lokal. Optionale externe Spracherkennung kann Audio hochladen."</string>
     <string name="setup_intro">"Einmalige Einrichtung in Android"</string>
     <string name="setup_warning">"Android warnt, dass Tastaturen von Drittanbietern getippten Text empfangen können. Tippen und Korrektur bleiben lokal. Optionales Diktieren kann einen externen Spracherkenner verwenden."</string>
     <string name="privacy_link_note">"Lokale Verarbeitung, Diktieren und Android-Warnungen"</string>

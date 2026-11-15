@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased — development preview
+## 0.8.1-preview — 2026-11-16
 
+- Publish a signed preview APK with checksum and certificate verification instructions.
 - Wait for writable emulator storage before starting diagnostics, including on the
   Android 15 16 KB image, whose boot flag can precede storage readiness.
 
@@ -18,4 +19,4 @@
 - Document font-dependent emoji limitations and the remaining release-signing,
   update-channel and physical-device validation work.
 
-This entry describes the current source candidate, not a published stable APK.
+This is a signed development preview, with the limitations listed in README.md.

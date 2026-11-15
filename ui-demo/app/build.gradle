@@ -1,4 +1,16 @@
 plugins { id 'com.android.application' }
+
+// The optional signing configuration must live outside the repository.
+def signingPath = providers.gradleProperty('signingPropertiesFile').orNull
+def releaseProperties = new Properties()
+if (signingPath != null) {
+    file(signingPath).withInputStream { releaseProperties.load(it) }
+    ['storeFile', 'storePassword', 'keyAlias', 'keyPassword'].each { name ->
+        if (!releaseProperties.getProperty(name)) {
+            throw new GradleException("Missing release signing property: " + name)
+        }
+    }
+}
 android {
     namespace 'hu.keyboard.proof'
     compileSdk 36
@@ -9,10 +21,23 @@ android {
         minSdk 33
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         targetSdk 36
-        versionCode 8
-        versionName '0.8.0-preview'
+        versionCode 9
+        versionName '0.8.1-preview'
+    }
+    signingConfigs {
+        if (signingPath != null) {
+            publication {
+                storeFile file(releaseProperties.getProperty('storeFile'))
+                storePassword releaseProperties.getProperty('storePassword')
+                keyAlias releaseProperties.getProperty('keyAlias')
+                keyPassword releaseProperties.getProperty('keyPassword')
+            }
+        }
     }
     buildTypes {
+        release {
+            if (signingPath != null) signingConfig signingConfigs.publication
+        }
         debug {
             // Opt in only to update an existing installation signed with the same debug key.
             if (!providers.gradleProperty('updateOriginal').isPresent()) {
