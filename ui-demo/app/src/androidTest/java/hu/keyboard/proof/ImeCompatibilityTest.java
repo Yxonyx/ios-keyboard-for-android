@@ -150,7 +150,19 @@ public final class ImeCompatibilityTest {
       if (served.get()) break;
       SystemClock.sleep(30);
     } while (SystemClock.uptimeMillis() < serveDeadline);
-    assertTrue("Editor did not connect to the input method", served.get());
+    if (!served.get()) {
+      AtomicReference<String> state = new AtomicReference<>();
+      instrumentation.runOnMainSync(() -> {
+        EditText field = result.get();
+        state.set("windowFocus=" + field.hasWindowFocus() + ", editorFocus=" + field.hasFocus()
+            + ", active=" + context.getSystemService(InputMethodManager.class).isActive(field));
+      });
+      System.out.println("Editor connection timeout: " + state.get());
+      System.out.println(shell("dumpsys input_method"));
+      System.out.println(shell("dumpsys window windows"));
+      shell("screencap -p /sdcard/Download/ime-compat/editor-connect-failed.png");
+      fail("Editor did not connect to the input method: " + state.get());
+    }
     // The window can be accessible while the IME/scroll animation is still moving it.
     // Send touches only after the actual on-screen bounds have remained stable.
     Rect previous = keyboardBounds();
