@@ -135,7 +135,7 @@
     <string name="typing_fields">"Campi reali di testo, ricerca e password"</string>
     <string name="visual_preview">"Anteprima visiva"</string>
     <string name="keyboard_preview">"Anteprima tastiera"</string>
-    <string name="setup_note">"Tocca il microfono per dettare. La correzione si modifica nelle impostazioni. Il globo scorre le lingue abilitate; con una sola lingua cambia tastiera."</string>
+    <string name="setup_note">"Tocca il microfono per dettare. La correzione si modifica nelle impostazioni. Tieni premuta la barra spaziatrice per cambiare lingua."</string>
     <string name="import_font">"Importa carattere (TTF / OTF)"</string>
     <string name="system_font">"Usa carattere di sistema"</string>
     <string name="cancel">"Annulla"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Lingua"</string>
     <string name="interface_language">"Lingua dell’interfaccia"</string>
     <string name="follow_system">"Segui il sistema"</string>
-    <string name="enabled_languages">"Lingue del tasto globo"</string>
-    <string name="globe_note">"Il globo scorre queste lingue nell’ordine mostrato. Selezionane almeno una."</string>
+    <string name="enabled_languages">"Lingue selezionabili con la barra spaziatrice"</string>
+    <string name="language_cycle_note">"Tieni premuta la barra spaziatrice per scorrere le lingue in questo ordine. Selezionane almeno una."</string>
     <string name="select_one_language">"Seleziona almeno una lingua"</string>
     <string name="save">"Salva"</string>
     <string name="skin_default">"Predefinita"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Ricerca emoji: %1$s · Fine per cercare"</string>
     <string name="paste_preview">"Incolla: %1$s"</string>
     <string name="preview_input_description">"Tastiera. Testo inserito: %1$s"</string>
-    <string name="settings_preview">"Impostazioni · pressione %1$s ms · microfono: dettatura · globo: cambia"</string>
+    <string name="settings_preview">"Impostazioni · pressione %1$s ms · microfono: dettatura · spazio premuto: cambia lingua"</string>
     <string name="speech_consent_title">"Riconoscimento vocale esterno"</string>
     <string name="speech_consent_message">"Il servizio vocale installato, solitamente Google, può registrare e caricare l’audio del microfono. La tastiera non ha accesso a Internet, ma il servizio può inviare audio.\n\nDigitazione e correzione funzionano localmente senza questa funzione. Puoi revocare il consenso nelle impostazioni di dettatura. Consentire il riconoscimento esterno?"</string>
     <string name="speech_consent_allow">"Consenti riconoscimento esterno"</string>

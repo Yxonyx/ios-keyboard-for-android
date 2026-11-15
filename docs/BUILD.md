@@ -26,6 +26,7 @@ Gradle cache. Offline typing is separate from build-time dependency downloads.
 ```sh
 python3 tools/verify_engine_sources.py
 python3 tools/verify_public_release.py
+python3 tools/verify_translations.py
 python3 tools/build_layout.py
 python3 tools/build_emoji_catalog.py
 git diff --exit-code -- ui-demo/app/src/main/assets/geometry.json ui-demo/app/src/main/assets/emoji/catalog.json
@@ -46,6 +47,12 @@ The debug APK is `app/build/outputs/apk/debug/app-debug.apk`, with application I
 `hu.keyboard.proof.debug`. It is debug-signed. Release output is unsigned and has
 application ID `hu.keyboard.proof`; there is no public production signing key or
 update channel. Keep any future signing keys outside the repository.
+
+For local maintenance only, `-PupdateOriginal` removes the debug application-ID
+suffix. This still produces a debug-signed build, not a production release. Use it
+only when the existing installation has the same signing certificate; never
+uninstall a user’s keyboard to work around a signature mismatch. Separate package
+IDs have separate preferences.
 
 ## Device verification
 
@@ -83,7 +90,7 @@ physical-device validation gaps.
 ## Interface languages and typing languages
 
 Settings → Languages and layout exposes nine typing languages, each with its own
-supported layouts. The globe-key list must contain at least one language; removing
+supported layouts. The language-cycle list must contain at least one language; removing
 the active language selects the first remaining one. Choosing another active
 language includes it in the cycle. Layout choices are remembered per language.
 

@@ -145,7 +145,7 @@
     <string name="typing_fields">"Real text, search and password fields"</string>
     <string name="visual_preview">"Visual preview"</string>
     <string name="keyboard_preview">"Keyboard preview"</string>
-    <string name="setup_note">"Tap the microphone for dictation. Correction can be changed in settings. The globe cycles through enabled languages; with one language it switches to another keyboard."</string>
+    <string name="setup_note">"Tap the microphone for dictation. Change correction in settings. Hold the space bar to switch languages."</string>
     <string name="import_font">"Import font (TTF / OTF)"</string>
     <string name="system_font">"Use system font"</string>
     <string name="cancel">"Cancel"</string>
@@ -202,8 +202,8 @@
     <string name="language">"Language"</string>
     <string name="interface_language">"Interface language"</string>
     <string name="follow_system">"Follow system"</string>
-    <string name="enabled_languages">"Languages for globe key"</string>
-    <string name="globe_note">"The globe cycles through these languages in the order shown. Keep at least one selected."</string>
+    <string name="enabled_languages">"Languages for space bar switching"</string>
+    <string name="language_cycle_note">"Hold the space bar to cycle through selected languages in this order. Keep at least one selected."</string>
     <string name="select_one_language">"Select at least one language"</string>
     <string name="save">"Save"</string>
     <string name="skin_default">"Default"</string>
@@ -220,7 +220,7 @@
     <string name="emoji_query">"Emoji search: %1$s · Done to search"</string>
     <string name="paste_preview">"Paste: %1$s"</string>
     <string name="preview_input_description">"Keyboard. Entered text: %1$s"</string>
-    <string name="settings_preview">"Settings · %1$s ms long press · microphone: dictation · globe: switch"</string>
+    <string name="settings_preview">"Settings · %1$s ms long press · microphone: dictation · hold space: switch"</string>
     <string name="speech_consent_title">"External speech recognition"</string>
     <string name="speech_consent_message">"The installed speech recognizer, usually Google, may record and upload microphone audio. The keyboard has no Internet permission, but the recognizer can send audio.\n\nTyping and correction work locally without this feature. You can revoke approval in dictation settings. Allow external speech recognition?"</string>
     <string name="speech_consent_allow">"Allow external speech"</string>

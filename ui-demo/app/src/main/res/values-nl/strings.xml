@@ -135,7 +135,7 @@
     <string name="typing_fields">"Echte tekst-, zoek- en wachtwoordvelden"</string>
     <string name="visual_preview">"Visueel voorbeeld"</string>
     <string name="keyboard_preview">"Toetsenbordvoorbeeld"</string>
-    <string name="setup_note">"Tik op de microfoon om te dicteren. Correctie is instelbaar. De wereldbol wisselt tussen ingeschakelde talen; bij één taal wisselt hij van toetsenbord."</string>
+    <string name="setup_note">"Tik op de microfoon om te dicteren. Correctie is instelbaar. Houd de spatiebalk ingedrukt om van taal te wisselen."</string>
     <string name="import_font">"Lettertype importeren (TTF / OTF)"</string>
     <string name="system_font">"Systeemlettertype gebruiken"</string>
     <string name="cancel">"Annuleren"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Taal"</string>
     <string name="interface_language">"Interfacetaal"</string>
     <string name="follow_system">"Systeem volgen"</string>
-    <string name="enabled_languages">"Talen voor de wereldboltoets"</string>
-    <string name="globe_note">"De wereldbol wisselt deze talen in de getoonde volgorde. Selecteer er minstens één."</string>
+    <string name="enabled_languages">"Talen om met de spatiebalk te wisselen"</string>
+    <string name="language_cycle_note">"Houd de spatiebalk ingedrukt om deze talen in de getoonde volgorde te wisselen. Selecteer er minstens één."</string>
     <string name="select_one_language">"Selecteer minstens één taal"</string>
     <string name="save">"Opslaan"</string>
     <string name="skin_default">"Standaard"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Emoji zoeken: %1$s · Gereed om te zoeken"</string>
     <string name="paste_preview">"Plakken: %1$s"</string>
     <string name="preview_input_description">"Toetsenbord. Ingevoerde tekst: %1$s"</string>
-    <string name="settings_preview">"Instellingen · lang indrukken %1$s ms · microfoon: dicteren · wereldbol: wisselen"</string>
+    <string name="settings_preview">"Instellingen · lang indrukken %1$s ms · microfoon: dicteren · spatie vasthouden: taal wisselen"</string>
     <string name="speech_consent_title">"Externe spraakherkenning"</string>
     <string name="speech_consent_message">"De geïnstalleerde spraakherkenner, meestal Google, kan microfoonaudio opnemen en uploaden. Het toetsenbord heeft geen internetmachtiging, maar de herkenner kan audio verzenden.\n\nTypen en correctie werken lokaal zonder deze functie. Je kunt de toestemming intrekken in de dicteerinstellingen. Externe spraakherkenning toestaan?"</string>
     <string name="speech_consent_allow">"Externe spraak toestaan"</string>

@@ -135,7 +135,7 @@
     <string name="typing_fields">"Rzeczywiste pola tekstu, wyszukiwania i hasła"</string>
     <string name="visual_preview">"Podgląd wizualny"</string>
     <string name="keyboard_preview">"Podgląd klawiatury"</string>
-    <string name="setup_note">"Dotknij mikrofonu, aby dyktować. Korektę można zmienić w ustawieniach. Glob przełącza włączone języki; przy jednym języku zmienia klawiaturę."</string>
+    <string name="setup_note">"Dotknij mikrofonu, aby dyktować. Korektę można zmienić w ustawieniach. Przytrzymaj spację, aby zmienić język."</string>
     <string name="import_font">"Importuj czcionkę (TTF / OTF)"</string>
     <string name="system_font">"Użyj czcionki systemowej"</string>
     <string name="cancel">"Anuluj"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Język"</string>
     <string name="interface_language">"Język interfejsu"</string>
     <string name="follow_system">"Zgodnie z systemem"</string>
-    <string name="enabled_languages">"Języki klawisza globu"</string>
-    <string name="globe_note">"Glob przełącza te języki w podanej kolejności. Zaznacz co najmniej jeden."</string>
+    <string name="enabled_languages">"Języki przełączane spacją"</string>
+    <string name="language_cycle_note">"Przytrzymaj spację, aby przełączać języki w podanej kolejności. Zaznacz co najmniej jeden."</string>
     <string name="select_one_language">"Wybierz co najmniej jeden język"</string>
     <string name="save">"Zapisz"</string>
     <string name="skin_default">"Domyślny"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Szukaj emoji: %1$s · Gotowe, aby szukać"</string>
     <string name="paste_preview">"Wklej: %1$s"</string>
     <string name="preview_input_description">"Klawiatura. Wpisany tekst: %1$s"</string>
-    <string name="settings_preview">"Ustawienia · przytrzymanie %1$s ms · mikrofon: dyktowanie · glob: przełączanie"</string>
+    <string name="settings_preview">"Ustawienia · przytrzymanie %1$s ms · mikrofon: dyktowanie · przytrzymaj spację: zmień język"</string>
     <string name="speech_consent_title">"Zewnętrzne rozpoznawanie mowy"</string>
     <string name="speech_consent_message">"Zainstalowana usługa rozpoznawania, zwykle Google, może nagrywać i wysyłać dźwięk z mikrofonu. Klawiatura nie ma uprawnienia Internetu, ale usługa może wysyłać dźwięk.\n\nPisanie i korekta działają lokalnie bez tej funkcji. Zgodę można cofnąć w ustawieniach dyktowania. Zezwolić na zewnętrzne rozpoznawanie mowy?"</string>
     <string name="speech_consent_allow">"Zezwól na zewnętrzną mowę"</string>

@@ -228,6 +228,21 @@ public final class ImeCompatibilityTest {
     instrumentation.waitForIdleSync();
   }
 
+  private void holdSpace() {
+    Rect rect = keyboardBounds();
+    float x = rect.left + 589f * rect.width() / 1179f;
+    float y = rect.top + (2280f - 1650f) * rect.height() / 906f;
+    long down = SystemClock.uptimeMillis();
+    for (int action : new int[] {MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP}) {
+      MotionEvent event = MotionEvent.obtain(down, SystemClock.uptimeMillis(), action, x, y, 0);
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      assertTrue("Touch injection rejected", instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+      if (action == MotionEvent.ACTION_DOWN) SystemClock.sleep(800);
+    }
+    instrumentation.waitForIdleSync();
+  }
+
   private void screenshot(String name) throws IOException {
     shell("mkdir -p /sdcard/Download/ime-compat");
     shell("screencap -p /sdcard/Download/ime-compat/" + name + ".png");
@@ -264,7 +279,7 @@ public final class ImeCompatibilityTest {
   }
 
   @Test
-  public void globeKeyCyclesAllNineLanguagesAndPreservesPerLanguageLayouts() {
+  public void longPressSpaceCyclesAllNineLanguagesAndPreservesPerLanguageLayouts() {
     EditText field = focus(R.id.test_message);
     KeyboardSettings settings = new KeyboardSettings(context);
     instrumentation.runOnMainSync(() -> {
@@ -277,7 +292,7 @@ public final class ImeCompatibilityTest {
     instrumentation.waitForIdleSync();
     for (int i = 1; i <= Languages.ALL.size(); i++) {
       focus(R.id.test_message);
-      tap(285, 2433);
+      holdSpace();
       String expected = Languages.ALL.get(i % Languages.ALL.size()).code();
       long deadline = SystemClock.uptimeMillis() + 2000;
       while (!expected.equals(settings.language()) && SystemClock.uptimeMillis() < deadline)
@@ -379,6 +394,61 @@ public final class ImeCompatibilityTest {
     AccessibilityNodeInfo emoji = imeNode("😀");
     assertTrue(emoji.performAction(AccessibilityNodeInfo.ACTION_CLICK));
     expect(message, "😀");
+  }
+
+  @Test
+  public void emojiSearchShowsMatchingResultsAndInsertsSelection() throws Exception {
+    EditText message = focus(R.id.test_message);
+    tap(127.5f, 2436);
+    assertTrue(imeNode(context.getString(R.string.search_emoji))
+        .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    for (char ch : "HEART".toCharArray()) key(String.valueOf(ch), false);
+    AccessibilityNodeInfo heart = imeNode("❤️");
+    assertTrue(heart.performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    expect(message, "❤️");
+  }
+
+  @Test
+  public void emojiGridSwipesBothWaysWithoutInserting() throws Exception {
+    EditText message = focus(R.id.test_message);
+    tap(127.5f, 2436);
+    assertTrue(imeNode(context.getString(R.string.emoji_people))
+        .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    int pages = (EmojiCatalog.get(context).filter(new KeyboardSettings(context), 1, "").size() + 27) / 28;
+    assertNotNull(imeNode("1 / " + pages));
+    Rect first = new Rect();
+    imeNode("😀").getBoundsInScreen(first);
+    swipeEmoji(first.centerY(), true);
+    assertNotNull(imeNode("2 / " + pages));
+    swipeEmoji(first.centerY(), false);
+    assertNotNull(imeNode("1 / " + pages));
+    expect(message, "");
+  }
+
+  private void swipeEmoji(float y, boolean left) {
+    float width = context.getResources().getDisplayMetrics().widthPixels;
+    long down = SystemClock.uptimeMillis();
+    for (int i = 0; i <= 12; i++) {
+      float progress = i / 12f;
+      float x = width * (left ? .8f - .6f * progress : .2f + .6f * progress);
+      int action = i == 0 ? MotionEvent.ACTION_DOWN : i == 12 ? MotionEvent.ACTION_UP : MotionEvent.ACTION_MOVE;
+      MotionEvent event = MotionEvent.obtain(down, SystemClock.uptimeMillis(), action, x, y, 0);
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      assertTrue(instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+      SystemClock.sleep(15);
+    }
+    instrumentation.waitForIdleSync();
+  }
+
+  @Test
+  public void heartCategoryStartsWithHearts() throws Exception {
+    focus(R.id.test_message);
+    tap(127.5f, 2436);
+    assertTrue(imeNode(context.getString(R.string.emoji_symbols))
+        .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    assertNotNull(imeNode("💘"));
+    assertNotNull(imeNode("❤️"));
   }
 
   @Test

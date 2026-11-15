@@ -19,7 +19,7 @@ public final class EmbeddedEmojiView extends LinearLayout {
   private TextView findView;
   private final LinearLayout grid, categories;
   private int category, page;
-  private float downX;
+  private int pageCount = 1;
   private int ink;
   private EmojiCatalog.Entry choosing;
   private final android.graphics.Typeface emojiFont;
@@ -69,7 +69,39 @@ public final class EmbeddedEmojiView extends LinearLayout {
     findView.setContentDescription(getContext().getString(R.string.search_emoji));
     findView.setOnClickListener(v -> search.run());
     addView(findView, new LayoutParams(-1, dp(40)));
-    grid = new LinearLayout(context);
+    grid = new LinearLayout(context) {
+      private float startX, startY;
+      private boolean swiping;
+
+      @Override public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+          startX = event.getX();
+          startY = event.getY();
+          swiping = false;
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+          float dx = event.getX() - startX, dy = event.getY() - startY;
+          if (Math.abs(dx) > dp(16) && Math.abs(dx) > Math.abs(dy)) {
+            swiping = true;
+            return true;
+          }
+        }
+        return false;
+      }
+
+      @Override public boolean onTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_UP && swiping) {
+          float dx = event.getX() - startX;
+          if (Math.abs(dx) > dp(32)) {
+            page = Math.max(0, Math.min(pageCount - 1, page + (dx < 0 ? 1 : -1)));
+            render();
+          }
+          swiping = false;
+        } else if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+          swiping = false;
+        }
+        return true;
+      }
+    };
     grid.setOrientation(VERTICAL);
     LayoutParams gl = new LayoutParams(-1, 0, 1);
     gl.setMargins(0, dp(8), 0, 0);
@@ -129,6 +161,7 @@ public final class EmbeddedEmojiView extends LinearLayout {
     List<EmojiCatalog.Entry> items =
         choosing == null ? catalog.filter(settings, category, query, settings.language()) : catalog.variants(choosing);
     int pages = Math.max(1, (items.size() + 27) / 28);
+    pageCount = pages;
     page = Math.min(page, pages - 1);
     TextView position = findViewWithTag("page");
     if (position != null)
@@ -142,17 +175,6 @@ public final class EmbeddedEmojiView extends LinearLayout {
         cell.setTypeface(emojiFont);
         cell.setGravity(Gravity.CENTER);
         row.addView(cell, new LayoutParams(0, -1, 1));
-        cell.setOnTouchListener(
-            (v, event) -> {
-              if (event.getActionMasked() == MotionEvent.ACTION_DOWN) downX = event.getX();
-              if (event.getActionMasked() == MotionEvent.ACTION_UP
-                  && Math.abs(event.getX() - downX) > dp(32)) {
-                page = Math.max(0, Math.min(pages - 1, page + (event.getX() < downX ? 1 : -1)));
-                render();
-                return true;
-              }
-              return false;
-            });
         cell.setClickable(true);
         if (index >= items.size()) continue;
         EmojiCatalog.Entry item = items.get(index);

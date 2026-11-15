@@ -135,7 +135,7 @@
     <string name="typing_fields">"Echte Text-, Such- und Passwortfelder"</string>
     <string name="visual_preview">"Visuelle Vorschau"</string>
     <string name="keyboard_preview">"Tastaturvorschau"</string>
-    <string name="setup_note">"Zum Diktieren auf das Mikrofon tippen. Die Korrektur lässt sich in den Einstellungen ändern. Die Weltkugel wechselt aktivierte Sprachen; bei einer Sprache wechselt sie die Tastatur."</string>
+    <string name="setup_note">"Zum Diktieren auf das Mikrofon tippen. Die Korrektur lässt sich in den Einstellungen ändern. Zum Sprachwechsel die Leertaste gedrückt halten."</string>
     <string name="import_font">"Schrift importieren (TTF / OTF)"</string>
     <string name="system_font">"Systemschrift verwenden"</string>
     <string name="cancel">"Abbrechen"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Sprache"</string>
     <string name="interface_language">"Oberflächensprache"</string>
     <string name="follow_system">"System folgen"</string>
-    <string name="enabled_languages">"Sprachen für die Weltkugeltaste"</string>
-    <string name="globe_note">"Die Weltkugel wechselt diese Sprachen in der angezeigten Reihenfolge. Mindestens eine auswählen."</string>
+    <string name="enabled_languages">"Sprachen zum Wechseln mit der Leertaste"</string>
+    <string name="language_cycle_note">"Die Leertaste gedrückt halten, um die ausgewählten Sprachen in dieser Reihenfolge zu wechseln. Mindestens eine auswählen."</string>
     <string name="select_one_language">"Mindestens eine Sprache auswählen"</string>
     <string name="save">"Speichern"</string>
     <string name="skin_default">"Standard"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Emoji-Suche: %1$s · Fertig zum Suchen"</string>
     <string name="paste_preview">"Einfügen: %1$s"</string>
     <string name="preview_input_description">"Tastatur. Eingegebener Text: %1$s"</string>
-    <string name="settings_preview">"Einstellungen · %1$s ms lang drücken · Mikrofon: Diktieren · Weltkugel: Wechseln"</string>
+    <string name="settings_preview">"Einstellungen · %1$s ms lang drücken · Mikrofon: Diktieren · Leertaste halten: Sprachwechsel"</string>
     <string name="speech_consent_title">"Externe Spracherkennung"</string>
     <string name="speech_consent_message">"Der installierte Spracherkenner, meist Google, kann Mikrofonaufnahmen erstellen und hochladen. Die Tastatur hat keine Internetberechtigung, aber der Erkenner kann Audio senden.\n\nTippen und Korrektur funktionieren ohne diese Funktion lokal. Die Freigabe lässt sich in den Diktiereinstellungen widerrufen. Externe Spracherkennung erlauben?"</string>
     <string name="speech_consent_allow">"Externe Erkennung erlauben"</string>

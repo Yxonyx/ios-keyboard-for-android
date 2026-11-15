@@ -135,7 +135,7 @@
     <string name="typing_fields">"Campos reais de texto, busca e senha"</string>
     <string name="visual_preview">"Prévia visual"</string>
     <string name="keyboard_preview">"Prévia do teclado"</string>
-    <string name="setup_note">"Toque no microfone para ditar. A correção pode ser alterada nas configurações. O globo alterna os idiomas ativados; com um só idioma, troca de teclado."</string>
+    <string name="setup_note">"Toque no microfone para ditar. A correção pode ser alterada nas configurações. Mantenha a barra de espaço pressionada para trocar de idioma."</string>
     <string name="import_font">"Importar fonte (TTF / OTF)"</string>
     <string name="system_font">"Usar fonte do sistema"</string>
     <string name="cancel">"Cancelar"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Idioma"</string>
     <string name="interface_language">"Idioma da interface"</string>
     <string name="follow_system">"Seguir o sistema"</string>
-    <string name="enabled_languages">"Idiomas da tecla do globo"</string>
-    <string name="globe_note">"O globo alterna estes idiomas na ordem exibida. Selecione pelo menos um."</string>
+    <string name="enabled_languages">"Idiomas para alternar com a barra de espaço"</string>
+    <string name="language_cycle_note">"Mantenha a barra de espaço pressionada para alternar os idiomas nesta ordem. Selecione pelo menos um."</string>
     <string name="select_one_language">"Selecione pelo menos um idioma"</string>
     <string name="save">"Salvar"</string>
     <string name="skin_default">"Padrão"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Buscar emojis: %1$s · Concluído para buscar"</string>
     <string name="paste_preview">"Colar: %1$s"</string>
     <string name="preview_input_description">"Teclado. Texto digitado: %1$s"</string>
-    <string name="settings_preview">"Configurações · toque longo %1$s ms · microfone: ditado · globo: alternar"</string>
+    <string name="settings_preview">"Configurações · toque longo %1$s ms · microfone: ditado · segurar espaço: trocar idioma"</string>
     <string name="speech_consent_title">"Reconhecimento de voz externo"</string>
     <string name="speech_consent_message">"O reconhecedor instalado, geralmente Google, pode gravar e enviar áudio do microfone. O teclado não tem permissão de Internet, mas o reconhecedor pode enviar áudio.\n\nDigitação e correção funcionam localmente sem este recurso. Você pode revogar a aprovação nas configurações de ditado. Permitir reconhecimento externo?"</string>
     <string name="speech_consent_allow">"Permitir reconhecimento externo"</string>

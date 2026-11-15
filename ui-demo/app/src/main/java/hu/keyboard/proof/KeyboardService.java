@@ -25,6 +25,8 @@ public final class KeyboardService extends InputMethodService implements Keyboar
   private boolean sensitive, searching, popupVisible;
   private String query = "";
   private TextView queryLabel;
+  private LinearLayout emojiResults;
+  private int emojiResultOffset;
   private CompositionSession.Suggestions shown = CompositionSession.Suggestions.NONE;
   private ClipboardManager clipboard;
   private final ClipboardOffer clipboardOffer = new ClipboardOffer();
@@ -443,11 +445,21 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       queryLabel = new TextView(this);
       queryLabel.setText(getString(R.string.emoji_query, query));
       queryLabel.setTextSize(16);
-      queryLabel.setTextColor(Color.BLACK);
+      boolean darkSearch = settings.text("theme", "system").equals("dark")
+          || (settings.text("theme", "system").equals("system")
+          && (getResources().getConfiguration().uiMode & 48) == 32);
+      queryLabel.setTextColor(darkSearch ? Color.WHITE : Color.BLACK);
       queryLabel.setPadding(20, 12, 20, 12);
-      queryLabel.setBackgroundColor(0xffeff0f4);
+      queryLabel.setBackgroundColor(darkSearch ? 0xff25272c : 0xffeff0f4);
       queryLabel.setOnClickListener(v -> showEmoji());
       root.addView(queryLabel);
+      HorizontalScrollView scroller = new HorizontalScrollView(this);
+      scroller.setHorizontalScrollBarEnabled(false);
+      emojiResults = new LinearLayout(this);
+      scroller.addView(emojiResults);
+      root.addView(scroller, new LinearLayout.LayoutParams(-1,
+          Math.round(56 * getResources().getDisplayMetrics().density)));
+      updateEmojiResults();
     }
     if (keyboard == null) {
       keyboard = new KeyboardProofView(this);
@@ -484,7 +496,9 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     endDictation();
     if (searching) {
       query += value;
+      emojiResultOffset = 0;
       queryLabel.setText(getString(R.string.emoji_query, query));
+      updateEmojiResults();
       return;
     }
     composition.finish();
@@ -497,7 +511,9 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     endDictation();
     if (searching) {
       query = removeLast(query);
+      emojiResultOffset = 0;
       queryLabel.setText(getString(R.string.emoji_query, query));
+      updateEmojiResults();
       return;
     }
     InputConnection ic = getCurrentInputConnection();
@@ -605,6 +621,54 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       composition.finish();
       query = "";
       showEmoji();
+    }
+  }
+
+  private void updateEmojiResults() {
+    if (emojiResults == null) return;
+    emojiResults.removeAllViews();
+    if (query.trim().isEmpty()) return;
+    EmojiCatalog catalog = EmojiCatalog.get(this);
+    int shown = 0;
+    int seen = 0;
+    boolean more = false;
+    for (EmojiCatalog.Entry item : catalog.filter(settings, 1, query, settings.language())) {
+      if (seen++ < emojiResultOffset) continue;
+      if (shown == 40) { more = true; break; }
+      TextView result = new TextView(this);
+      result.setText(item.emoji);
+      result.setTextSize(28);
+      result.setTypeface(EmojiCatalog.font(this));
+      result.setGravity(Gravity.CENTER);
+      result.setContentDescription(item.keywords(settings.language()));
+      result.setOnClickListener(v -> {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic != null) ic.commitText(item.emoji, 1);
+        catalog.remember(settings, item.emoji);
+        query = "";
+        searching = false;
+        composition.reset(correctionAllowed(getCurrentInputEditorInfo()));
+        showLetters(true);
+      });
+      emojiResults.addView(result, new LinearLayout.LayoutParams(
+          Math.round(52 * getResources().getDisplayMetrics().density), -1));
+      shown++;
+    }
+    if (more || emojiResultOffset > 0) {
+      TextView next = new TextView(this);
+      next.setText(more ? "…" : "↺");
+      next.setTextSize(24);
+      next.setGravity(Gravity.CENTER);
+      final boolean hasMore = more;
+      next.setOnClickListener(v -> { emojiResultOffset = hasMore ? emojiResultOffset + 40 : 0; updateEmojiResults(); });
+      emojiResults.addView(next, new LinearLayout.LayoutParams(
+          Math.round(52 * getResources().getDisplayMetrics().density), -1));
+    }
+    if (shown == 0) {
+      TextView empty = new TextView(this);
+      empty.setText(R.string.no_results);
+      empty.setGravity(Gravity.CENTER_VERTICAL);
+      emojiResults.addView(empty);
     }
   }
 

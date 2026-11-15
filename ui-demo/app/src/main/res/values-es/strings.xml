@@ -135,7 +135,7 @@
     <string name="typing_fields">"Campos reales de texto, búsqueda y contraseña"</string>
     <string name="visual_preview">"Vista previa visual"</string>
     <string name="keyboard_preview">"Vista previa del teclado"</string>
-    <string name="setup_note">"Toca el micrófono para dictar. La corrección se cambia en ajustes. El globo alterna los idiomas activados; con uno solo, cambia de teclado."</string>
+    <string name="setup_note">"Toca el micrófono para dictar. La corrección se cambia en ajustes. Mantén pulsada la barra espaciadora para cambiar de idioma."</string>
     <string name="import_font">"Importar fuente (TTF / OTF)"</string>
     <string name="system_font">"Usar fuente del sistema"</string>
     <string name="cancel">"Cancelar"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Idioma"</string>
     <string name="interface_language">"Idioma de la interfaz"</string>
     <string name="follow_system">"Seguir el sistema"</string>
-    <string name="enabled_languages">"Idiomas de la tecla del globo"</string>
-    <string name="globe_note">"El globo alterna estos idiomas en el orden mostrado. Selecciona al menos uno."</string>
+    <string name="enabled_languages">"Idiomas para cambiar con la barra espaciadora"</string>
+    <string name="language_cycle_note">"Mantén pulsada la barra espaciadora para recorrer los idiomas en este orden. Selecciona al menos uno."</string>
     <string name="select_one_language">"Selecciona al menos un idioma"</string>
     <string name="save">"Guardar"</string>
     <string name="skin_default">"Predeterminado"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Buscar emojis: %1$s · Listo para buscar"</string>
     <string name="paste_preview">"Pegar: %1$s"</string>
     <string name="preview_input_description">"Teclado. Texto escrito: %1$s"</string>
-    <string name="settings_preview">"Ajustes · pulsación larga %1$s ms · micrófono: dictado · globo: cambiar"</string>
+    <string name="settings_preview">"Ajustes · pulsación larga %1$s ms · micrófono: dictado · mantener espacio: cambiar idioma"</string>
     <string name="speech_consent_title">"Reconocimiento de voz externo"</string>
     <string name="speech_consent_message">"El servicio de voz instalado, normalmente Google, puede grabar y subir audio del micrófono. El teclado no tiene permiso de Internet, pero el servicio puede enviar audio.\n\nLa escritura y corrección funcionan localmente sin esta función. Puedes revocar el permiso en los ajustes de dictado. ¿Permitir reconocimiento de voz externo?"</string>
     <string name="speech_consent_allow">"Permitir voz externa"</string>

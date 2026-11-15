@@ -11,5 +11,12 @@
       "bytes": 527295,
       "sha256": "d47c56b046811bba3c9902a773c982d8184b1b34bef3cc94f41a30d0bb44bb94"
     }
+  },
+  "artwork": {
+    "app-icon.svg": {
+      "source": "Original project keyboard mark; same geometry as Android launcher vectors",
+      "license": "GPL-3.0-only",
+      "sha256": "85b265537e5f672643037c91a5540c32b8d954715ee77780be86fbb5f35a3ee4"
+    }
   }
 }

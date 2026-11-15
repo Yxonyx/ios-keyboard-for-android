@@ -364,7 +364,7 @@ public final class SettingsActivity extends Activity {
     choice(getString(R.string.active_language), "language", languageNames(), languageCodes(),
         settings.language(), true);
     row(getString(R.string.enabled_languages), enabledLanguageNames(), "", this::enabledLanguages, false);
-    note(getString(R.string.globe_note));
+    note(getString(R.string.language_cycle_note));
     section(settings.current().name());
     String[] layouts = settings.current().layouts().toArray(new String[0]);
     choice(getString(R.string.layout), "layout_" + settings.language(), layouts, layouts,

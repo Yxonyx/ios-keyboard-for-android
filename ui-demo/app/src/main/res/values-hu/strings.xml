@@ -135,7 +135,7 @@
     <string name="typing_fields">"Valódi szöveg-, kereső- és jelszómező"</string>
     <string name="visual_preview">"Vizuális próba"</string>
     <string name="keyboard_preview">"A billentyűzet előnézete"</string>
-    <string name="setup_note">"Diktáláshoz koppints a mikrofonra. A javítás a beállításokban kapcsolható. A földgomb a kijelölt nyelveket váltja; egyetlen nyelvnél másik billentyűzetre vált."</string>
+    <string name="setup_note">"Diktáláshoz koppints a mikrofonra. A javítás a beállításokban kapcsolható. A nyelvváltáshoz tartsd nyomva a szóközt."</string>
     <string name="import_font">"Betűkészlet importálása (TTF / OTF)"</string>
     <string name="system_font">"Rendszer betűkészlet használata"</string>
     <string name="cancel">"Mégse"</string>
@@ -192,8 +192,8 @@
     <string name="language">"Nyelv"</string>
     <string name="interface_language">"Felület nyelve"</string>
     <string name="follow_system">"Rendszer szerint"</string>
-    <string name="enabled_languages">"Földgombbal váltható nyelvek"</string>
-    <string name="globe_note">"A földgomb a megjelenített sorrendben váltja ezeket a nyelveket. Legalább egy maradjon kijelölve."</string>
+    <string name="enabled_languages">"Szóközzel váltható nyelvek"</string>
+    <string name="language_cycle_note">"A szóköz hosszú nyomásával a megjelenített sorrendben válthatsz nyelvet. Legalább egy maradjon kijelölve."</string>
     <string name="select_one_language">"Válassz legalább egy nyelvet"</string>
     <string name="save">"Mentés"</string>
     <string name="skin_default">"Alap"</string>
@@ -210,7 +210,7 @@
     <string name="emoji_query">"Emoji keresése: %1$s · Kész: keresés"</string>
     <string name="paste_preview">"Beillesztés: %1$s"</string>
     <string name="preview_input_description">"Billentyűzet. Beírt szöveg: %1$s"</string>
-    <string name="settings_preview">"Beállítások · %1$s ms hosszú nyomás · mikrofon: diktálás · földgomb: váltás"</string>
+    <string name="settings_preview">"Beállítások · %1$s ms hosszú nyomás · mikrofon: diktálás · szóköz hosszan: váltás"</string>
     <string name="speech_consent_title">"Külső beszédfelismerés"</string>
     <string name="speech_consent_message">"A telepített beszédfelismerő, általában a Google, rögzítheti és feltöltheti a mikrofon hangját. A billentyűzetnek nincs internetengedélye, a felismerő azonban elküldheti a hangot.\n\nA gépelés és a javítás e nélkül is helyben működik. A jóváhagyást a diktálás beállításainál visszavonhatod. Engedélyezed a külső beszédfelismerést?"</string>
     <string name="speech_consent_allow">"Külső beszédfelismerés engedélyezése"</string>

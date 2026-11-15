@@ -22,7 +22,7 @@ resources. `tools/build_emoji_catalog.py` generates emoji metadata from the incl
 Unicode and CLDR sources. The device or a user-imported font supplies emoji glyphs.
 
 All nine typing languages are exposed in settings and Android subtype metadata.
-Each language remembers its own layout; the globe cycles through a nonempty user
+Each language remembers its own layout; holding the space bar cycles through a nonempty user
 selection. Interface text uses English default Android resources plus eight locale
 packs. Android 13+ LocaleManager persists the independent interface language and
 exposes it in system app-language settings; first-use typing follows the system

@@ -1,5 +1,7 @@
 # iOS Keyboard for Android
 
+<img src="docs/images/app-icon.svg" width="88" height="88" alt="Keyboard app icon" />
+
 Many of us find Android keyboards hard to get used to after using an iPhone. I started this project to make that transition easier, with a familiar layout and typing experience on Android.
 
 An iOS-inspired, open-source Android keyboard with nine typing languages, conservative offline
@@ -14,12 +16,24 @@ for tested configurations and physical-device gaps. It does not bundle Apple fon
 or traced screenshot artwork. Letter labels use Inter; key rectangles are generated
 from row rules and icons are drawn in code.
 
+## Try the preview
+
+Build from source using the [pinned toolchain](docs/BUILD.md). The debug APK is
+installed separately from other versions; enable it in Android keyboard settings,
+then choose it in the system keyboard picker. Hold the space bar to cycle through
+the typing languages selected in settings.
+
+There is no stable signed APK or automatic update channel yet. Do not interpret an
+unsigned `assembleRelease` artifact as an installable maintainer release. Signing
+and verification requirements are recorded in the [release guide](docs/RELEASE.md).
+
 ## What works
 
 - A real Android input method: typing into other apps, editor actions, selection
   replacement, grapheme deletion, accent choices and spacebar cursor movement.
 - Offline AOSP LatinIME correction, a suggestion strip and immediate Backspace undo.
-- Emoji categories, recents, skin-tone choices and CLDR search keywords.
+- Emoji categories, recents, skin-tone choices and CLDR search keywords. Swipe the
+  grid in either direction to change pages; hold an emoji to see its skin-tone variants.
 - Theme, feedback, keyboard-height and typing-behavior settings.
 - Optional speech recognition through Google's installed recognizer or the system
   fallback. **Audio may leave the phone.** See [privacy](PRIVACY.md).
@@ -27,7 +41,7 @@ from row rules and icons are drawn in code.
 Language definitions, dictionaries and emoji keywords cover English, Hungarian,
 German, French, Spanish, Italian, Brazilian Portuguese, Polish and Dutch. The
 settings expose all nine typing languages and their layouts, plus a selectable
-globe-key language cycle. The interface is translated into the same nine languages
+language cycle using a long press on the space bar. The interface is translated into the same nine languages
 and can follow Android or use an independent application language.
 Do not interpret the presence of dictionaries as measured correction quality in
 all nine languages. The Portuguese dictionary here is the original OpenBoard
@@ -43,6 +57,18 @@ version, rather than the separately patched variant used in private development.
 Light and dark modes, shown in the Grok app. Captured from the private development
 build before the public-source artwork changes; the publication candidate uses
 Inter labels and code-drawn icons. Grok's interface is shown only as the host app.
+
+## Known limitations
+
+- Android 13 or newer; physical validation across manufacturers is still incomplete.
+- Emoji metadata covers 3,972 records. The nine component-only records are not
+  standalone keys; the other 3,963 sequences are reachable through categories and
+  variant selection. Rendering still depends on the installed emoji font. A check
+  with the sampled Xiaomi font reported 19 unsupported sequences; this is not a
+  universal count. See [emoji coverage](docs/COMPATIBILITY.md#emoji-coverage).
+- Dictionaries are included for nine languages; correction quality has not been
+  measured equally across those languages.
+- Optional dictation uses an external recognizer and may upload audio.
 
 ## Privacy and the Android keyboard warning
 

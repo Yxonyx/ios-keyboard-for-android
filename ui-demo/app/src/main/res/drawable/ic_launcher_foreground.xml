@@ -1,5 +1,6 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
-<path android:fillColor="#FFFFFF" android:pathData="M36,29 L72,29 Q80,29 80,37 L80,73 Q80,81 72,81 L36,81 Q28,81 28,73 L28,37 Q28,29 36,29Z"/>
-<path android:fillColor="#00000000" android:strokeColor="#191B20" android:strokeWidth="5" android:pathData="M65,58 A11,12 0,1 1,43 58 A11,12 0,1 1,65 58"/>
-<path android:fillColor="#00000000" android:strokeColor="#1757B5" android:strokeWidth="4" android:strokeLineCap="round" android:pathData="M45,43 L50,37 M57,43 L62,37"/>
+    <!-- Original keyboard mark: rows of keys and a single blue space bar. -->
+    <path android:fillColor="#00000000" android:strokeColor="#F3F4F6" android:strokeWidth="2.5" android:pathData="M35,35 H73 Q80,35 80,42 V66 Q80,73 73,73 H35 Q28,73 28,66 V42 Q28,35 35,35 Z"/>
+    <path android:fillColor="#F3F4F6" android:pathData="M35,42 h6 v6 h-6 Z M43,42 h6 v6 h-6 Z M51,42 h6 v6 h-6 Z M59,42 h6 v6 h-6 Z M67,42 h6 v6 h-6 Z M39,51 h6 v6 h-6 Z M47,51 h6 v6 h-6 Z M55,51 h6 v6 h-6 Z M63,51 h6 v6 h-6 Z M35,60 h6 v6 h-6 Z M67,60 h6 v6 h-6 Z"/>
+    <path android:fillColor="#8CB7FF" android:pathData="M45,60 H63 V66 H45 Z"/>
 </vector>

@@ -12,7 +12,14 @@ android {
         versionCode 8
         versionName '0.8.0-preview'
     }
-    buildTypes { debug { applicationIdSuffix '.debug' } }
+    buildTypes {
+        debug {
+            // Opt in only to update an existing installation signed with the same debug key.
+            if (!providers.gradleProperty('updateOriginal').isPresent()) {
+                applicationIdSuffix '.debug'
+            }
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

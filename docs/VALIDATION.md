@@ -1,5 +1,32 @@
 # Validation
 
+## Emoji and public-preview cleanup, 2026-11-16
+
+The local ARM64 Android 16 / API 36 emulator run passed **20 app instrumentation
+and 6 native instrumentation tests**, with no failures or skips. The app suite
+includes emoji swipe-forward/swipe-back without insertion, search-and-insert,
+heart-category placement, catalog reachability, and hold-space switching through
+all nine languages while retaining their layout choices.
+
+The candidate also passed **24 JVM unit tests**, debug/release builds, debug/release
+lint, the source and license inventories, all nine translation/format checks,
+and generated-layout/emoji reproduction. Both packaged APKs passed the ABI/16 KB
+alignment checks and contain no INTERNET permission. Gitleaks reported no leaks
+in the Git history and working tree. These checks do not constitute a formal
+security audit or proof of every-device compatibility.
+
+The original launcher mark and its Android monochrome variant were rendered and
+visually reviewed. All nine interface-language instructions now describe long-press
+space switching. The README, changelog and release guide distinguish a source
+preview from an unsigned release artifact and a future signed distribution.
+
+The physical Xiaomi installation used the `hu.keyboard.proof` development build;
+this is installation/use evidence, not completion of the full physical-device
+checklist. The font-specific 19 unsupported sequences remain documented under
+[emoji coverage](COMPATIBILITY.md#emoji-coverage). No production key, stable APK or
+update channel was created. Hosted matrix results for earlier commits remain
+historical; the changed candidate must obtain its own hosted results.
+
 ## Compatibility and privacy update, 2026-11-12
 
 The compatibility candidate passed 24 JVM unit tests, 11 app instrumentation tests
