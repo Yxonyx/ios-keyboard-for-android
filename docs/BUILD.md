@@ -26,6 +26,7 @@ Gradle cache. Offline typing is separate from build-time dependency downloads.
 ```sh
 python3 tools/verify_engine_sources.py
 python3 tools/verify_public_release.py
+python3 tools/verify_translations.py
 python3 tools/build_layout.py
 python3 tools/build_emoji_catalog.py
 git diff --exit-code -- ui-demo/app/src/main/assets/geometry.json ui-demo/app/src/main/assets/emoji/catalog.json
@@ -44,8 +45,16 @@ cd ui-demo
 
 The debug APK is `app/build/outputs/apk/debug/app-debug.apk`, with application ID
 `hu.keyboard.proof.debug`. It is debug-signed. Release output is unsigned and has
-application ID `hu.keyboard.proof`; there is no public production signing key or
-update channel. Keep any future signing keys outside the repository.
+application ID `hu.keyboard.proof`. Maintainer preview APKs use a dedicated signing
+key, whose public certificate fingerprint is in [RELEASE.md](RELEASE.md). Private
+signing material stays outside the repository. Without an explicit signing
+configuration, release builds remain unsigned.
+
+For local maintenance only, `-PupdateOriginal` removes the debug application-ID
+suffix. This still produces a debug-signed build, not a production release. Use it
+only when the existing installation has the same signing certificate; never
+uninstall a user’s keyboard to work around a signature mismatch. Separate package
+IDs have separate preferences.
 
 ## Device verification
 
@@ -79,3 +88,40 @@ These commands run from the repository root and inspect the built ELF files and
 ZIP alignment. For an x86_64-only APK, append `--abis x86_64`. See
 [the compatibility matrix](COMPATIBILITY.md) for the opt-in IME/editor tests and
 physical-device validation gaps.
+
+## Interface languages and typing languages
+
+Settings → Languages and layout exposes nine typing languages, each with its own
+supported layouts. The language-cycle list must contain at least one language; removing
+the active language selects the first remaining one. Choosing another active
+language includes it in the cycle. Layout choices are remembered per language.
+
+The independent interface selector uses Android 13+ application locales, including
+“Follow system”. It changes settings, privacy/consent, editor actions and emoji
+panel labels; it does not change the chosen typing dictionary or speech locale.
+Android Settings also exposes the same nine application languages. Portuguese is
+Brazilian Portuguese. Emoji keywords follow the typing language.
+
+```sh
+python3 tools/verify_translations.py
+```
+
+This verifies complete resource coverage and format arguments in English,
+Hungarian, German, French, Spanish, Italian, Brazilian Portuguese, Polish and Dutch.
+Bundled third-party legal texts retain their original language. Native-speaker
+review is welcome; translation completeness is not an independent editorial review.
+
+## Signed maintainer build
+
+Create a private properties file **outside this checkout**, readable only by its
+owner, containing `storeFile` (absolute keystore path), `storePassword`, `keyAlias`
+and `keyPassword`. Do not commit it or upload it as a build artifact. Then run:
+
+```sh
+cd ui-demo
+./gradlew --no-daemon -PsigningPropertiesFile=/absolute/private/release.properties :app:assembleRelease
+```
+
+The signed output is `app/build/outputs/apk/release/app-release.apk`. Without that
+property, the output remains `app-release-unsigned.apk`. Keep the same release key
+for updates, and back it up securely. A debug key is not the release key.

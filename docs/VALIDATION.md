@@ -1,5 +1,56 @@
 # Validation
 
+## Signed preview publication, 2026-11-16
+
+Version 0.8.1-preview (version code 9) adds optional external signing configuration.
+The signed release build passed release lint and 24 JVM tests; its signature and
+ARM64/ARM32 native packaging passed verification. The signed APK installed and
+started on the API 36 ARM64 emulator, and the selected release IME inserted synthetic
+text through its on-screen keys. The private release key is outside Git; its public
+certificate fingerprint is recorded in RELEASE.md.
+
+The full local source suite passed 20 app and 6 native tests earlier in this change.
+Hosted results for 3635965 passed build/provenance, API 34 phone, API 35 regular phone,
+API 36 tablet and the API 33 32-bit native fixture. API 33 phone stopped on Maven HTTP
+429 before tests. The API 35 experimental 16 KB image passed native tests but failed
+IME editor-connection preparation in 9 app tests. Subsequent diagnostic runs remain
+separate evidence, not proof of a fix. This preview does not claim that configuration
+as validated. See the current Actions run for the final candidate's exact status.
+
+## Emoji and public-preview cleanup, 2026-11-16
+
+The local ARM64 Android 16 / API 36 emulator run passed **20 app instrumentation
+and 6 native instrumentation tests**, with no failures or skips. The app suite
+includes emoji swipe-forward/swipe-back without insertion, search-and-insert,
+heart-category placement, catalog reachability, and hold-space switching through
+all nine languages while retaining their layout choices.
+
+The candidate also passed **24 JVM unit tests**, debug/release builds, debug/release
+lint, the source and license inventories, all nine translation/format checks,
+and generated-layout/emoji reproduction. Both packaged APKs passed the ABI/16 KB
+alignment checks and contain no INTERNET permission. Gitleaks reported no leaks
+in the Git history and working tree. These checks do not constitute a formal
+security audit or proof of every-device compatibility.
+
+The original launcher mark and its Android monochrome variant were rendered and
+visually reviewed. All nine interface-language instructions now describe long-press
+space switching. The README, changelog and release guide distinguish a source
+preview from an unsigned release artifact and a future signed distribution.
+
+The physical Xiaomi installation used the `hu.keyboard.proof` development build;
+this is installation/use evidence, not completion of the full physical-device
+checklist. The font-specific 19 unsupported sequences remain documented under
+[emoji coverage](COMPATIBILITY.md#emoji-coverage). No production key, stable APK or
+update channel was created. Hosted matrix results for earlier commits remain
+historical; the changed candidate must obtain its own hosted results.
+
+The first hosted run of this cleanup exposed a startup race on the API 35 16 KB
+image: `sys.boot_completed` was set before `/sdcard` was writable. Zero tests ran
+in that job. The emulator wrapper now waits up to 30 seconds for its diagnostics
+directory to become writable and fails explicitly if storage never becomes ready;
+it continues to refuse physical devices. The wrapper passed a local ready-storage
+run; the hosted matrix is rerun for the correction.
+
 ## Compatibility and privacy update, 2026-11-12
 
 The compatibility candidate passed 24 JVM unit tests, 11 app instrumentation tests

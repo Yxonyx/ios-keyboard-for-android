@@ -68,7 +68,7 @@ matrix is not a screenshot-based visual or accessibility audit.
 | --- | --- |
 | Google Pixel / stock Android | Not yet tested on a physical device |
 | Samsung / One UI | Not yet tested |
-| Xiaomi / HyperOS | Earlier private build used on a Xiaomi; public build installation was denied by the device, so it is not counted as a pass |
+| Xiaomi / HyperOS | Current public-source development build installed and used on Xiaomi 17; full physical checklist remains incomplete |
 | OnePlus / OxygenOS, Oppo / ColorOS, Vivo | Not yet tested |
 | Devices without Google services | Ordinary typing is designed to work; physical validation pending; Google dictation is not assumed available |
 | 32-bit ARM / low-memory Android Go | Native build checked; physical runtime validation pending |
@@ -99,3 +99,25 @@ For an x86 or x86_64 emulator, also set `-PengineAbis=x86` or `x86_64` respectiv
 Ordinary connected tests skip IME switching unless it is explicitly enabled.
 All source and test results remain reviewable through the
 [Actions page](https://github.com/Yxonyx/ios-keyboard-for-android/actions).
+
+## Emoji coverage
+
+The checked-in Unicode 18.0 catalog has 3,972 records. Nine component-only entries
+(such as isolated skin modifiers) are not standalone keys. The other 3,963 sequences
+are reachable through category pages and long-press variant selection; not every
+variant has its own top-level key. Search uses the selected skin tone for each family.
+
+The read-only `EmojiCoverageTest` verifies this accounting and reports unsupported
+glyphs using Android `Paint.hasGlyph`. On 2026-11-16, the emoji font copied from the
+Xiaomi test phone was loaded on the API 36 ARM64 emulator: all 3,963 sequences were
+reachable and 19 lacked a supported glyph. The font SHA-256 was
+`469e3b92d63cfc203789f8742f1835b8672c7b5995ab4a832f1699b712a5afcc`.
+The proprietary font is not distributed in this repository. This was a font coverage
+measurement on an emulator, not a screenshot audit of all emoji on the phone;
+Android fallback and vendor rendering can differ. Unsupported characters can still
+be inserted as Unicode, but their artwork cannot be promised on that device.
+
+To check another device font, run `hu.keyboard.proof.EmojiCoverageTest` using the
+instrumentation runner. The test reads existing preferences and font data; it does
+not switch the system keyboard or modify settings. `fontMissing` is a diagnostic,
+not an assertion that every Android release must have the newest emoji artwork.

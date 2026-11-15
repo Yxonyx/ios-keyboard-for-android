@@ -126,15 +126,47 @@ public final class ImeCompatibilityTest {
     return null;
   }
 
-  private EditText focus(String description) {
+  private EditText focus(int id) {
     AtomicReference<EditText> result = new AtomicReference<>();
     instrumentation.runOnMainSync(() -> {
-      EditText field = find(activity.findViewById(android.R.id.content), description);
-      assertNotNull(description, field);
+      EditText field = activity.findViewById(id);
+      assertNotNull("Missing editor " + id, field);
       field.requestFocus();
-      context.getSystemService(InputMethodManager.class).showSoftInput(field, 0);
       result.set(field);
     });
+    // Android 14 may deliver focus before this editor is served by the input method.
+    // A premature showSoftInput is ignored, so wait for the real window/editor connection.
+    instrumentation.waitForIdleSync();
+    AtomicBoolean served = new AtomicBoolean();
+    long serveDeadline = SystemClock.uptimeMillis() + 5000;
+    do {
+      instrumentation.runOnMainSync(() -> {
+        EditText field = result.get();
+        InputMethodManager manager = context.getSystemService(InputMethodManager.class);
+        boolean ready = field.hasWindowFocus() && field.hasFocus() && manager.isActive(field);
+        served.set(ready);
+        if (ready) manager.showSoftInput(field, 0);
+      });
+      if (served.get()) break;
+      SystemClock.sleep(30);
+    } while (SystemClock.uptimeMillis() < serveDeadline);
+    if (!served.get()) {
+      AtomicReference<String> state = new AtomicReference<>();
+      instrumentation.runOnMainSync(() -> {
+        EditText field = result.get();
+        state.set("windowFocus=" + field.hasWindowFocus() + ", editorFocus=" + field.hasFocus()
+            + ", active=" + context.getSystemService(InputMethodManager.class).isActive(field));
+      });
+      System.out.println("Editor connection timeout: " + state.get());
+      try {
+        System.out.println(shell("dumpsys input_method"));
+        System.out.println(shell("dumpsys window windows"));
+        shell("screencap -p /sdcard/Download/ime-compat/editor-connect-failed.png");
+      } catch (IOException diagnosticFailure) {
+        System.out.println("Could not capture editor diagnostics: " + diagnosticFailure);
+      }
+      fail("Editor did not connect to the input method: " + state.get());
+    }
     // The window can be accessible while the IME/scroll animation is still moving it.
     // Send touches only after the actual on-screen bounds have remained stable.
     Rect previous = keyboardBounds();
@@ -191,7 +223,7 @@ public final class ImeCompatibilityTest {
 
   private Rect keyboardBounds() {
     Rect rect = new Rect();
-    imeNode("iOS Keyboard for Android billentyűzet").getBoundsInScreen(rect);
+    imeNode(context.getString(R.string.keyboard_description)).getBoundsInScreen(rect);
     assertTrue("Keyboard width", rect.width() > 0);
     assertTrue("Keyboard height", rect.height() > 0);
     return rect;
@@ -208,6 +240,21 @@ public final class ImeCompatibilityTest {
       assertTrue("Touch injection rejected", instrumentation.getUiAutomation().injectInputEvent(event, true));
       event.recycle();
       SystemClock.sleep(20);
+    }
+    instrumentation.waitForIdleSync();
+  }
+
+  private void holdSpace() {
+    Rect rect = keyboardBounds();
+    float x = rect.left + 589f * rect.width() / 1179f;
+    float y = rect.top + (2280f - 1650f) * rect.height() / 906f;
+    long down = SystemClock.uptimeMillis();
+    for (int action : new int[] {MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP}) {
+      MotionEvent event = MotionEvent.obtain(down, SystemClock.uptimeMillis(), action, x, y, 0);
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      assertTrue("Touch injection rejected", instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+      if (action == MotionEvent.ACTION_DOWN) SystemClock.sleep(800);
     }
     instrumentation.waitForIdleSync();
   }
@@ -248,8 +295,34 @@ public final class ImeCompatibilityTest {
   }
 
   @Test
+  public void longPressSpaceCyclesAllNineLanguagesAndPreservesPerLanguageLayouts() {
+    EditText field = focus(R.id.test_message);
+    KeyboardSettings settings = new KeyboardSettings(context);
+    instrumentation.runOnMainSync(() -> {
+      settings.prefs.edit().putString("language", "en")
+          .putString("layout_hu", "QWERTY").putString("layout_fr", "AZERTY").commit();
+      java.util.List<String> codes = new java.util.ArrayList<>();
+      for (Languages.Language language : Languages.ALL) codes.add(language.code());
+      settings.setLanguages(codes);
+    });
+    instrumentation.waitForIdleSync();
+    for (int i = 1; i <= Languages.ALL.size(); i++) {
+      focus(R.id.test_message);
+      holdSpace();
+      String expected = Languages.ALL.get(i % Languages.ALL.size()).code();
+      long deadline = SystemClock.uptimeMillis() + 2000;
+      while (!expected.equals(settings.language()) && SystemClock.uptimeMillis() < deadline)
+        SystemClock.sleep(20);
+      assertEquals(expected, settings.language());
+      if (expected.equals("hu")) assertEquals("QWERTY", settings.layout());
+      if (expected.equals("fr")) assertEquals("AZERTY", settings.layout());
+    }
+    expect(field, "");
+  }
+
+  @Test
   public void noLearningEditorSuppressesTheClipboardOfferAndSuggestionStrip() throws Exception {
-    EditText message = focus("Üzenet");
+    EditText message = focus(R.id.test_message);
     ClipboardManager clipboard = context.getSystemService(ClipboardManager.class);
     AtomicReference<ClipData> previous = new AtomicReference<>();
     instrumentation.runOnMainSync(() -> {
@@ -258,10 +331,10 @@ public final class ImeCompatibilityTest {
     });
     prefs.edit().putBoolean("suggestions", true).putBoolean("clipboard_suggest", true).commit();
     try {
-      focus("Üzenet");
+      focus(R.id.test_message);
       int offeredHeight = keyboardBounds().height();
       screenshot("clipboard-normal-field");
-      focus("Jelszópróba");
+      focus(R.id.test_password);
       int privateHeight = keyboardBounds().height();
       assertTrue("Positive control: normal field did not show its clipboard strip",
           offeredHeight > privateHeight);
@@ -271,7 +344,7 @@ public final class ImeCompatibilityTest {
         message.setText("synthetic");
         message.setSelection(message.length());
       });
-      focus("Üzenet");
+      focus(R.id.test_message);
       screenshot("clipboard-private-field");
       assertEquals("No-learning field must hide suggestions and clipboard", privateHeight,
           keyboardBounds().height());
@@ -288,7 +361,7 @@ public final class ImeCompatibilityTest {
 
   @Test
   public void decliningSpeechApprovalKeepsTypingLocal() throws Exception {
-    EditText field = focus("Üzenet");
+    EditText field = focus(R.id.test_message);
     int microphoneBefore = context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO);
     tap(1072, 2436);
     appNode(context.getString(R.string.speech_consent_title));
@@ -299,14 +372,14 @@ public final class ImeCompatibilityTest {
     instrumentation.waitForIdleSync();
     assertFalse(new KeyboardSettings(context).enabled(MicPermissionActivity.CONSENT_KEY, false));
     assertEquals(microphoneBefore, context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO));
-    focus("Üzenet");
+    focus(R.id.test_message);
     key("A", false);
     expect(field, "a");
   }
 
   @Test
   public void literalTypingDeleteAndSelectionReplacement() throws Exception {
-    EditText field = focus("Üzenet");
+    EditText field = focus(R.id.test_message);
     for (char ch : "HELLO".toCharArray()) key(String.valueOf(ch), false);
     key("space", false);
     expect(field, "hello ");
@@ -319,10 +392,10 @@ public final class ImeCompatibilityTest {
 
   @Test
   public void numericSearchActionAndEmojiInsertion() throws Exception {
-    EditText numeric = focus("Szám");
+    EditText numeric = focus(R.id.test_number);
     key("1", true); key("2", true); key("3", true);
     expect(numeric, "123");
-    EditText search = focus("Keresés");
+    EditText search = focus(R.id.test_search);
     AtomicBoolean submitted = new AtomicBoolean();
     instrumentation.runOnMainSync(() -> search.setOnEditorActionListener((view, action, event) -> {
       submitted.set(action == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH);
@@ -332,7 +405,7 @@ public final class ImeCompatibilityTest {
     long deadline = SystemClock.uptimeMillis() + 3000;
     while (!submitted.get() && SystemClock.uptimeMillis() < deadline) SystemClock.sleep(30);
     assertTrue("Search editor action was not delivered", submitted.get());
-    EditText message = focus("Üzenet");
+    EditText message = focus(R.id.test_message);
     tap(127.5f, 2436);
     AccessibilityNodeInfo emoji = imeNode("😀");
     assertTrue(emoji.performAction(AccessibilityNodeInfo.ACTION_CLICK));
@@ -340,9 +413,64 @@ public final class ImeCompatibilityTest {
   }
 
   @Test
+  public void emojiSearchShowsMatchingResultsAndInsertsSelection() throws Exception {
+    EditText message = focus(R.id.test_message);
+    tap(127.5f, 2436);
+    assertTrue(imeNode(context.getString(R.string.search_emoji))
+        .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    for (char ch : "HEART".toCharArray()) key(String.valueOf(ch), false);
+    AccessibilityNodeInfo heart = imeNode("❤️");
+    assertTrue(heart.performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    expect(message, "❤️");
+  }
+
+  @Test
+  public void emojiGridSwipesBothWaysWithoutInserting() throws Exception {
+    EditText message = focus(R.id.test_message);
+    tap(127.5f, 2436);
+    assertTrue(imeNode(context.getString(R.string.emoji_people))
+        .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    int pages = (EmojiCatalog.get(context).filter(new KeyboardSettings(context), 1, "").size() + 27) / 28;
+    assertNotNull(imeNode("1 / " + pages));
+    Rect first = new Rect();
+    imeNode("😀").getBoundsInScreen(first);
+    swipeEmoji(first.centerY(), true);
+    assertNotNull(imeNode("2 / " + pages));
+    swipeEmoji(first.centerY(), false);
+    assertNotNull(imeNode("1 / " + pages));
+    expect(message, "");
+  }
+
+  private void swipeEmoji(float y, boolean left) {
+    float width = context.getResources().getDisplayMetrics().widthPixels;
+    long down = SystemClock.uptimeMillis();
+    for (int i = 0; i <= 12; i++) {
+      float progress = i / 12f;
+      float x = width * (left ? .8f - .6f * progress : .2f + .6f * progress);
+      int action = i == 0 ? MotionEvent.ACTION_DOWN : i == 12 ? MotionEvent.ACTION_UP : MotionEvent.ACTION_MOVE;
+      MotionEvent event = MotionEvent.obtain(down, SystemClock.uptimeMillis(), action, x, y, 0);
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      assertTrue(instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+      SystemClock.sleep(15);
+    }
+    instrumentation.waitForIdleSync();
+  }
+
+  @Test
+  public void heartCategoryStartsWithHearts() throws Exception {
+    focus(R.id.test_message);
+    tap(127.5f, 2436);
+    assertTrue(imeNode(context.getString(R.string.emoji_symbols))
+        .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    assertNotNull(imeNode("💘"));
+    assertNotNull(imeNode("❤️"));
+  }
+
+  @Test
   public void passwordStaysLiteralAndDoesNotOpenSpeechConsent() throws Exception {
     prefs.edit().putBoolean("autocorrect", true).putBoolean("suggestions", true).commit();
-    EditText field = focus("Jelszópróba");
+    EditText field = focus(R.id.test_password);
     for (char ch : "HOGZ".toCharArray()) key(String.valueOf(ch), false);
     key("space", false);
     expect(field, "hogz ");

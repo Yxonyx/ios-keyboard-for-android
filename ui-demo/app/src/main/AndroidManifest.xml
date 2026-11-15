@@ -4,7 +4,7 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
     <uses-feature android:name="android.hardware.screen.portrait" android:required="false"/>
     <queries><intent><action android:name="android.speech.RecognitionService"/></intent></queries>
-    <application android:theme="@style/AppTheme" android:label="iOS Keyboard for Android" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:allowBackup="false" android:supportsRtl="false">
+    <application android:theme="@style/AppTheme" android:label="iOS Keyboard for Android" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:allowBackup="false" android:supportsRtl="false" android:localeConfig="@xml/locales_config">
         <service android:name=".KeyboardService" android:label="@string/ime_name" android:permission="android.permission.BIND_INPUT_METHOD" android:exported="true"><intent-filter><action android:name="android.view.InputMethod"/></intent-filter><meta-data android:name="android.view.im" android:resource="@xml/input_method"/></service>
         <activity android:name=".LicensesActivity" android:exported="false"/>
         <activity android:name=".PrivacyActivity" android:exported="false"/>

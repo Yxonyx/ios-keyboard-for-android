@@ -21,3 +21,7 @@ benchmark/private/
 validation-local/
 .worktrees/
 *.hprof
+
+# Release signing material must never be published
+*.p12
+keystore.properties

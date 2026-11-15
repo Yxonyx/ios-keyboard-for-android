@@ -88,7 +88,7 @@ final class Dictation {
     intent.putExtra(
         RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000L);
     active = true;
-    listener.status("Kapcsolódás…");
+    listener.status(context.getString(R.string.connecting));
     recognizer.startListening(intent);
     return true;
   }
@@ -97,7 +97,7 @@ final class Dictation {
   void stop() {
     if (recognizer != null && active) {
       recognizer.stopListening();
-      listener.status("Feldolgozás…");
+      listener.status(context.getString(R.string.processing));
     }
   }
 
@@ -128,7 +128,7 @@ final class Dictation {
 
     @Override
     public void onReadyForSpeech(Bundle params) {
-      if (current()) listener.status("Hallgatlak…");
+      if (current()) listener.status(context.getString(R.string.listening));
     }
 
     @Override
@@ -142,7 +142,7 @@ final class Dictation {
 
     @Override
     public void onEndOfSpeech() {
-      if (current()) listener.status("Feldolgozás…");
+      if (current()) listener.status(context.getString(R.string.processing));
     }
 
     @Override

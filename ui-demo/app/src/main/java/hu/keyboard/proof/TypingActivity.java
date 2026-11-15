@@ -18,30 +18,30 @@ public final class TypingActivity extends Activity {
     content.setPadding(pad, pad * 2, pad, pad);
     scroll.addView(content);
     TextView heading = new TextView(this);
-    heading.setText("Billentyűzet kipróbálása");
+    heading.setText(getString(R.string.try_keyboard));
     heading.setTextSize(24);
     content.addView(heading);
     TextView note = new TextView(this);
-    note.setText("Valódi Android szövegmezők. Az ide beírt szöveget nem mentjük.");
+    note.setText(getString(R.string.typing_test_note));
     content.addView(note);
     field(
         content,
-        "Üzenet",
+        getString(R.string.message),
         InputType.TYPE_CLASS_TEXT
             | InputType.TYPE_TEXT_FLAG_MULTI_LINE
             | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
         EditorInfo.IME_ACTION_NONE,
         4);
-    field(content, "Keresés", InputType.TYPE_CLASS_TEXT, EditorInfo.IME_ACTION_SEARCH, 1);
+    field(content, getString(R.string.search), InputType.TYPE_CLASS_TEXT, EditorInfo.IME_ACTION_SEARCH, 1);
     field(
         content,
-        "Szám",
+        getString(R.string.number),
         InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL,
         EditorInfo.IME_ACTION_NEXT,
         1);
     field(
         content,
-        "Jelszópróba",
+        getString(R.string.password_test),
         InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD,
         EditorInfo.IME_ACTION_DONE,
         1);
@@ -55,15 +55,18 @@ public final class TypingActivity extends Activity {
     parent.addView(label);
     EditText field = new EditText(this);
     field.setContentDescription(name);
+    field.setId(action == EditorInfo.IME_ACTION_SEARCH ? R.id.test_search
+        : action == EditorInfo.IME_ACTION_NEXT ? R.id.test_number
+        : action == EditorInfo.IME_ACTION_DONE ? R.id.test_password : R.id.test_message);
     field.setInputType(type);
     field.setImeOptions(action);
     field.setMinLines(lines);
     field.setMaxLines(lines);
     parent.addView(field);
-    if (name.equals("Keresés"))
+    if (action == EditorInfo.IME_ACTION_SEARCH)
       field.setOnEditorActionListener(
           (view, id, event) -> {
-            Toast.makeText(this, "Keresés művelet működik", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.search_action_works), Toast.LENGTH_SHORT).show();
             return true;
           });
   }

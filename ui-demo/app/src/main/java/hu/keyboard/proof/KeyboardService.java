@@ -25,6 +25,8 @@ public final class KeyboardService extends InputMethodService implements Keyboar
   private boolean sensitive, searching, popupVisible;
   private String query = "";
   private TextView queryLabel;
+  private LinearLayout emojiResults;
+  private int emojiResultOffset;
   private CompositionSession.Suggestions shown = CompositionSession.Suggestions.NONE;
   private ClipboardManager clipboard;
   private final ClipboardOffer clipboardOffer = new ClipboardOffer();
@@ -413,24 +415,24 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     super.onCurrentInputMethodSubtypeChanged(subtype);
     Languages.Language language =
         subtype == null ? null : Languages.forLocale(subtype.getLanguageTag());
-    if (language != null) settings.prefs.edit().putString("language", language.code()).apply();
+    if (language != null) settings.setLanguage(language.code());
   }
 
   private String action() {
-    if (searching) return "Keresés";
+    if (searching) return getString(R.string.search);
     EditorInfo info = getCurrentInputEditorInfo();
     if (info == null || (info.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) return "";
     switch (info.imeOptions & EditorInfo.IME_MASK_ACTION) {
       case EditorInfo.IME_ACTION_SEARCH:
-        return "Keresés";
+        return getString(R.string.search);
       case EditorInfo.IME_ACTION_NEXT:
-        return "Tovább";
+        return getString(R.string.next);
       case EditorInfo.IME_ACTION_DONE:
-        return "Kész";
+        return getString(R.string.done);
       case EditorInfo.IME_ACTION_SEND:
-        return "Küldés";
+        return getString(R.string.send);
       case EditorInfo.IME_ACTION_GO:
-        return "Ugrás";
+        return getString(R.string.go);
       default:
         return "";
     }
@@ -441,13 +443,23 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     root.removeAllViews();
     if (searching) {
       queryLabel = new TextView(this);
-      queryLabel.setText("Emoji keresése: " + query + "   ·   Kész: keresés");
+      queryLabel.setText(getString(R.string.emoji_query, query));
       queryLabel.setTextSize(16);
-      queryLabel.setTextColor(Color.BLACK);
+      boolean darkSearch = settings.text("theme", "system").equals("dark")
+          || (settings.text("theme", "system").equals("system")
+          && (getResources().getConfiguration().uiMode & 48) == 32);
+      queryLabel.setTextColor(darkSearch ? Color.WHITE : Color.BLACK);
       queryLabel.setPadding(20, 12, 20, 12);
-      queryLabel.setBackgroundColor(0xffeff0f4);
+      queryLabel.setBackgroundColor(darkSearch ? 0xff25272c : 0xffeff0f4);
       queryLabel.setOnClickListener(v -> showEmoji());
       root.addView(queryLabel);
+      HorizontalScrollView scroller = new HorizontalScrollView(this);
+      scroller.setHorizontalScrollBarEnabled(false);
+      emojiResults = new LinearLayout(this);
+      scroller.addView(emojiResults);
+      root.addView(scroller, new LinearLayout.LayoutParams(-1,
+          Math.round(56 * getResources().getDisplayMetrics().density)));
+      updateEmojiResults();
     }
     if (keyboard == null) {
       keyboard = new KeyboardProofView(this);
@@ -484,7 +496,9 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     endDictation();
     if (searching) {
       query += value;
-      queryLabel.setText("Emoji keresése: " + query + "   ·   Kész: keresés");
+      emojiResultOffset = 0;
+      queryLabel.setText(getString(R.string.emoji_query, query));
+      updateEmojiResults();
       return;
     }
     composition.finish();
@@ -497,7 +511,9 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     endDictation();
     if (searching) {
       query = removeLast(query);
-      queryLabel.setText("Emoji keresése: " + query + "   ·   Kész: keresés");
+      emojiResultOffset = 0;
+      queryLabel.setText(getString(R.string.emoji_query, query));
+      updateEmojiResults();
       return;
     }
     InputConnection ic = getCurrentInputConnection();
@@ -608,6 +624,54 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     }
   }
 
+  private void updateEmojiResults() {
+    if (emojiResults == null) return;
+    emojiResults.removeAllViews();
+    if (query.trim().isEmpty()) return;
+    EmojiCatalog catalog = EmojiCatalog.get(this);
+    int shown = 0;
+    int seen = 0;
+    boolean more = false;
+    for (EmojiCatalog.Entry item : catalog.filter(settings, 1, query, settings.language())) {
+      if (seen++ < emojiResultOffset) continue;
+      if (shown == 40) { more = true; break; }
+      TextView result = new TextView(this);
+      result.setText(item.emoji);
+      result.setTextSize(28);
+      result.setTypeface(EmojiCatalog.font(this));
+      result.setGravity(Gravity.CENTER);
+      result.setContentDescription(item.keywords(settings.language()));
+      result.setOnClickListener(v -> {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic != null) ic.commitText(item.emoji, 1);
+        catalog.remember(settings, item.emoji);
+        query = "";
+        searching = false;
+        composition.reset(correctionAllowed(getCurrentInputEditorInfo()));
+        showLetters(true);
+      });
+      emojiResults.addView(result, new LinearLayout.LayoutParams(
+          Math.round(52 * getResources().getDisplayMetrics().density), -1));
+      shown++;
+    }
+    if (more || emojiResultOffset > 0) {
+      TextView next = new TextView(this);
+      next.setText(more ? "…" : "↺");
+      next.setTextSize(24);
+      next.setGravity(Gravity.CENTER);
+      final boolean hasMore = more;
+      next.setOnClickListener(v -> { emojiResultOffset = hasMore ? emojiResultOffset + 40 : 0; updateEmojiResults(); });
+      emojiResults.addView(next, new LinearLayout.LayoutParams(
+          Math.round(52 * getResources().getDisplayMetrics().density), -1));
+    }
+    if (shown == 0) {
+      TextView empty = new TextView(this);
+      empty.setText(R.string.no_results);
+      empty.setGravity(Gravity.CENTER_VERTICAL);
+      emojiResults.addView(empty);
+    }
+  }
+
   private void showEmoji() {
     searching = false;
     popupVisible = false;
@@ -658,11 +722,11 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       return;
     }
     if (sensitive || searching) {
-      Toast.makeText(this, "Ebben a mezőben nincs diktálás", Toast.LENGTH_SHORT).show();
+      Toast.makeText(this, getString(R.string.no_dictation_field), Toast.LENGTH_SHORT).show();
       return;
     }
     if (!settings.enabled("dictation", true)) {
-      Toast.makeText(this, "A diktálás ki van kapcsolva a beállításokban", Toast.LENGTH_SHORT)
+      Toast.makeText(this, getString(R.string.dictation_disabled), Toast.LENGTH_SHORT)
           .show();
       return;
     }
@@ -682,7 +746,7 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     dictationCaps = capitalsAtCursor();
     dictationPartial = "";
     if (!dictation.start(settings.current().speech()))
-      Toast.makeText(this, "Nincs telepítve Google beszédfelismerő", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, getString(R.string.recognizer_missing), Toast.LENGTH_LONG).show();
   }
 
   private void askMicrophone() {
@@ -733,28 +797,28 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     switch (error) {
       case SpeechRecognizer.ERROR_NO_MATCH:
       case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-        message = "Nem hallottam semmit";
+        message = getString(R.string.nothing_heard);
         break;
       case SpeechRecognizer.ERROR_NETWORK:
       case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
       case SpeechRecognizer.ERROR_SERVER:
       case SpeechRecognizer.ERROR_SERVER_DISCONNECTED:
-        message = "Nincs kapcsolat a Google beszédfelismerővel";
+        message = getString(R.string.recognizer_connection);
         break;
       case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
         askMicrophone();
         return;
       case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-        message = "A beszédfelismerő foglalt, próbáld újra";
+        message = getString(R.string.recognizer_busy);
         break;
       case SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED:
       case SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE:
-        message = "Ez a nyelv most nem érhető el a diktáláshoz";
+        message = getString(R.string.speech_language_unavailable);
         break;
       case SpeechRecognizer.ERROR_CLIENT:
         return;
       default:
-        message = "Diktálási hiba (" + error + ")";
+        message = getString(R.string.speech_error, error);
     }
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
   }
@@ -773,7 +837,7 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       return;
     }
     String language = enabled.get((enabled.indexOf(settings.language()) + 1) % enabled.size());
-    settings.prefs.edit().putString("language", language).apply();
+    settings.setLanguage(language);
     Toast.makeText(this, Languages.get(language).name(), Toast.LENGTH_SHORT).show();
   }
 

@@ -24,15 +24,19 @@ public final class EmojiCatalog {
           value.optString("emoji"),
           value.optString("name"),
           languages(value.optJSONObject("kw")),
-          value.optInt("group"));
+          value.optInt("group"), value.optString("subgroup"));
     }
 
     Entry(String emoji, String name, Map<String, String> kw, int group) {
+      this(emoji, name, kw, group, "");
+    }
+
+    Entry(String emoji, String name, Map<String, String> kw, int group, String subgroup) {
       this.emoji = emoji;
       this.name = name;
       this.kw = kw;
       keywords = keywords("hu");
-      this.group = group == 9 ? 6 : group;
+      this.group = "heart".equals(subgroup) ? 7 : group;
       String base = emoji.replaceAll("[\\x{1F3FB}-\\x{1F3FF}]", "");
       key = base.isEmpty() ? emoji : base;
     }
@@ -104,6 +108,8 @@ public final class EmojiCatalog {
     String skin = settings.text("skin", "");
     for (List<Entry> variants : families.values()) {
       Entry selected = variants.get(0);
+      // Skin modifiers are components, not standalone emoji.
+      if (selected.group == 9) continue;
       if (!skin.isEmpty()) {
         for (Entry item : variants)
           if (item.emoji.contains(skin)
@@ -125,7 +131,7 @@ public final class EmojiCatalog {
   }
 
   public List<Entry> filter(KeyboardSettings settings, int group, String query) {
-    return filter(settings, group, query, "hu");
+    return filter(settings, group, query, settings.language());
   }
 
   public List<Entry> filter(KeyboardSettings settings, int group, String query, String language) {

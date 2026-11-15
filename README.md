@@ -1,8 +1,10 @@
 # iOS Keyboard for Android
 
+<img src="docs/images/app-icon.svg" width="88" height="88" alt="Keyboard app icon" />
+
 Many of us find Android keyboards hard to get used to after using an iPhone. I started this project to make that transition easier, with a familiar layout and typing experience on Android.
 
-An iOS-inspired, open-source Android keyboard with Hungarian typing, conservative offline
+An iOS-inspired, open-source Android keyboard with nine typing languages, conservative offline
 autocorrection, accent popups, emoji search, and optional Google speech recognition.
 Licensed under **GPL-3.0-only**, with separately licensed components listed in
 [third-party notices](THIRD_PARTY_NOTICES.md).
@@ -14,20 +16,38 @@ for tested configurations and physical-device gaps. It does not bundle Apple fon
 or traced screenshot artwork. Letter labels use Inter; key rectangles are generated
 from row rules and icons are drawn in code.
 
+## Try the preview
+
+1. Download the signed APK from [GitHub Releases](https://github.com/Yxonyx/ios-keyboard-for-android/releases).
+2. Install it, open the app, and enable it in Android keyboard settings.
+3. Choose it in the system keyboard picker. Hold the space bar to cycle through
+   the typing languages selected in settings.
+
+The release is a **development preview**. Verify the APK checksum and signing
+certificate using the [release guide](docs/RELEASE.md). Updates signed with the same
+release key retain settings. A debug-signed development installation has a different
+identity and cannot be updated in place by the release APK. Export or record your
+settings before choosing to replace a development build; do not uninstall merely
+to bypass an unexplained signature error. The `.debug` package installs separately.
+
+To build it yourself, follow the [pinned toolchain instructions](docs/BUILD.md).
+
 ## What works
 
 - A real Android input method: typing into other apps, editor actions, selection
   replacement, grapheme deletion, accent choices and spacebar cursor movement.
 - Offline AOSP LatinIME correction, a suggestion strip and immediate Backspace undo.
-- Emoji categories, recents, skin-tone choices and CLDR search keywords.
+- Emoji categories, recents, skin-tone choices and CLDR search keywords. Swipe the
+  grid in either direction to change pages; hold an emoji to see its skin-tone variants.
 - Theme, feedback, keyboard-height and typing-behavior settings.
 - Optional speech recognition through Google's installed recognizer or the system
   fallback. **Audio may leave the phone.** See [privacy](PRIVACY.md).
 
 Language definitions, dictionaries and emoji keywords cover English, Hungarian,
 German, French, Spanish, Italian, Brazilian Portuguese, Polish and Dutch. The
-settings language picker and Android subtype declarations still expose Hungarian
-and English only; the nine-language settings UI and translations are unfinished.
+settings expose all nine typing languages and their layouts, plus a selectable
+language cycle using a long press on the space bar. The interface is translated into the same nine languages
+and can follow Android or use an independent application language.
 Do not interpret the presence of dictionaries as measured correction quality in
 all nine languages. The Portuguese dictionary here is the original OpenBoard
 version, rather than the separately patched variant used in private development.
@@ -42,6 +62,20 @@ version, rather than the separately patched variant used in private development.
 Light and dark modes, shown in the Grok app. Captured from the private development
 build before the public-source artwork changes; the publication candidate uses
 Inter labels and code-drawn icons. Grok's interface is shown only as the host app.
+
+## Known limitations
+
+- Android 13 or newer; physical validation across manufacturers is still incomplete.
+- The experimental Android 15 16 KB emulator currently fails app-test editor
+  connection preparation. Native tests passed there; full IME validation is pending.
+- Emoji metadata covers 3,972 records. The nine component-only records are not
+  standalone keys; the other 3,963 sequences are reachable through categories and
+  variant selection. Rendering still depends on the installed emoji font. A check
+  with the sampled Xiaomi font reported 19 unsupported sequences; this is not a
+  universal count. See [emoji coverage](docs/COMPATIBILITY.md#emoji-coverage).
+- Dictionaries are included for nine languages; correction quality has not been
+  measured equally across those languages.
+- Optional dictation uses an external recognizer and may upload audio.
 
 ## Privacy and the Android keyboard warning
 

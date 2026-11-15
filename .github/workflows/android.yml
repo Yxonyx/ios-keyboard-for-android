@@ -31,6 +31,7 @@ jobs:
         run: |
           python3 tools/verify_engine_sources.py
           python3 tools/verify_public_release.py
+          python3 tools/verify_translations.py
           python3 tools/build_layout.py
           python3 tools/build_emoji_catalog.py
           git diff --exit-code -- ui-demo/app/src/main/assets/emoji/catalog.json ui-demo/app/src/main/assets/geometry.json

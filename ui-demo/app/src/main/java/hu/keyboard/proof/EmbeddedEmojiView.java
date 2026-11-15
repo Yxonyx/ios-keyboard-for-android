@@ -19,20 +19,20 @@ public final class EmbeddedEmojiView extends LinearLayout {
   private TextView findView;
   private final LinearLayout grid, categories;
   private int category, page;
-  private float downX;
+  private int pageCount = 1;
   private int ink;
   private EmojiCatalog.Entry choosing;
   private final android.graphics.Typeface emojiFont;
   private final String[] names = {
-    "Legutóbbi",
-    "Arcok és emberek",
-    "Állatok és természet",
-    "Étel és ital",
-    "Tevékenységek",
-    "Utazás",
-    "Tárgyak",
-    "Jelek",
-    "Zászlók"
+    getContext().getString(R.string.emoji_recent),
+    getContext().getString(R.string.emoji_people),
+    getContext().getString(R.string.emoji_nature),
+    getContext().getString(R.string.emoji_food),
+    getContext().getString(R.string.emoji_activities),
+    getContext().getString(R.string.emoji_travel),
+    getContext().getString(R.string.emoji_objects),
+    getContext().getString(R.string.emoji_symbols),
+    getContext().getString(R.string.emoji_flags)
   };
 
   public EmbeddedEmojiView(
@@ -62,14 +62,46 @@ public final class EmbeddedEmojiView extends LinearLayout {
     ink = dark ? 0xffeceef4 : 0xff575c65;
     setPadding(dp(8), dp(8), dp(8), dp(8));
     setBackground(shape(dark ? 0xc5292b2f : 0xc7e3e3e5, 28));
-    findView = text(query.isEmpty() ? "Emojik keresése" : query, 16, ink);
+    findView = text(query.isEmpty() ? getContext().getString(R.string.search_emoji) : query, 16, ink);
     findView.setGravity(Gravity.CENTER_VERTICAL);
     findView.setPadding(dp(16), 0, dp(16), 0);
     findView.setBackground(shape(dark ? 0x80747578 : 0xd9f3f3f5, 24));
-    findView.setContentDescription("Emojik keresése");
+    findView.setContentDescription(getContext().getString(R.string.search_emoji));
     findView.setOnClickListener(v -> search.run());
     addView(findView, new LayoutParams(-1, dp(40)));
-    grid = new LinearLayout(context);
+    grid = new LinearLayout(context) {
+      private float startX, startY;
+      private boolean swiping;
+
+      @Override public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+          startX = event.getX();
+          startY = event.getY();
+          swiping = false;
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+          float dx = event.getX() - startX, dy = event.getY() - startY;
+          if (Math.abs(dx) > dp(16) && Math.abs(dx) > Math.abs(dy)) {
+            swiping = true;
+            return true;
+          }
+        }
+        return false;
+      }
+
+      @Override public boolean onTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_UP && swiping) {
+          float dx = event.getX() - startX;
+          if (Math.abs(dx) > dp(32)) {
+            page = Math.max(0, Math.min(pageCount - 1, page + (dx < 0 ? 1 : -1)));
+            render();
+          }
+          swiping = false;
+        } else if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+          swiping = false;
+        }
+        return true;
+      }
+    };
     grid.setOrientation(VERTICAL);
     LayoutParams gl = new LayoutParams(-1, 0, 1);
     gl.setMargins(0, dp(8), 0, 0);
@@ -92,7 +124,7 @@ public final class EmbeddedEmojiView extends LinearLayout {
     bottom.addView(position, new LayoutParams(0, -2, 1));
     position.setTag("page");
     EmojiPanel.CategoryIcon microphone = new EmojiPanel.CategoryIcon(context, "mic", ink);
-    microphone.setContentDescription("Diktálás");
+    microphone.setContentDescription(getContext().getString(R.string.dictation));
     microphone.setOnClickListener(v -> dictate.run());
     bottom.addView(microphone, new LayoutParams(dp(44), dp(44)));
     render();
@@ -129,10 +161,11 @@ public final class EmbeddedEmojiView extends LinearLayout {
     List<EmojiCatalog.Entry> items =
         choosing == null ? catalog.filter(settings, category, query, settings.language()) : catalog.variants(choosing);
     int pages = Math.max(1, (items.size() + 27) / 28);
+    pageCount = pages;
     page = Math.min(page, pages - 1);
     TextView position = findViewWithTag("page");
     if (position != null)
-      position.setText(choosing != null ? "Bőrszínváltozatok" : (page + 1) + " / " + pages);
+      position.setText(choosing != null ? getContext().getString(R.string.skin_variants) : (page + 1) + " / " + pages);
     for (int r = 0; r < 4; r++) {
       LinearLayout row = new LinearLayout(getContext());
       grid.addView(row, new LayoutParams(-1, 0, 1));
@@ -142,17 +175,6 @@ public final class EmbeddedEmojiView extends LinearLayout {
         cell.setTypeface(emojiFont);
         cell.setGravity(Gravity.CENTER);
         row.addView(cell, new LayoutParams(0, -1, 1));
-        cell.setOnTouchListener(
-            (v, event) -> {
-              if (event.getActionMasked() == MotionEvent.ACTION_DOWN) downX = event.getX();
-              if (event.getActionMasked() == MotionEvent.ACTION_UP
-                  && Math.abs(event.getX() - downX) > dp(32)) {
-                page = Math.max(0, Math.min(pages - 1, page + (event.getX() < downX ? 1 : -1)));
-                render();
-                return true;
-              }
-              return false;
-            });
         cell.setClickable(true);
         if (index >= items.size()) continue;
         EmojiCatalog.Entry item = items.get(index);
@@ -172,7 +194,7 @@ public final class EmbeddedEmojiView extends LinearLayout {
     if (items.isEmpty()) {
       grid.removeAllViews();
       TextView empty =
-          text(query.isEmpty() ? "Még nincsenek legutóbbi emojik" : "Nincs találat", 14, ink);
+          text(query.isEmpty() ? getContext().getString(R.string.no_recent_emoji) : getContext().getString(R.string.no_results), 14, ink);
       empty.setGravity(Gravity.CENTER);
       grid.addView(empty, new LayoutParams(-1, -1));
     }
@@ -186,7 +208,7 @@ public final class EmbeddedEmojiView extends LinearLayout {
           v -> {
             category = selected;
             query = "";
-            findView.setText("Emojik keresése");
+            findView.setText(getContext().getString(R.string.search_emoji));
             choosing = null;
             page = 0;
             settings.prefs.edit().putInt("emoji_category", selected).apply();
@@ -195,7 +217,7 @@ public final class EmbeddedEmojiView extends LinearLayout {
       categories.addView(icon, new LayoutParams(0, dp(44), 1));
     }
     EmojiPanel.CategoryIcon delete = new EmojiPanel.CategoryIcon(getContext(), "delete", ink);
-    delete.setContentDescription("Törlés");
+    delete.setContentDescription(getContext().getString(R.string.delete));
     delete.setOnClickListener(v -> erase.run());
     categories.addView(delete, new LayoutParams(dp(40), dp(44)));
   }

@@ -81,7 +81,7 @@ final class Languages {
               "A ÀÁÂÄÆÃÅĀ|E ÈÉÊËĘĖĒ|I ÌÍÎÏĮĪ|O ÒÓÔÖŒØŌÕ|U ÙÚÛÜŪ"),
           new Language(
               "pt",
-              "Português",
+              "Português (Brasil)",
               "pt-BR",
               List.of("QWERTY"),
               null,

@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a focused improvement to the keyboard.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What typing problem would this solve?
+      description: Describe a concrete situation using invented text only.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Proposed behavior
+      description: Include language, layout, device or host-app details if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or existing settings you tried
