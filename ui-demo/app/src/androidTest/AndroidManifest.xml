@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <application>
+        <!-- Synthetic engine only in the test APK; never records audio or ships in the app. -->
+        <service android:name="hu.keyboard.proof.SyntheticRecognitionService"
+            android:exported="true" android:permission="android.permission.BIND_SPEECH_RECOGNITION_SERVICE">
+            <intent-filter><action android:name="android.speech.RecognitionService"/></intent-filter>
+        </service>
+    </application>
+</manifest>

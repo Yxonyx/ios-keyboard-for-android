@@ -477,10 +477,10 @@ public final class SettingsActivity extends Activity {
     row(
         getString(R.string.recognizer),
         Dictation.available(this)
-            ? (Dictation.service(this) != null ? "Google" : getString(R.string.system_default))
+            ? Dictation.providerName(this)
             : getString(R.string.not_installed),
         getString(R.string.external_service),
-        null,
+        () -> Dictation.openSettings(this),
         false);
     note(
         getString(R.string.dictation_note));

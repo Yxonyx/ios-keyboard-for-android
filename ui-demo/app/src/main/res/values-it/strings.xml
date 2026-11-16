@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Layout, tempi e cronologia"</string>
     <string name="reset_all_title">"Ripristinare tutte le impostazioni?"</string>
     <string name="reset_all_message">"Impostazioni personali ed emoji recenti verranno eliminati. La lingua dell’interfaccia tornerà a seguire il sistema."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nLa digitazione è locale. Il riconoscimento vocale esterno facoltativo può caricare audio."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nLa digitazione è locale. Il riconoscimento vocale esterno facoltativo può caricare audio."</string>
     <string name="setup_intro">"Configurazione iniziale in Android"</string>
     <string name="setup_warning">"Android avvisa che le tastiere di terzi possono ricevere il testo digitato. Digitazione e correzione restano locali. La dettatura facoltativa può usare un servizio esterno."</string>
     <string name="privacy_link_note">"Elaborazione locale, dettatura e avvisi Android"</string>
@@ -218,4 +218,5 @@
     <string name="speech_ready">"Consenso salvato. Tocca di nuovo il microfono per dettare."</string>
     <string name="privacy_summary">"Digitazione locale\nDigitazione, correzione e ricerca emoji avvengono sul dispositivo. Nessun permesso Internet, account, analisi, server dello sviluppatore o collegamento GitHub in background. GitHub ospita il codice, non un servizio di digitazione.\n\nDettatura facoltativa\nUn servizio esterno, solitamente Google, può registrare e caricare audio dopo consenso separato e permesso microfono. Puoi revocare il consenso nelle impostazioni di dettatura.\n\nAvvisi Android\nUna tastiera può ricevere ciò che digiti. L’avviso Android descrive questa capacità; da solo non dimostra la presenza di malware. L’open source non garantisce un APK sicuro. Valuta separatamente gli avvisi Play Protect, di firma e manomissione. Questa anteprima non ha una firma di produzione attendibile né una garanzia di sicurezza indipendente.\n\nArchiviazione locale\nImpostazioni, emoji recenti, dizionari e un carattere facoltativo restano nell’archivio privato. I suggerimenti degli appunti sono disattivati per impostazione predefinita. Nessuna cronologia di digitazione. L’app che riceve il testo ha una propria informativa privacy."</string>
     <string name="emoji_panel">Pannello</string>
+    <string name="recognizer_setup">"Scegli un servizio di riconoscimento vocale predefinito nelle impostazioni di input vocale Android, poi tocca di nuovo il microfono."</string>
 </resources>

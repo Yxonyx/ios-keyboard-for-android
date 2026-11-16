@@ -23,7 +23,21 @@ final class Languages {
       return Locale.forLanguageTag(code);
     }
 
-    /** Variants for each base letter in popup order, without the base letter itself. */
+    /** Visible order, including the base key; Hungarian O keeps Ó to its right. */
+    List<String> popupLabels(String key, boolean rightward) {
+      if (code.equals("hu") && key.equals("O"))
+        return "ŌØŒÕÒÔŐÖOÓ".codePoints()
+            .mapToObj(cp -> new String(Character.toChars(cp)))
+            .collect(java.util.stream.Collectors.toList());
+      List<String> labels = new java.util.ArrayList<>();
+      labels.add(key);
+      accentMap().getOrDefault(key, "").codePoints()
+          .forEach(cp -> labels.add(new String(Character.toChars(cp))));
+      if (!rightward) java.util.Collections.reverse(labels);
+      return labels;
+    }
+
+    /** Variants for each base letter, without the base letter itself. */
     Map<String, String> accentMap() {
       Map<String, String> result = new LinkedHashMap<>();
       if (accents.isEmpty()) return result;
@@ -50,7 +64,7 @@ final class Languages {
               "hu-HU",
               List.of("QWERTZ", "QWERTY"),
               null,
-              "A ÁÀÂÄÆÃÅĀ|E ÉÈÊËĘĖĒ|I Í|O ÖŐÓÒÔŒØŌÕ|U ÜŰÚÙÛŪ"),
+              "A ÁÀÂÄÆÃÅĀ|E ÉÈÊËĘĖĒ|I ÍÎÏÌĮĪ|O ÓÖŐÔÒÕŒØŌ|U ÜŰÚÙÛŪ"),
           new Language(
               "de",
               "Deutsch",

@@ -736,6 +736,11 @@ public final class KeyboardService extends InputMethodService implements Keyboar
       askMicrophone();
       return;
     }
+    if (Dictation.needsSetup(this)) {
+      Toast.makeText(this, R.string.recognizer_setup, Toast.LENGTH_LONG).show();
+      Dictation.openSettings(this);
+      return;
+    }
     composition.finish();
     InputConnection ic = getCurrentInputConnection();
     CharSequence before = ic == null ? null : ic.getTextBeforeCursor(1, 0);

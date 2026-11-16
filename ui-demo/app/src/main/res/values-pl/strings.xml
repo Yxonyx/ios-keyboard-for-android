@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Układy, czasy i historia"</string>
     <string name="reset_all_title">"Zresetować wszystkie ustawienia?"</string>
     <string name="reset_all_message">"Własne ustawienia i ostatnie emoji zostaną usunięte. Język interfejsu znów będzie zgodny z systemem."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nPisanie jest lokalne. Opcjonalne zewnętrzne rozpoznawanie mowy może wysyłać dźwięk."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nPisanie jest lokalne. Opcjonalne zewnętrzne rozpoznawanie mowy może wysyłać dźwięk."</string>
     <string name="setup_intro">"Jednorazowa konfiguracja w Androidzie"</string>
     <string name="setup_warning">"Android ostrzega, że klawiatury innych firm mogą otrzymywać wpisywany tekst. Pisanie i korekta pozostają lokalne. Opcjonalne dyktowanie może używać zewnętrznej usługi."</string>
     <string name="privacy_link_note">"Lokalne przetwarzanie, dyktowanie i ostrzeżenia Androida"</string>
@@ -218,4 +218,5 @@
     <string name="speech_ready">"Zgoda zapisana. Dotknij mikrofonu ponownie, aby dyktować."</string>
     <string name="privacy_summary">"Lokalne pisanie\nPisanie, korekta i wyszukiwanie emoji działają na urządzeniu. Brak uprawnienia Internetu, konta, analityki, serwera twórcy i połączenia z GitHubem w tle. GitHub udostępnia kod, a nie usługę pisania.\n\nOpcjonalne dyktowanie\nZewnętrzna usługa, zwykle Google, może nagrywać i wysyłać dźwięk po osobnej zgodzie i udzieleniu uprawnienia mikrofonu. Zgodę można cofnąć w ustawieniach dyktowania.\n\nOstrzeżenia Androida\nKlawiatura może otrzymywać wpisywany tekst. Ostrzeżenie Androida opisuje tę możliwość; samo w sobie nie jest wykryciem malware. Otwarty kod nie gwarantuje bezpiecznego APK. Osobno sprawdzaj alerty Play Protect, podpisu i modyfikacji. Ta wersja podglądowa nie ma zaufanego podpisu produkcyjnego ani niezależnej gwarancji bezpieczeństwa.\n\nLokalne dane\nUstawienia, ostatnie emoji, słowniki i opcjonalna czcionka pozostają w prywatnej pamięci aplikacji. Podpowiedzi schowka są domyślnie wyłączone. Brak bazy historii pisania. Aplikacja otrzymująca tekst ma własną politykę prywatności."</string>
     <string name="emoji_panel">Panel</string>
+    <string name="recognizer_setup">"Wybierz domyślną usługę rozpoznawania mowy w ustawieniach wprowadzania głosowego Androida i ponownie dotknij mikrofonu."</string>
 </resources>

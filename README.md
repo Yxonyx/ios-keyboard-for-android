@@ -63,6 +63,9 @@ Light and dark modes, shown in the Grok app. Captured from the private developme
 build before the public-source artwork changes; the publication candidate uses
 Inter labels and code-drawn icons. Grok's interface is shown only as the host app.
 
+For recognizer setup, live partial text and microphone troubleshooting, see
+[dictation](docs/DICTATION.md).
+
 ## Known limitations
 
 - Android 13 or newer; physical validation across manufacturers is still incomplete.

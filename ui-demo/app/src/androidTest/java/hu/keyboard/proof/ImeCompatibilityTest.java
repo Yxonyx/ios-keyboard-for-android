@@ -468,6 +468,40 @@ public final class ImeCompatibilityTest {
   }
 
   @Test
+  public void dictationStreamsIntoTheEditorBeforeFinalResultWithoutDuplicatingText() throws Exception {
+    String previousEngine = shell("settings get secure voice_recognition_service").trim();
+    String testPackage = instrumentation.getContext().getPackageName();
+    String engine = new ComponentName(testPackage, SyntheticRecognitionService.class.getName())
+        .flattenToShortString();
+    try {
+      shell("settings put secure voice_recognition_service " + quote(engine));
+      instrumentation.getUiAutomation().grantRuntimePermission(context.getPackageName(),
+          android.Manifest.permission.RECORD_AUDIO);
+      instrumentation.getUiAutomation().grantRuntimePermission(testPackage,
+          android.Manifest.permission.RECORD_AUDIO);
+      prefs.edit().putBoolean(MicPermissionActivity.CONSENT_KEY, true).commit();
+      EditText field = focus(R.id.test_message);
+      tap(1072, 2436);
+      expect(field, "próba");
+      AtomicInteger composing = new AtomicInteger(-1);
+      instrumentation.runOnMainSync(() -> composing.set(
+          android.view.inputmethod.BaseInputConnection.getComposingSpanStart(field.getText())));
+      assertEquals("Partial recognition must already be composing in the real editor", 0, composing.get());
+      context.sendBroadcast(new Intent(SyntheticRecognitionService.FINISH).setPackage(testPackage));
+      expect(field, "próba beszéd");
+      instrumentation.runOnMainSync(() -> composing.set(
+          android.view.inputmethod.BaseInputConnection.getComposingSpanStart(field.getText())));
+      assertEquals("Final result must commit the existing composition", -1, composing.get());
+    } finally {
+      if (previousEngine.isEmpty() || previousEngine.equals("null"))
+        shell("settings delete secure voice_recognition_service");
+      else shell("settings put secure voice_recognition_service " + quote(previousEngine));
+      // Revoking a runtime permission would kill this instrumentation process.
+      // The disposable test target is uninstalled by the connected-test runner.
+    }
+  }
+
+  @Test
   public void passwordStaysLiteralAndDoesNotOpenSpeechConsent() throws Exception {
     prefs.edit().putBoolean("autocorrect", true).putBoolean("suggestions", true).commit();
     EditText field = focus(R.id.test_password);
