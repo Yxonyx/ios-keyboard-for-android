@@ -2,6 +2,9 @@
 
 ## 0.8.2-preview — 2026-11-16
 
+- Request one discreet native haptic tap when the recognizer is ready to listen,
+  respecting keyboard and system haptic settings. Document device/provider limits.
+
 - Respect the configured system speech recognizer before Google fallbacks. Guide
   Android 15+ users to voice-input setup when a downloaded fallback lacks a
   privileged system binding, instead of repeatedly starting a muted microphone.

@@ -12,6 +12,15 @@ provider can send zero, one or multiple partial results, so word-by-word latency
 cannot be promised for every provider or language. See the Android
 [RecognitionListener contract](https://developer.android.com/reference/android/speech/RecognitionListener).
 
+## Start feedback
+
+A single short native haptic tap is requested when the recognizer reports that it
+is ready to listen, rather than at the initial button press. It follows the
+keyboard's existing haptic setting and Android system settings. Devices without a
+vibration motor or with haptics disabled may provide no vibration; that does not
+mean speech capture failed. A ready callback alone is also not proof of audible
+input, as the diagnosis below demonstrates.
+
 ## Listening but no text
 
 Permission approval and a "Listening" callback do not prove that the recognizer is
@@ -44,6 +53,18 @@ silently broaden microphone permission. OEM settings screens can differ.
 Framework references: [provider privilege selection](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android15-release/services/core/java/com/android/server/speech/SpeechRecognitionManagerServiceImpl.java),
 [binding flags](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android15-release/services/core/java/com/android/server/speech/RemoteSpeechRecognitionService.java),
 [audio sharing](https://developer.android.com/media/platform/sharing-audio-input).
+
+## Who this was checked for
+
+The user confirmed that dictation worked on the Xiaomi / Android 16 test phone
+after the default-recognizer correction. Lifecycle-only logs also confirmed Google
+partial-result and final-result delivery; recognized text was not logged. This is
+a device-specific confirmation,
+not a guarantee for all Android phones. Samsung, Pixel, other OEMs, Bluetooth
+microphones and alternate recognizers have not all been physically validated.
+A compatible provider must support the selected language; it may require downloaded
+models or network access. Partial-result frequency and latency are provider-specific.
+The app's Android 13 minimum does not itself establish dictation compatibility.
 
 ## Validation boundary
 

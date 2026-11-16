@@ -2,6 +2,15 @@
 
 ## Dictation setup and live editor regression, 2026-11-16
 
+The user subsequently confirmed that dictation worked on the Xiaomi phone after
+the system-recognizer correction. This is a user-confirmed physical result; the
+recognized utterance was not captured as evidence. The lifecycle-only log also
+confirmed repeated Google partial-result callbacks followed by final-result
+callbacks, without storing their text. It must not be generalized to
+all manufacturers or recognition engines. A native haptic tap is now requested
+once per recognition session when its ready callback arrives, respecting existing
+haptic preferences.
+
 The local API 36 ARM64 suite passed 29 JVM tests, 21 app instrumentation tests and
 6 native tests, with zero failures or skips. Debug/release lint and compilation
 passed. The new synthetic recognition service exists only in the test APK, opens

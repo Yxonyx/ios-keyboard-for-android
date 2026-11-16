@@ -123,6 +123,11 @@ public final class KeyboardService extends InputMethodService implements Keyboar
         new Dictation(
             this,
             new Dictation.Listener() {
+              public void ready() {
+                if (keyboard != null && settings.enabled("haptic", true))
+                  keyboard.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP);
+              }
+
               public void status(String value) {
                 showDictation(value);
               }
