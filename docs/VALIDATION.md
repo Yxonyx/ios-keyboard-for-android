@@ -1,5 +1,26 @@
 # Validation
 
+## Dictation setup and live editor regression, 2026-11-16
+
+The local API 36 ARM64 suite passed 29 JVM tests, 21 app instrumentation tests and
+6 native tests, with zero failures or skips. Debug/release lint and compilation
+passed. The new synthetic recognition service exists only in the test APK, opens
+no audio recorder, and verifies partial text is composing in the actual host editor
+before a final result replaces/commits it without duplication. It is not a speech
+accuracy benchmark.
+
+On the Xiaomi / Android 16 phone, selecting the installed Google Speech Services
+as the system recognizer changed its audio capture from `silenced` to
+`silenced:false`. No default recognizer had previously been configured. Suspending
+the environmental sound recognition accessibility service did not fix capture;
+its original setting was restored. See [DICTATION.md](DICTATION.md) for the framework
+binding-policy explanation and the distinction between audio routing, synthetic
+editor validation and recognition of a real spoken utterance. No real recognized
+text or audio is included in the diagnostics.
+
+The Hungarian A/E/I/O popup changes were visually inspected on the phone using
+synthetic editor content. The original iPhone reference images remain outside Git.
+
 ## Signed preview publication, 2026-11-16
 
 Version 0.8.1-preview (version code 9) adds optional external signing configuration.

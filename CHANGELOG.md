@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.2-preview — 2026-11-16
+
+- Respect the configured system speech recognizer before Google fallbacks. Guide
+  Android 15+ users to voice-input setup when a downloaded fallback lacks a
+  privileged system binding, instead of repeatedly starting a muted microphone.
+- Report the actual recognizer package in settings and link to system voice input.
+- Add an emulator-only synthetic speech engine to verify partial text appears in
+  the host editor before finalization, without duplicate text or audio recording.
+- Match Hungarian A/E/I/O accent choices and popup placement to the supplied
+  reference, including Ó immediately to the right of O.
+
 ## 0.8.1-preview — 2026-11-16
 
 - Publish a signed preview APK with checksum and certificate verification instructions.

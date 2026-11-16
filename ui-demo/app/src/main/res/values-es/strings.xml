@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Distribuciones, tiempos e historial"</string>
     <string name="reset_all_title">"¿Restablecer todos los ajustes?"</string>
     <string name="reset_all_message">"Se borrarán los ajustes personalizados y emojis recientes. El idioma de la interfaz volverá a seguir al sistema."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nLa escritura es local. El reconocimiento de voz externo opcional puede subir audio."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nLa escritura es local. El reconocimiento de voz externo opcional puede subir audio."</string>
     <string name="setup_intro">"Configuración inicial en Android"</string>
     <string name="setup_warning">"Android advierte que los teclados externos pueden recibir el texto escrito. La escritura y corrección son locales. El dictado opcional puede usar un servicio externo."</string>
     <string name="privacy_link_note">"Procesamiento local, dictado y avisos de Android"</string>
@@ -218,4 +218,5 @@
     <string name="speech_ready">"Aprobación guardada. Toca otra vez el micrófono para dictar."</string>
     <string name="privacy_summary">"Escritura local\nLa escritura, corrección y búsqueda de emojis se ejecutan en este dispositivo. Sin permiso de Internet, cuenta, analítica, servidor del desarrollador ni conexión a GitHub en segundo plano. GitHub aloja el código, no un servicio de escritura.\n\nDictado opcional\nUn servicio externo, normalmente Google, puede grabar y subir audio tras una aprobación independiente y permiso del micrófono. Puedes revocar la aprobación en los ajustes de dictado.\n\nAvisos de Android\nUn teclado puede recibir lo que escribes. El aviso de Android describe esta capacidad; por sí solo no indica malware. El código abierto no garantiza un APK seguro. Revisa por separado las alertas de Play Protect, firma y manipulación. Esta versión previa no tiene firma de producción de confianza ni garantía de seguridad independiente.\n\nAlmacenamiento local\nAjustes, emojis recientes, diccionarios y fuente opcional quedan en almacenamiento privado. Las sugerencias del portapapeles están desactivadas de forma predeterminada. No hay historial de escritura. La aplicación que recibe el texto tiene su propia política de privacidad."</string>
     <string name="emoji_panel">Panel</string>
+    <string name="recognizer_setup">"Selecciona un reconocedor de voz predeterminado en los ajustes de entrada de voz de Android y vuelve a tocar el micrófono."</string>
 </resources>

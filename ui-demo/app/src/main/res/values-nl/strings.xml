@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Indelingen, timing en geschiedenis"</string>
     <string name="reset_all_title">"Alle instellingen herstellen?"</string>
     <string name="reset_all_message">"Aangepaste instellingen en recente emoji worden verwijderd. De interfacetaal volgt weer het systeem."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nTypen is lokaal. Optionele externe spraakherkenning kan audio uploaden."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nTypen is lokaal. Optionele externe spraakherkenning kan audio uploaden."</string>
     <string name="setup_intro">"Eenmalig instellen in Android"</string>
     <string name="setup_warning">"Android waarschuwt dat toetsenborden van derden getypte tekst kunnen ontvangen. Typen en correctie blijven lokaal. Optioneel dicteren kan een externe spraakherkenner gebruiken."</string>
     <string name="privacy_link_note">"Lokale verwerking, dicteren en Android-waarschuwingen"</string>
@@ -218,4 +218,5 @@
     <string name="speech_ready">"Toestemming opgeslagen. Tik opnieuw op de microfoon om te dicteren."</string>
     <string name="privacy_summary">"Lokaal typen\nTypen, correctie en emoji zoeken werken op dit apparaat. Geen internetmachtiging, account, analyse, ontwikkelaarsserver of GitHub-verbinding op de achtergrond. GitHub bevat de broncode, geen typedienst.\n\nOptioneel dicteren\nEen externe herkenner, meestal Google, kan na aparte toestemming en microfoonmachtiging audio opnemen en uploaden. Je kunt toestemming intrekken in de dicteerinstellingen.\n\nAndroid-waarschuwingen\nEen toetsenbord kan ontvangen wat je typt. De Android-waarschuwing beschrijft deze mogelijkheid; op zichzelf is dit geen malwaremelding. Open source garandeert geen veilige APK. Beoordeel Play Protect-, handtekening- en manipulatiemeldingen afzonderlijk. Deze preview heeft geen vertrouwde productiehandtekening of onafhankelijke veiligheidsgarantie.\n\nLokale opslag\nInstellingen, recente emoji, woordenboeken en een optioneel lettertype blijven in privéopslag. Klembordsuggesties staan standaard uit. Er is geen typgeschiedenis. De app die je tekst ontvangt heeft een eigen privacybeleid."</string>
     <string name="emoji_panel">Paneel</string>
+    <string name="recognizer_setup">"Kies een standaard spraakherkenner in de Android-instellingen voor spraakinvoer en tik opnieuw op de microfoon."</string>
 </resources>

@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Layouts, tempos e histórico"</string>
     <string name="reset_all_title">"Redefinir todas as configurações?"</string>
     <string name="reset_all_message">"Configurações personalizadas e emojis recentes serão apagados. O idioma da interface voltará a seguir o sistema."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nA digitação é local. O reconhecimento externo opcional pode enviar áudio."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nA digitação é local. O reconhecimento externo opcional pode enviar áudio."</string>
     <string name="setup_intro">"Configuração inicial no Android"</string>
     <string name="setup_warning">"O Android avisa que teclados de terceiros podem receber o texto digitado. Digitação e correção são locais. O ditado opcional pode usar um reconhecedor externo."</string>
     <string name="privacy_link_note">"Processamento local, ditado e avisos do Android"</string>
@@ -218,4 +218,5 @@
     <string name="speech_ready">"Aprovação salva. Toque novamente no microfone para ditar."</string>
     <string name="privacy_summary">"Digitação local\nDigitação, correção e busca de emojis funcionam neste dispositivo. Sem permissão de Internet, conta, análise, servidor do desenvolvedor ou conexão ao GitHub em segundo plano. O GitHub hospeda o código, não um serviço de digitação.\n\nDitado opcional\nUm reconhecedor externo, geralmente Google, pode gravar e enviar áudio após aprovação separada e permissão do microfone. Você pode revogar a aprovação nas configurações de ditado.\n\nAvisos do Android\nUm teclado pode receber o que você digita. O aviso do Android descreve essa capacidade; sozinho não indica malware. Código aberto não garante um APK seguro. Avalie separadamente alertas do Play Protect, de assinatura e adulteração. Esta prévia não tem assinatura de produção confiável nem garantia independente de segurança.\n\nArmazenamento local\nConfigurações, emojis recentes, dicionários e uma fonte opcional ficam no armazenamento privado. Sugestões da área de transferência vêm desativadas. Não há histórico de digitação. O aplicativo que recebe o texto tem sua própria política de privacidade."</string>
     <string name="emoji_panel">Painel</string>
+    <string name="recognizer_setup">"Selecione um reconhecedor de fala padrão nas configurações de entrada de voz do Android e toque novamente no microfone."</string>
 </resources>

@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Kiosztások, időzítések és előzmények"</string>
     <string name="reset_all_title">"Minden beállítás visszaállítása?"</string>
     <string name="reset_all_message">"Az egyéni beállítások és az emoji-előzmények törlődnek. A felület nyelve újra a rendszert követi."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.1-preview\nA gépelés helyben fut. A választható diktálás külső beszédfelismerőt használhat, amely a hangot feltöltheti."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nA gépelés helyben fut. A választható diktálás külső beszédfelismerőt használhat, amely a hangot feltöltheti."</string>
     <string name="setup_intro">"Egyszeri beállítás a telefon Android rendszerében"</string>
     <string name="setup_warning">"Az Android minden külső billentyűzetnél figyelmeztethet a beírt szöveghez való hozzáférésre. A gépelés és a szójavítás helyben fut. A választható diktálás külső beszédfelismerőt használhat."</string>
     <string name="privacy_link_note">"Helyi működés, diktálás és Android-figyelmeztetések"</string>
@@ -218,4 +218,5 @@
     <string name="speech_ready">"Jóváhagyás mentve. Diktáláshoz koppints újra a mikrofonra."</string>
     <string name="privacy_summary">"Helyi gépelés\nA gépelés, javítás és emojikeresés az eszközön fut. Nincs internetengedély, fiók, analitika, fejlesztői szerver vagy háttérkapcsolat a GitHubhoz. A GitHub a forráskódot tárolja, nem gépelési szolgáltatás.\n\nVálasztható diktálás\nA külső felismerő, általában a Google, külön jóváhagyás és mikrofonengedély után rögzítheti és feltöltheti a hangot. A jóváhagyás a diktálás beállításainál visszavonható.\n\nAndroid-figyelmeztetések\nA billentyűzet hozzáférhet a beírt szöveghez. Az Android figyelmeztetése ezt a képességet jelzi; önmagában nem kártevőtalálat. A nyílt forráskód nem garantál biztonságos APK-t. A Play Protect, aláírási és módosítási riasztásokat külön vizsgáld meg. Ennek az előzetes verziónak nincs megbízható kiadási aláírása vagy független biztonsági garanciája.\n\nHelyi tárolás\nA beállítások, legutóbbi emojik, szótárak és az opcionális betűkészlet az alkalmazás privát tárhelyén maradnak. A vágólapajánlás alapból kikapcsolt. Nincs gépelésielőzmény-adatbázis. A szöveget fogadó alkalmazás saját adatvédelmi szabályai érvényesek."</string>
     <string name="emoji_panel">Panel</string>
+    <string name="recognizer_setup">"Válassz alapértelmezett beszédfelismerőt az Android hangbeviteli beállításaiban, majd koppints újra a mikrofonra."</string>
 </resources>
