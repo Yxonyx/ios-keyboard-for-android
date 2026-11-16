@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * One utterance through an installed Android recognizer, preferring Google when available.
+ * One utterance through the system-selected recognizer, with Google fallbacks.
  * The provider may upload audio. Explicit approval is required; this keyboard stores no recording.
  */
 final class Dictation {
   interface Listener {
+    default void ready() {}
+
     void status(String value);
 
     void partial(String text);
@@ -167,6 +169,7 @@ final class Dictation {
 
   private final class Callbacks implements RecognitionListener {
     private final SpeechRecognizer owner;
+    private boolean readyNotified;
 
     Callbacks(SpeechRecognizer owner) {
       this.owner = owner;
@@ -179,7 +182,12 @@ final class Dictation {
     @Override
     public void onReadyForSpeech(Bundle params) {
       android.util.Log.i("KeyboardDictation", "Ready for speech; current=" + current());
-      if (current()) listener.status(context.getString(R.string.listening));
+      if (!current()) return;
+      if (!readyNotified) {
+        readyNotified = true;
+        listener.ready();
+      }
+      listener.status(context.getString(R.string.listening));
     }
 
     @Override

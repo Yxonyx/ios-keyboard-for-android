@@ -78,7 +78,11 @@ For recognizer setup, live partial text and microphone troubleshooting, see
   universal count. See [emoji coverage](docs/COMPATIBILITY.md#emoji-coverage).
 - Dictionaries are included for nine languages; correction quality has not been
   measured equally across those languages.
-- Optional dictation uses an external recognizer and may upload audio.
+- Optional dictation uses an external recognizer and may upload audio. It needs a
+  compatible, configured provider and microphone permission; language/model,
+  connectivity, Android/OEM audio policy and partial-result support vary. The
+  dictation fix was confirmed by the user on a Xiaomi / Android 16 phone, not on
+  every manufacturer. See [dictation evidence and limits](docs/DICTATION.md).
 
 ## Privacy and the Android keyboard warning
 
