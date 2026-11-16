@@ -188,22 +188,17 @@ public final class KeyboardProofView extends View {
     final int initial;
 
     /** Accent choices are laid out from the active key and its language definition. */
-    Popup(Key key, String variants) {
-      List<String> labels = new ArrayList<>();
-      labels.add(key.label);
-      variants.codePoints().forEach(cp -> labels.add(new String(Character.toChars(cp))));
-      while (labels.size() > 9) labels.remove(labels.size() - 1);
-      boolean rightward = key.rect.centerX() < W / 2;
-      if (!rightward) Collections.reverse(labels);
-      float width = 56 + labels.size() * 110;
-      float left =
-          rightward ? key.rect.centerX() - 83 : key.rect.centerX() + 83 - width;
+    Popup(Key key, List<String> labels) {
+      float cellWidth = Math.min(110, (W - 96) / labels.size());
+      float width = 56 + labels.size() * cellWidth;
+      initial = labels.indexOf(key.label);
+      float left = key.rect.centerX() - 28 - (initial + 0.5f) * cellWidth;
       left = Math.max(20, Math.min(W - 20 - width, left));
-      rect = new RectF(left, 1514, left + width, 1720);
-      initial = rightward ? 0 : labels.size() - 1;
+      float top = key.rect.top - 214;
+      rect = new RectF(left, top, left + width, top + 206);
       for (int i = 0; i < labels.size(); i++)
-        cells.add(
-            new Key(labels.get(i), new RectF(left + 28 + i * 110, 1544, left + 138 + i * 110, 1690)));
+        cells.add(new Key(labels.get(i), new RectF(left + 28 + i * cellWidth, top + 30,
+            left + 28 + (i + 1) * cellWidth, top + 176)));
     }
   }
 
@@ -336,7 +331,7 @@ public final class KeyboardProofView extends View {
     Map<String, String> accents = language.accentMap();
     for (Key k : letters) {
       String variants = accents.get(k.label);
-      if (variants != null) languagePopups.put(k.label, new Popup(k, variants));
+      if (variants != null) languagePopups.put(k.label, new Popup(k, language.popupLabels(k.label, k.rect.centerX() < W / 2)));
     }
   }
 
