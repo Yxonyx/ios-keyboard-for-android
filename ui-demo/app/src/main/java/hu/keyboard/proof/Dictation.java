@@ -87,6 +87,8 @@ final class Dictation {
         RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 2500L);
     intent.putExtra(
         RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 2000L);
+    android.util.Log.i("KeyboardDictation", "Starting provider="
+        + (component == null ? "system-default" : component.flattenToShortString()) + " language=" + tag);
     active = true;
     listener.status(context.getString(R.string.connecting));
     recognizer.startListening(intent);
@@ -128,6 +130,7 @@ final class Dictation {
 
     @Override
     public void onReadyForSpeech(Bundle params) {
+      android.util.Log.i("KeyboardDictation", "Ready for speech; current=" + current());
       if (current()) listener.status(context.getString(R.string.listening));
     }
 
@@ -147,6 +150,7 @@ final class Dictation {
 
     @Override
     public void onError(int error) {
+      android.util.Log.w("KeyboardDictation", "Recognition error=" + error + "; current=" + current());
       if (!current()) return;
       cancel();
       listener.failed(error);
@@ -154,6 +158,7 @@ final class Dictation {
 
     @Override
     public void onResults(Bundle results) {
+      android.util.Log.i("KeyboardDictation", "Final result received; current=" + current());
       if (!current()) return;
       String text = first(results);
       cancel();
@@ -162,6 +167,7 @@ final class Dictation {
 
     @Override
     public void onPartialResults(Bundle results) {
+      android.util.Log.i("KeyboardDictation", "Partial result received; current=" + current());
       if (current()) listener.partial(first(results));
     }
 
