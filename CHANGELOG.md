@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Improve the repository introduction, installation heading and FAQ for people
+  looking for an iPhone-style Android keyboard; add relevant GitHub topics and
+  a direct release-page link to the repository metadata. No app behavior changes.
+
 ## 0.8.2-preview — 2026-11-16
 
 - Request one discreet native haptic tap when the recognizer is ready to listen,
