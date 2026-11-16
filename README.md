@@ -1,11 +1,15 @@
 # iOS Keyboard for Android
 
-<img src="docs/images/app-icon.svg" width="88" height="88" alt="Keyboard app icon" />
+<img src="docs/images/app-icon.svg" width="88" height="88" alt="iOS Keyboard for Android app icon" />
 
-Many of us find Android keyboards hard to get used to after using an iPhone. I started this project to make that transition easier, with a familiar layout and typing experience on Android.
+An open-source, iPhone-style keyboard for Android 13+, with an iOS-inspired layout,
+offline autocorrection, nine typing languages, long-press accents and emoji search.
+Optional dictation uses an external Android speech recognizer.
 
-An iOS-inspired, open-source Android keyboard with nine typing languages, conservative offline
-autocorrection, accent popups, emoji search, and optional Google speech recognition.
+Many of us find Android keyboards hard to get used to after using an iPhone. I started
+this project to make that transition easier, with a familiar layout and typing experience
+on Android.
+
 Licensed under **GPL-3.0-only**, with separately licensed components listed in
 [third-party notices](THIRD_PARTY_NOTICES.md).
 
@@ -16,7 +20,7 @@ for tested configurations and physical-device gaps. It does not bundle Apple fon
 or traced screenshot artwork. Letter labels use Inter; key rectangles are generated
 from row rules and icons are drawn in code.
 
-## Try the preview
+## Download and install
 
 1. Download the signed APK from [GitHub Releases](https://github.com/Yxonyx/ios-keyboard-for-android/releases).
 2. Install it, open the app, and enable it in Android keyboard settings.
@@ -83,6 +87,25 @@ For recognizer setup, live partial text and microphone troubleshooting, see
   connectivity, Android/OEM audio policy and partial-result support vary. The
   dictation fix was confirmed by the user on a Xiaomi / Android 16 phone, not on
   every manufacturer. See [dictation evidence and limits](docs/DICTATION.md).
+
+## Frequently asked questions
+
+### Can I get an iPhone-style keyboard on Android?
+
+That is what this project provides: a separate Android keyboard inspired by the iOS
+layout and typing experience. It is not an Apple product and does not include Apple
+fonts or emoji artwork. Install the signed APK above; Android 13 or newer is required.
+
+### Does this Android keyboard work offline?
+
+Typing, autocorrection and emoji search work locally without an account or Internet
+permission. Optional dictation is separate: the installed speech provider may need a
+network connection and may upload audio. See [privacy](PRIVACY.md).
+
+### Does it support Hungarian and accented letters?
+
+Yes. Hungarian supports QWERTZ and QWERTY, with long-press choices for Á, É, Í, Ó, Ö,
+Ő, Ú, Ü and Ű. Eight other typing languages are included; see the language list above.
 
 ## Privacy and the Android keyboard warning
 
