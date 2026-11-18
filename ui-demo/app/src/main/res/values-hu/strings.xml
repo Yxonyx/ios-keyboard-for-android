@@ -34,7 +34,7 @@
     <string name="maintenance_summary">"Előzmények és alapbeállítások"</string>
     <string name="autosaved">"A változtatások automatikusan mentődnek"</string>
     <string name="language_intro">"A nyelvek külön megjegyzik a kiválasztott kiosztást"</string>
-    <string name="active_language">"Aktív nyelv"</string>
+    <string name="active_language">"Aktív gépelési nyelv"</string>
     <string name="layout">"Kiosztás"</string>
     <string name="dictionary_switch">"A nyelvhez tartozó offline szótár automatikusan vált."</string>
     <string name="correction_intro">"Helyben futó javítás kilenc beépített szótárral"</string>
@@ -45,7 +45,7 @@
     <string name="autocorrection">"Automatikus javítás"</string>
     <string name="conservative_correction">"Óvatos szójavítás"</string>
     <string name="correction_note">"Szóköznél vagy írásjelnél javít; a sávban kiemelt szó kerül be. Az első törlés visszaállítja az eredeti szót. Jelszó-, e-mail- és webcímmezőben, illetve privát bevitelnél kikapcsol. Nem tanul és nem ment beírt szöveget."</string>
-    <string name="typing_intro">"Amit a telefonos billentyűzetek alapból tudnak"</string>
+    <string name="typing_intro">"Mindennapi gépelési beállítások"</string>
     <string name="text">"Szöveg"</string>
     <string name="auto_caps">"Automatikus nagybetű"</string>
     <string name="double_space">"Dupla szóköz: pont"</string>
@@ -164,10 +164,10 @@
     <string name="recognizer_busy">"A beszédfelismerő foglalt, próbáld újra"</string>
     <string name="speech_language_unavailable">"Ez a nyelv most nem érhető el a diktáláshoz"</string>
     <string name="keyboard_description">"iOS Keyboard for Android billentyűzet"</string>
-    <string name="interactive_preview">"Billentyűzet · interaktív UI-próba"</string>
+    <string name="interactive_preview">"Billentyűzet · interaktív előnézet"</string>
     <string name="preview_instruction">"Próbáld ki a gombokat és a hosszú nyomást."</string>
     <string name="type_here">"Írj ide…"</string>
-    <string name="preview_no_dictation">"A diktálás ebben a UI-próbában még nem aktív."</string>
+    <string name="preview_no_dictation">"Ebben az előnézetben nincs diktálás."</string>
     <string name="emoji_recent">"Legutóbbi"</string>
     <string name="emoji_people">"Arcok és emberek"</string>
     <string name="emoji_nature">"Állatok és természet"</string>
@@ -178,8 +178,8 @@
     <string name="emoji_flags">"Zászlók"</string>
     <string name="search_emoji">"Emojik keresése"</string>
     <string name="back_letters">"Vissza a betűkhöz"</string>
-    <string name="preview_microphone">"Diktálás, még nem elérhető"</string>
-    <string name="preview_speech_unavailable">"A diktálás még nem érhető el"</string>
+    <string name="preview_microphone">"Az előnézetben nincs diktálás"</string>
+    <string name="preview_speech_unavailable">"Ebben a panelen nincs diktálás"</string>
     <string name="no_recent_emoji">"Még nincsenek legutóbbi emojik"</string>
     <string name="no_results">"Nincs találat"</string>
     <string name="skin_variants">"Bőrszínváltozatok"</string>
@@ -216,7 +216,7 @@
     <string name="speech_consent_allow">"Külső beszédfelismerés engedélyezése"</string>
     <string name="speech_consent_decline">"Maradjon a helyi gépelés"</string>
     <string name="speech_ready">"Jóváhagyás mentve. Diktáláshoz koppints újra a mikrofonra."</string>
-    <string name="privacy_summary">"Helyi gépelés\nA gépelés, javítás és emojikeresés az eszközön fut. Nincs internetengedély, fiók, analitika, fejlesztői szerver vagy háttérkapcsolat a GitHubhoz. A GitHub a forráskódot tárolja, nem gépelési szolgáltatás.\n\nVálasztható diktálás\nA külső felismerő, általában a Google, külön jóváhagyás és mikrofonengedély után rögzítheti és feltöltheti a hangot. A jóváhagyás a diktálás beállításainál visszavonható.\n\nAndroid-figyelmeztetések\nA billentyűzet hozzáférhet a beírt szöveghez. Az Android figyelmeztetése ezt a képességet jelzi; önmagában nem kártevőtalálat. A nyílt forráskód nem garantál biztonságos APK-t. A Play Protect, aláírási és módosítási riasztásokat külön vizsgáld meg. Ennek az előzetes verziónak nincs megbízható kiadási aláírása vagy független biztonsági garanciája.\n\nHelyi tárolás\nA beállítások, legutóbbi emojik, szótárak és az opcionális betűkészlet az alkalmazás privát tárhelyén maradnak. A vágólapajánlás alapból kikapcsolt. Nincs gépelésielőzmény-adatbázis. A szöveget fogadó alkalmazás saját adatvédelmi szabályai érvényesek."</string>
+    <string name="privacy_summary">"Helyi gépelés\nA gépelés, javítás és emojikeresés az eszközön fut. Nincs internetengedély, fiók, analitika, fejlesztői szerver vagy háttérkapcsolat a GitHubhoz. A GitHub a forráskódot tárolja, nem gépelési szolgáltatás.\n\nVálasztható diktálás\nA külső felismerő, általában a Google, külön jóváhagyás és mikrofonengedély után rögzítheti és feltöltheti a hangot. A jóváhagyás a diktálás beállításainál visszavonható.\n\nAndroid-figyelmeztetések\nA billentyűzet hozzáférhet a beírt szöveghez. Az Android figyelmeztetése ezt a képességet jelzi; önmagában nem kártevőtalálat. A nyílt forráskód nem garantál biztonságos APK-t. A Play Protect, aláírási és módosítási riasztásokat külön vizsgáld meg. Ennek az előzetes verziónak nincs megbízható kiadási aláírása vagy független biztonsági garanciája.\n\nHelyi tárolás\nA beállítások, legutóbbi emojik, szótárak és az opcionális betűkészlet az alkalmazás privát tárhelyén maradnak. A vágólapajánlás alapból kikapcsolt. Gépelési előzményeket nem tárol. A szöveget fogadó alkalmazás saját adatvédelmi szabályai érvényesek."</string>
     <string name="emoji_panel">Panel</string>
     <string name="recognizer_setup">"Válassz alapértelmezett beszédfelismerőt az Android hangbeviteli beállításaiban, majd koppints újra a mikrofonra."</string>
 </resources>

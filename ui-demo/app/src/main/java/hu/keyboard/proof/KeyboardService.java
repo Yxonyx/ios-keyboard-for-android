@@ -209,8 +209,35 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     super.onStartInputView(info, restarting);
     inputViewActive = true;
     applyWindowTheme();
+    hideSystemImeBar();
     if (root != null) showLetters(true);
     clipChanged();
+  }
+
+  @Override
+  public void onWindowShown() {
+    super.onWindowShown();
+    hideSystemImeBar();
+  }
+
+  /**
+   * Android 16 draws its own back and keyboard-switch buttons over the bottom of the keyboard,
+   * exactly where the emoji and microphone keys sit (iOS has no such buttons). Tapping the lower
+   * half of the microphone switched keyboards. The IME may hide that bar (captionBar insets);
+   * holding the emoji key then lists the other keyboards, and the back gesture still closes it.
+   */
+  private void hideSystemImeBar() {
+    if (android.os.Build.VERSION.SDK_INT < 36) return;
+    Window window = getWindow() == null ? null : getWindow().getWindow();
+    WindowInsetsController controller = window == null ? null : window.getInsetsController();
+    if (controller != null) controller.hide(WindowInsets.Type.captionBar());
+  }
+
+  @Override
+  public void keyboardPicker() {
+    endDictation();
+    InputMethodManager manager = getSystemService(InputMethodManager.class);
+    if (manager != null) manager.showInputMethodPicker();
   }
 
   private boolean stripEnabled() {
@@ -312,7 +339,7 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     searching = false;
     query = "";
     if (keyboard != null) {
-      keyboard.startEditor(false, false, true, "");
+      keyboard.startEditor(false, false, true, "", false);
       keyboard.showSuggestions(CompositionSession.Suggestions.NONE, null);
     }
     super.onFinishInputView(finishing);
@@ -485,7 +512,12 @@ public final class KeyboardService extends InputMethodService implements Keyboar
               && (cls == InputType.TYPE_CLASS_NUMBER
                   || cls == InputType.TYPE_CLASS_PHONE
                   || cls == InputType.TYPE_CLASS_DATETIME);
-      keyboard.startEditor(capitalsAtCursor(), numbers, privateEditor(info), action());
+      keyboard.startEditor(
+          capitalsAtCursor(),
+          numbers,
+          privateEditor(info),
+          action(),
+          EnterKey.primary(info == null ? 0 : info.imeOptions, searching));
       refreshStrip();
     }
   }
@@ -848,7 +880,8 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     }
     String language = enabled.get((enabled.indexOf(settings.language()) + 1) % enabled.size());
     settings.setLanguage(language);
-    Toast.makeText(this, Languages.get(language).name(), Toast.LENGTH_SHORT).show();
+    // iOS names the new language inside the space bar instead of a separate notice.
+    if (keyboard != null) keyboard.showLanguage(Languages.get(language).name());
   }
 
   @Override

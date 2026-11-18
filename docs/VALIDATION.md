@@ -1,5 +1,19 @@
 # Validation
 
+## iOS detail pass, 2026-11-19
+
+Compared on an iOS 27.2 Simulator (iPhone 18 Pro, stock keyboard; reference captures
+kept outside Git) against the API 36 ARM64 `medium_phone` emulator started with
+`-read-only`, using the public 0.8.2-preview APK as "before" and this change's debug
+build as "after". All nine typing languages were cycled with a held space bar; their
+layouts (QWERTZ for Hungarian/German, AZERTY with M and apostrophe for French, Ñ for
+Spanish) and English accent order matched the reference. Holding space inserted no
+text. The listening state, emoji glyph, language label, blue Search key, emoji tap,
+emoji hold (keyboard picker) and dark theme were checked on the emulator; captures
+are in [validation/ios-details-2026-11-19](validation/ios-details-2026-11-19/README.md).
+Hiding the system IME buttons applies only from API 36; older Android keeps them.
+The physical-phone check is recorded separately when done.
+
 ## Dictation setup and live editor regression, 2026-11-16
 
 The user subsequently confirmed that dictation worked on the Xiaomi phone after

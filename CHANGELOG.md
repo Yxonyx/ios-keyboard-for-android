@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Keep the microphone key neutral while dictating, as iOS does: a key-coloured disc
+  and a filled microphone glyph replace the red circle.
+- Redraw the emoji key's grinning face with iOS-like proportions (firmer outline,
+  rounder eyes, half-moon mouth with a filled lower part), still drawn in code.
+- Show the new typing language's name inside the space bar after a hold-space switch,
+  fading out, instead of an Android toast. TalkBack announces it.
+- Draw Search, Go, Send and Done return keys blue with a white label (Next and plain
+  return keep the ordinary key), matching iOS.
+- On Android 16, hide the system IME back/switch buttons that were drawn over the
+  emoji and microphone keys; tapping the lower half of the microphone could switch
+  to another keyboard. Holding the emoji key now opens the keyboard picker, like
+  holding the iOS globe key. Emoji opens on release instead of on touch.
+- Correct Hungarian interface wording that described the visual preview as an
+  unfinished "UI test" and dictation there as "not active yet".
+
 - Improve the repository introduction, installation heading and FAQ for people
   looking for an iPhone-style Android keyboard; add relevant GitHub topics and
   a direct release-page link to the repository metadata. No app behavior changes.

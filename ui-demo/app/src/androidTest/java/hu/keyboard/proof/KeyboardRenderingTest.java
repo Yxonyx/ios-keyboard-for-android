@@ -89,7 +89,7 @@ public final class KeyboardRenderingTest {
       view.setOutput(OUTPUT);
       view.setSuggestionStrip(true);
       view.setEditorHasText(true);
-      view.startEditor(false, false, true, "");
+      view.startEditor(false, false, true, "", false);
       view.showSuggestions(new CompositionSession.Suggestions("synthetic", "example", List.of()),
           "SYNTHETIC_CLIPBOARD");
       assertFalse(view.stripVisible());
