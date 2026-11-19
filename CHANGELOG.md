@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.8.3-preview — 2026-11-19
 
+- Decide between an emoji tap and a hold (keyboard picker) from the touch's own
+  timestamps at release, so a busy device that delivers the release late can no longer
+  open the picker from a tap.
 - Autocorrect words typed without their accents (koszonom → köszönöm, kesobb → később,
   manana → mañana); before, only one changed letter was allowed, so two missing accents
   were offered in the bar but never applied. A bare form that the dictionary also lists

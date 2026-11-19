@@ -133,7 +133,7 @@
     <string name="reset_all_note">"Layouts, timing and history"</string>
     <string name="reset_all_title">"Reset all settings?"</string>
     <string name="reset_all_message">"Custom settings and recent emoji will be deleted. The interface language will follow the system again."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nTyping is local. Optional external speech recognition may upload audio."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.3-preview\nTyping is local. Optional external speech recognition may upload audio."</string>
     <string name="setup_intro">"One-time setup in Android settings"</string>
     <string name="setup_warning">"Android warns that third-party keyboards can receive typed text. Typing and correction stay local. Optional dictation can use an external speech recognizer."</string>
     <string name="privacy_link_note">"Local processing, dictation and Android warnings"</string>

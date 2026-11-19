@@ -893,6 +893,10 @@ public final class KeyboardProofView extends View {
     invalidate();
   }
 
+  private long emojiHoldMs() {
+    return Math.max(450, settings.number("long_press", 360));
+  }
+
   /** Cover row gaps with deterministic nearest-key targets, independently of the drawn caps. */
   public int[][] correctionLayout() {
     List<Integer> codes = new ArrayList<>(), rectangles = new ArrayList<>();
@@ -1097,19 +1101,16 @@ public final class KeyboardProofView extends View {
               .show();
         else if (x < 220 && settings.enabled("emoji", true) && !privateEditor) {
           if (imeMode) {
-            // Open emoji on release; a hold lists the other keyboards instead.
+            // Open emoji on release; a hold lists the other keyboards instead. The choice is made
+            // at release from the touch's own timestamps, so a busy main thread that delivers the
+            // release late cannot turn a tap into a hold. The haptic only marks the hold.
             emojiDown = true;
             longPressed = false;
             handler.postDelayed(
                 () -> {
-                  if (emojiDown) {
-                    emojiDown = false;
-                    longPressed = true;
-                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    output.keyboardPicker();
-                  }
+                  if (emojiDown) performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 },
-                Math.max(450, settings.number("long_press", 360)));
+                emojiHoldMs());
             return true;
           }
           emojiMode = true;
@@ -1209,7 +1210,8 @@ public final class KeyboardProofView extends View {
       if (emojiDown) {
         emojiDown = false;
         activePointer = -1;
-        output.emoji();
+        if (e.getEventTime() - e.getDownTime() >= emojiHoldMs()) output.keyboardPicker();
+        else output.emoji();
         return true;
       }
       if (stripSlot >= 0) {

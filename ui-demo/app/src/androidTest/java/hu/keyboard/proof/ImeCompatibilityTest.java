@@ -425,6 +425,29 @@ public final class ImeCompatibilityTest {
   }
 
   @Test
+  public void lateDeliveredEmojiTapStillOpensEmojiNotTheKeyboardPicker() throws Exception {
+    focus(R.id.test_message);
+    Rect rect = keyboardBounds();
+    float x = rect.left + 127.5f * rect.width() / 1179f;
+    float y = rect.top + (2436f - 1650f) * rect.height() / 906f;
+    long down = SystemClock.uptimeMillis();
+    // A 30 ms tap whose release reaches the keyboard 700 ms late, as on a busy device.
+    MotionEvent press = MotionEvent.obtain(down, down, MotionEvent.ACTION_DOWN, x, y, 0);
+    MotionEvent release = MotionEvent.obtain(down, down + 30, MotionEvent.ACTION_UP, x, y, 0);
+    for (MotionEvent event : new MotionEvent[] {press, release}) {
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      if (event == release) SystemClock.sleep(700);
+      assertTrue("Touch injection rejected", instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+    }
+    instrumentation.waitForIdleSync();
+    assertNotNull(imeNode(context.getString(R.string.search_emoji)));
+    AtomicBoolean focused = new AtomicBoolean();
+    instrumentation.runOnMainSync(() -> focused.set(activity.hasWindowFocus()));
+    assertTrue("A keyboard picker took the window focus", focused.get());
+  }
+
+  @Test
   public void emojiGridSwipesBothWaysWithoutInserting() throws Exception {
     EditText message = focus(R.id.test_message);
     tap(127.5f, 2436);
