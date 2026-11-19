@@ -28,7 +28,7 @@ public final class ImeCompatibilityTest {
   private Instrumentation instrumentation;
   private Context context;
   private TypingActivity activity;
-  private String originalIme, component;
+  private String originalIme, component, originalErrorDialogs;
   private boolean originallyEnabled;
   private SharedPreferences prefs;
   private Map<String, ?> originalPrefs;
@@ -49,6 +49,10 @@ public final class ImeCompatibilityTest {
     component = new ComponentName(context, KeyboardService.class).flattenToShortString();
     originalIme = shell("settings get secure default_input_method").trim();
     originallyEnabled = shell("settings get secure enabled_input_methods").contains(component);
+    // Slow CI emulators show system "isn't responding" dialogs (Pixel Launcher) that take the
+    // window and keyboard focus mid-test. This disposable emulator hides them while we run.
+    originalErrorDialogs = shell("settings get global hide_error_dialogs").trim();
+    shell("settings put global hide_error_dialogs 1");
     prefs = new KeyboardSettings(context).prefs;
     originalPrefs = new HashMap<>(prefs.getAll());
     prefs.edit().clear().putString("language", "en").putString("layout_en", "QWERTY")
@@ -83,6 +87,12 @@ public final class ImeCompatibilityTest {
       if (originalIme != null && !originalIme.isEmpty() && !originalIme.equals("null"))
         shell("ime set " + quote(originalIme));
       if (!originallyEnabled && component != null) shell("ime disable " + quote(component));
+      if (originalErrorDialogs != null) {
+        if (originalErrorDialogs.equals("null") || originalErrorDialogs.isEmpty())
+          shell("settings delete global hide_error_dialogs");
+        else if (originalErrorDialogs.matches("[0-9]+"))
+          shell("settings put global hide_error_dialogs " + originalErrorDialogs);
+      }
     } finally {
       if (prefs != null && originalPrefs != null) {
         SharedPreferences.Editor edit = prefs.edit().clear();
@@ -138,7 +148,8 @@ public final class ImeCompatibilityTest {
     // A premature showSoftInput is ignored, so wait for the real window/editor connection.
     instrumentation.waitForIdleSync();
     AtomicBoolean served = new AtomicBoolean();
-    long serveDeadline = SystemClock.uptimeMillis() + 10000;
+    long serveStart = SystemClock.uptimeMillis(), serveDeadline = serveStart + 10000;
+    long nextDialogCheck = serveStart + 2000;
     do {
       instrumentation.runOnMainSync(() -> {
         EditText field = result.get();
@@ -148,7 +159,11 @@ public final class ImeCompatibilityTest {
         if (ready) manager.showSoftInput(field, 0);
       });
       if (served.get()) break;
-      dismissNotRespondingDialogs();
+      // Walking every window's tree is heavy on slow emulators: only after 2 s, twice a second.
+      if (SystemClock.uptimeMillis() >= nextDialogCheck) {
+        dismissNotRespondingDialogs();
+        nextDialogCheck = SystemClock.uptimeMillis() + 500;
+      }
       SystemClock.sleep(30);
     } while (SystemClock.uptimeMillis() < serveDeadline);
     if (!served.get()) {
