@@ -58,11 +58,20 @@ public final class KeyboardProofView extends View {
 
     /** The microphone key: starts dictation, or stops the running one. */
     default void dictate() {}
+
+    /** Holding the emoji key lists the other keyboards, like holding the iOS globe key. */
+    default void keyboardPicker() {}
   }
 
   private Output output;
   private boolean imeMode, privateEditor, numericEditor, stripShown, editorHasText;
   private String enterLabel = "";
+  // Search, Go, Send and Done draw as a blue key with a white label, as on iOS.
+  private boolean primaryEnter;
+  // After a language switch the space bar shows the language name for a moment, as on iOS.
+  private String spaceLabel;
+  private long spaceLabelUntil;
+  private static final long SPACE_LABEL_MS = 1300, SPACE_LABEL_FADE_MS = 300;
   private float imeBoardPixels;
   private CompositionSession.Suggestions suggestions = CompositionSession.Suggestions.NONE;
   private String clipPreview, dictation;
@@ -133,7 +142,18 @@ public final class KeyboardProofView extends View {
     setContentDescription(getContext().getString(R.string.keyboard_description));
   }
 
-  public void startEditor(boolean capitals, boolean numbers, boolean sensitive, String action) {
+  /** Shows the typing language's name inside the space bar after it changes. */
+  public void showLanguage(String name) {
+    spaceLabel = name;
+    spaceLabelUntil = android.os.SystemClock.uptimeMillis() + SPACE_LABEL_MS + SPACE_LABEL_FADE_MS;
+    announceForAccessibility(name);
+    invalidate();
+  }
+
+  public void startEditor(
+      boolean capitals, boolean numbers, boolean sensitive, String action, boolean primary) {
+    primaryEnter = primary;
+    emojiDown = false;
     handler.removeCallbacksAndMessages(null);
     pressed = null;
     popupKey = null;
@@ -154,7 +174,7 @@ public final class KeyboardProofView extends View {
     else input.append(value);
   }
 
-  private boolean drawingBoard, emojiMode, slidingText;
+  private boolean drawingBoard, emojiMode, slidingText, emojiDown;
   private float boardHeight = 1;
   private final Typeface font;
   private final StringBuilder input = new StringBuilder();
@@ -272,6 +292,7 @@ public final class KeyboardProofView extends View {
 
   public void refreshSettings() {
     handler.removeCallbacksAndMessages(null);
+    emojiDown = false;
     pressed = null;
     popupKey = null;
     invalidate();
@@ -492,21 +513,51 @@ public final class KeyboardProofView extends View {
           dark
               ? (down ? 0xa088898c : (utility ? 0x80747578 : 0x706c6d70))
               : (down ? 0xe6d9d9dc : blurred ? 0xc8ffffff : 0xf0ffffff);
+      boolean blue = blueEnter(k);
+      if (blue) keyColor = down ? (dark ? 0xff0a6fd6 : 0xff0062cc) : (dark ? 0xff0a84ff : 0xff007aff);
       fill(keyColor);
       c.drawRoundRect(k.rect, 26, 26, paint);
-      if (down) {
+      if (down && !blue) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(0.7f);
         paint.setColor(dark ? 0x818b8c8f : 0x99c7c7ca);
         c.drawRoundRect(k.rect, 26, 26, paint);
       }
       if (ICON_KEYS.contains(k.label)) {
-        if (!k.label.equals("space")) drawKeyIcon(c, k);
+        if (k.label.equals("space")) drawSpaceLabel(c, k, dark);
+        else drawKeyIcon(c, k);
       } else drawKeyLabel(c, k);
     }
     if (settings.enabled("emoji", true) && !privateEditor) drawEmoji(c);
     drawMicrophone(c);
     if (pressed != null && popupKey == null) drawKeyPreview(c, pressed, dark);
+  }
+
+  private boolean blueEnter(Key k) {
+    return imeMode && primaryEnter && !enterLabel.isEmpty() && k.label.equals("return");
+  }
+
+  /** The language name in the space bar after a switch; it fades out like the iOS label. */
+  private void drawSpaceLabel(Canvas c, Key k, boolean dark) {
+    if (spaceLabel == null) return;
+    long left = spaceLabelUntil - android.os.SystemClock.uptimeMillis();
+    if (left <= 0) {
+      spaceLabel = null;
+      return;
+    }
+    float alpha = Math.min(1f, left / (float) SPACE_LABEL_FADE_MS);
+    int base = dark ? 0xd8d8dc : 0x6c6c72;
+    fill((Math.round(alpha * 255) << 24) | base);
+    paint.setTypeface(font);
+    paint.setTextSize(40);
+    paint.setTextAlign(Paint.Align.CENTER);
+    String value = spaceLabel;
+    float room = k.rect.width() - 48;
+    if (paint.measureText(value) > room) paint.setTextSize(40 * room / paint.measureText(value));
+    Paint.FontMetrics metrics = paint.getFontMetrics();
+    c.drawText(value, k.rect.centerX(), k.rect.centerY() - (metrics.ascent + metrics.descent) / 2, paint);
+    if (left > SPACE_LABEL_FADE_MS) postInvalidateDelayed(left - SPACE_LABEL_FADE_MS);
+    else postInvalidateOnAnimation();
   }
 
   private String[] stripSlots() {
@@ -520,7 +571,7 @@ public final class KeyboardProofView extends View {
             ? suggestions.correction()
             : rest.isEmpty() ? null : rest.remove(0);
     return new String[] {
-      "„" + suggestions.typed() + "”", middle, rest.isEmpty() ? null : rest.get(0)
+      settings.current().quote(suggestions.typed()), middle, rest.isEmpty() ? null : rest.get(0)
     };
   }
 
@@ -563,7 +614,9 @@ public final class KeyboardProofView extends View {
             (suggestions.correction() != null && (i == 1 || i == 2))
                 || stripSlot == i
                 || stripSlot == i - 1;
-        if (besideHighlight) continue;
+        // As on iOS, a divider only separates two words; an empty cell gets none.
+        boolean emptyNeighbours = slots[i - 1] == null || slots[i] == null;
+        if (besideHighlight || emptyNeighbours) continue;
         fill(dark ? 0x665a5b5e : 0xffbfc0c5);
         c.drawRect(i * slot - 1, top + 34, i * slot + 1, bottom - 34, paint);
       }
@@ -708,7 +761,8 @@ public final class KeyboardProofView extends View {
       case "return":
         {
           if (imeMode && !enterLabel.isEmpty()) {
-            fill(Color.BLACK);
+            // 0xfffffffe: pure white on the blue key, outside the dark-theme colour mapping.
+            fill(blueEnter(k) ? 0xfffffffe : Color.BLACK);
             paint.setTypeface(font);
             paint.setTextSize(36);
             paint.setTextAlign(Paint.Align.CENTER);
@@ -732,32 +786,55 @@ public final class KeyboardProofView extends View {
     c.restore();
   }
 
+  /**
+   * A grinning face drawn in code with iOS-like proportions: a firm outline, small round eyes and
+   * a wide half-moon mouth whose lower part is filled, without a separate teeth arc.
+   */
   private void drawEmoji(Canvas c) {
     c.save();
     c.translate(127.5f, 2436);
-    stroke(4.7f);
-    c.drawCircle(0, 0, 37.5f, paint);
+    stroke(5f);
+    c.drawCircle(0, 0, 35, paint);
     fill(Color.BLACK);
-    c.drawOval(new RectF(-18, -15, -8, -3), paint);
-    c.drawOval(new RectF(8, -15, 18, -3), paint);
-    stroke(4.4f);
-    Path p = new Path();
-    p.moveTo(-24, 7);
-    p.quadTo(0, 20, 24, 7);
-    p.quadTo(21, 32, 0, 31);
-    p.quadTo(-21, 30, -24, 7);
-    c.drawPath(p, paint);
-    c.drawArc(new RectF(-24, -6, 24, 27), 12, 156, false, paint);
+    c.drawOval(new RectF(-15, -15.5f, -6, -4.5f), paint);
+    c.drawOval(new RectF(6, -15.5f, 15, -4.5f), paint);
+    Path mouth = new Path();
+    mouth.moveTo(-24, 4);
+    mouth.quadTo(0, 10, 24, 4);
+    mouth.cubicTo(23.5f, 19, 13, 24.5f, 0, 24.5f);
+    mouth.cubicTo(-13, 24.5f, -23.5f, 19, -24, 4);
+    mouth.close();
+    c.save();
+    c.clipPath(mouth);
+    Path lower = new Path();
+    lower.moveTo(-30, 10.5f);
+    lower.quadTo(0, 15.5f, 30, 10.5f);
+    lower.lineTo(30, 30);
+    lower.lineTo(-30, 30);
+    lower.close();
+    c.drawPath(lower, paint);
+    c.restore();
+    stroke(4.2f);
+    c.drawPath(mouth, paint);
     c.restore();
   }
 
   private void drawMicrophone(Canvas c) {
-    if (dictation != null) {
-      fill(0xffff3b30);
+    // iOS keeps the dictation key neutral while listening (no red): the glyph fills in and sits
+    // on a key-coloured disc, and the strip shows the listening status.
+    boolean listening = dictation != null;
+    if (listening) {
+      fill(Color.WHITE);
+      paint.setShadowLayer(3, 0, 1.5f, 0x40000000);
       c.drawCircle(1051, 2433, 56, paint);
+      paint.clearShadowLayer();
     }
     c.save();
     c.translate(1051, 2433);
+    if (listening) {
+      fill(Color.BLACK);
+      c.drawRoundRect(new RectF(-14.4f, -41.4f, 14.4f, 16.4f), 14.4f, 14.4f, paint);
+    }
     stroke(4.8f);
     c.drawRoundRect(new RectF(-12, -39, 12, 14), 13, 13, paint);
     Path p = new Path();
@@ -814,6 +891,10 @@ public final class KeyboardProofView extends View {
     longPressed = true;
     if (imeMode) output.popup(true);
     invalidate();
+  }
+
+  private long emojiHoldMs() {
+    return Math.max(450, settings.number("long_press", 360));
   }
 
   /** Cover row gaps with deterministic nearest-key targets, independently of the drawn caps. */
@@ -963,6 +1044,11 @@ public final class KeyboardProofView extends View {
       if (popupKey != null) return true;
       handler.removeCallbacksAndMessages(null);
       if (pressed != null && !longPressed) commit(pressed);
+      if (emojiDown) {
+        emojiDown = false;
+        output.emoji();
+        return true;
+      }
       pressed = null;
       action = MotionEvent.ACTION_DOWN;
     } else if (action == MotionEvent.ACTION_POINTER_UP) {
@@ -1015,7 +1101,16 @@ public final class KeyboardProofView extends View {
               .show();
         else if (x < 220 && settings.enabled("emoji", true) && !privateEditor) {
           if (imeMode) {
-            output.emoji();
+            // Open emoji on release; a hold lists the other keyboards instead. The choice is made
+            // at release from the touch's own timestamps, so a busy main thread that delivers the
+            // release late cannot turn a tap into a hold. The haptic only marks the hold.
+            emojiDown = true;
+            longPressed = false;
+            handler.postDelayed(
+                () -> {
+                  if (emojiDown) performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                },
+                emojiHoldMs());
             return true;
           }
           emojiMode = true;
@@ -1112,6 +1207,13 @@ public final class KeyboardProofView extends View {
     }
     if (action == MotionEvent.ACTION_UP) {
       handler.removeCallbacksAndMessages(null);
+      if (emojiDown) {
+        emojiDown = false;
+        activePointer = -1;
+        if (e.getEventTime() - e.getDownTime() >= emojiHoldMs()) output.keyboardPicker();
+        else output.emoji();
+        return true;
+      }
       if (stripSlot >= 0) {
         int slot = stripSlot;
         stripSlot = -1;
@@ -1139,6 +1241,7 @@ public final class KeyboardProofView extends View {
     }
     if (action == MotionEvent.ACTION_CANCEL) {
       handler.removeCallbacksAndMessages(null);
+      emojiDown = false;
       stripSlot = -1;
       pressed = null;
       activePointer = -1;

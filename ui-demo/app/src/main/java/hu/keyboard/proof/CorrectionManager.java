@@ -62,10 +62,11 @@ final class CorrectionManager implements AutoCloseable {
                 engine.suggest(
                     word.toLowerCase(Locale.ROOT), x, y, previous.toLowerCase(Locale.ROOT));
             List<CompositionSession.Candidate> converted = new ArrayList<>();
-            for (var c : candidates)
+            for (var c : candidates) {
+              String text = lowerVariant(engine, c.text(), language);
               converted.add(
-                  new CompositionSession.Candidate(
-                      c.text(), c.confidence(), engine.contains(c.text())));
+                  new CompositionSession.Candidate(text, c.confidence(), engine.contains(text)));
+            }
             result =
                 new CompositionSession.Result(
                     engine.contains(word.toLowerCase(Locale.ROOT)), List.copyOf(converted));
@@ -84,6 +85,21 @@ final class CorrectionManager implements AutoCloseable {
                 if (!closed && token == latest.get()) callback.accept(response);
               });
         });
+  }
+
+  /**
+   * The dictionary often holds a sentence-start "Köszönöm" next to "köszönöm", and the capitalised
+   * one can rank first. Offer the lowercase form when it is a word too; the session capitalises it
+   * again where the typed word is capitalised. Names that exist only capitalised stay as they are.
+   */
+  static String lowerVariant(LatinImeEngine engine, String text, String language) {
+    int first = text.isEmpty() ? 0 : text.codePointAt(0);
+    if (text.codePointCount(0, text.length()) < 3 || !Character.isUpperCase(first)) return text;
+    String rest = text.substring(Character.charCount(first));
+    if (!rest.equals(rest.toLowerCase(Locale.ROOT))) return text;   // iPhone, McDonald
+    if (rest.startsWith("'") || rest.startsWith("\u2019")) return text;   // I'm, I'll
+    String lower = new String(Character.toChars(first)).toLowerCase(Locale.forLanguageTag(language)) + rest;
+    return engine.contains(lower) ? lower : text;
   }
 
   private File dictionary(String language) throws Exception {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-only -->
+<!-- The debug build installs next to the release one; a distinct name keeps the two apart in system keyboard lists. -->
+<resources>
+    <string name="ime_name" translatable="false">iOS Keyboard (debug)</string>
+</resources>

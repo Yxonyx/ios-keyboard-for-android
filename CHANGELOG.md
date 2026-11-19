@@ -1,6 +1,43 @@
 # Changelog
 
-## Unreleased
+## 0.8.3-preview — 2026-11-19
+
+- Decide between an emoji tap and a hold (keyboard picker) from the touch's own
+  timestamps at release, so a busy device that delivers the release late can no longer
+  open the picker from a tap.
+- Autocorrect words typed without their accents (koszonom → köszönöm, kesobb → később,
+  manana → mañana); before, only one changed letter was allowed, so two missing accents
+  were offered in the bar but never applied. A bare form that the dictionary also lists
+  is corrected only when its accented form is clearly preferred (szivesen, perche, wiec,
+  amanha, jo); words like schon, esta, el, tu, la and ou are kept.
+- Apply the dictionary's apostrophe corrections (im → I'm, cant → can't, ill → I'll,
+  lets → let's); its other whitelist entries that would rewrite real words (hid → his)
+  stay suggestions.
+- Add a nine-language correction check on the emulator (100 typed words).
+- Offer the lowercase form of a suggestion mid-sentence when the dictionary also lists a
+  capitalised sentence-start form (köszönöm instead of Köszönöm); names stay capitalised.
+- Quote the typed word in the suggestion bar with the typing language's own marks
+  (“word” in English, „szó” in Hungarian, „Wort“ in German, « mot » in French and so on);
+  it used Hungarian quotes in every language.
+- Leave an empty suggestion cell without a divider, as on iOS; dividers only separate words.
+- Show the dictation approval in the phone's own dialog style (it used a legacy
+  look) with shorter wording and plain Allow / Not now buttons, in all nine languages.
+- Name the debug build "iOS Keyboard (debug)" so system keyboard lists, which merge
+  same-named keyboards on some phones, show it apart from the release build.
+- Keep the microphone key neutral while dictating, as iOS does: a key-coloured disc
+  and a filled microphone glyph replace the red circle.
+- Redraw the emoji key's grinning face with iOS-like proportions (firmer outline,
+  rounder eyes, half-moon mouth with a filled lower part), still drawn in code.
+- Show the new typing language's name inside the space bar after a hold-space switch,
+  fading out, instead of an Android toast. TalkBack announces it.
+- Draw Search, Go, Send and Done return keys blue with a white label (Next and plain
+  return keep the ordinary key), matching iOS.
+- On Android 16, hide the system IME back/switch buttons that were drawn over the
+  emoji and microphone keys; tapping the lower half of the microphone could switch
+  to another keyboard. Holding the emoji key now opens the keyboard picker, like
+  holding the iOS globe key. Emoji opens on release instead of on touch.
+- Correct Hungarian interface wording that described the visual preview as an
+  unfinished "UI test" and dictation there as "not active yet".
 
 - Improve the repository introduction, installation heading and FAQ for people
   looking for an iPhone-style Android keyboard; add relevant GitHub topics and

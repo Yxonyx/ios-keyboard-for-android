@@ -123,7 +123,7 @@
     <string name="reset_all_note">"Układy, czasy i historia"</string>
     <string name="reset_all_title">"Zresetować wszystkie ustawienia?"</string>
     <string name="reset_all_message">"Własne ustawienia i ostatnie emoji zostaną usunięte. Język interfejsu znów będzie zgodny z systemem."</string>
-    <string name="version_privacy">"iOS Keyboard for Android · 0.8.2-preview\nPisanie jest lokalne. Opcjonalne zewnętrzne rozpoznawanie mowy może wysyłać dźwięk."</string>
+    <string name="version_privacy">"iOS Keyboard for Android · 0.8.3-preview\nPisanie jest lokalne. Opcjonalne zewnętrzne rozpoznawanie mowy może wysyłać dźwięk."</string>
     <string name="setup_intro">"Jednorazowa konfiguracja w Androidzie"</string>
     <string name="setup_warning">"Android ostrzega, że klawiatury innych firm mogą otrzymywać wpisywany tekst. Pisanie i korekta pozostają lokalne. Opcjonalne dyktowanie może używać zewnętrznej usługi."</string>
     <string name="privacy_link_note">"Lokalne przetwarzanie, dyktowanie i ostrzeżenia Androida"</string>
@@ -211,10 +211,10 @@
     <string name="paste_preview">"Wklej: %1$s"</string>
     <string name="preview_input_description">"Klawiatura. Wpisany tekst: %1$s"</string>
     <string name="settings_preview">"Ustawienia · przytrzymanie %1$s ms · mikrofon: dyktowanie · przytrzymaj spację: zmień język"</string>
-    <string name="speech_consent_title">"Zewnętrzne rozpoznawanie mowy"</string>
-    <string name="speech_consent_message">"Zainstalowana usługa rozpoznawania, zwykle Google, może nagrywać i wysyłać dźwięk z mikrofonu. Klawiatura nie ma uprawnienia Internetu, ale usługa może wysyłać dźwięk.\n\nPisanie i korekta działają lokalnie bez tej funkcji. Zgodę można cofnąć w ustawieniach dyktowania. Zezwolić na zewnętrzne rozpoznawanie mowy?"</string>
-    <string name="speech_consent_allow">"Zezwól na zewnętrzną mowę"</string>
-    <string name="speech_consent_decline">"Pozostań przy lokalnym pisaniu"</string>
+    <string name="speech_consent_title">"Zezwolić na dyktowanie?"</string>
+    <string name="speech_consent_message">"Dyktowanie korzysta z rozpoznawania mowy w telefonie, zwykle Google, które może wysyłać dźwięk z mikrofonu. Klawiatura nie ma dostępu do Internetu, a pisanie zostaje w telefonie. Możesz to wyłączyć w ustawieniach dyktowania."</string>
+    <string name="speech_consent_allow">"Zezwól"</string>
+    <string name="speech_consent_decline">"Nie teraz"</string>
     <string name="speech_ready">"Zgoda zapisana. Dotknij mikrofonu ponownie, aby dyktować."</string>
     <string name="privacy_summary">"Lokalne pisanie\nPisanie, korekta i wyszukiwanie emoji działają na urządzeniu. Brak uprawnienia Internetu, konta, analityki, serwera twórcy i połączenia z GitHubem w tle. GitHub udostępnia kod, a nie usługę pisania.\n\nOpcjonalne dyktowanie\nZewnętrzna usługa, zwykle Google, może nagrywać i wysyłać dźwięk po osobnej zgodzie i udzieleniu uprawnienia mikrofonu. Zgodę można cofnąć w ustawieniach dyktowania.\n\nOstrzeżenia Androida\nKlawiatura może otrzymywać wpisywany tekst. Ostrzeżenie Androida opisuje tę możliwość; samo w sobie nie jest wykryciem malware. Otwarty kod nie gwarantuje bezpiecznego APK. Osobno sprawdzaj alerty Play Protect, podpisu i modyfikacji. Ta wersja podglądowa nie ma zaufanego podpisu produkcyjnego ani niezależnej gwarancji bezpieczeństwa.\n\nLokalne dane\nUstawienia, ostatnie emoji, słowniki i opcjonalna czcionka pozostają w prywatnej pamięci aplikacji. Podpowiedzi schowka są domyślnie wyłączone. Brak bazy historii pisania. Aplikacja otrzymująca tekst ma własną politykę prywatności."</string>
     <string name="emoji_panel">Panel</string>

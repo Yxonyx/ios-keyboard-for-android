@@ -23,6 +23,24 @@ final class Languages {
       return Locale.forLanguageTag(code);
     }
 
+    /** The typed word in the language's own quotation marks, as the iOS suggestion bar shows it. */
+    String quote(String word) {
+      switch (code) {
+        case "hu":
+        case "pl":
+          return "\u201e" + word + "\u201d";
+        case "de":
+          return "\u201e" + word + "\u201c";
+        case "fr":
+          return "\u00ab\u202f" + word + "\u202f\u00bb";
+        case "es":
+        case "it":
+          return "\u00ab" + word + "\u00bb";
+        default:
+          return "\u201c" + word + "\u201d";
+      }
+    }
+
     /** Visible order, including the base key; Hungarian O keeps Ó to its right. */
     List<String> popupLabels(String key, boolean rightward) {
       if (code.equals("hu") && key.equals("O"))

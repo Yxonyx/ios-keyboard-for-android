@@ -28,7 +28,7 @@ public final class ImeCompatibilityTest {
   private Instrumentation instrumentation;
   private Context context;
   private TypingActivity activity;
-  private String originalIme, component;
+  private String originalIme, component, originalErrorDialogs;
   private boolean originallyEnabled;
   private SharedPreferences prefs;
   private Map<String, ?> originalPrefs;
@@ -49,6 +49,10 @@ public final class ImeCompatibilityTest {
     component = new ComponentName(context, KeyboardService.class).flattenToShortString();
     originalIme = shell("settings get secure default_input_method").trim();
     originallyEnabled = shell("settings get secure enabled_input_methods").contains(component);
+    // Slow CI emulators show system "isn't responding" dialogs (Pixel Launcher) that take the
+    // window and keyboard focus mid-test. This disposable emulator hides them while we run.
+    originalErrorDialogs = shell("settings get global hide_error_dialogs").trim();
+    shell("settings put global hide_error_dialogs 1");
     prefs = new KeyboardSettings(context).prefs;
     originalPrefs = new HashMap<>(prefs.getAll());
     prefs.edit().clear().putString("language", "en").putString("layout_en", "QWERTY")
@@ -83,6 +87,12 @@ public final class ImeCompatibilityTest {
       if (originalIme != null && !originalIme.isEmpty() && !originalIme.equals("null"))
         shell("ime set " + quote(originalIme));
       if (!originallyEnabled && component != null) shell("ime disable " + quote(component));
+      if (originalErrorDialogs != null) {
+        if (originalErrorDialogs.equals("null") || originalErrorDialogs.isEmpty())
+          shell("settings delete global hide_error_dialogs");
+        else if (originalErrorDialogs.matches("[0-9]+"))
+          shell("settings put global hide_error_dialogs " + originalErrorDialogs);
+      }
     } finally {
       if (prefs != null && originalPrefs != null) {
         SharedPreferences.Editor edit = prefs.edit().clear();
@@ -138,7 +148,8 @@ public final class ImeCompatibilityTest {
     // A premature showSoftInput is ignored, so wait for the real window/editor connection.
     instrumentation.waitForIdleSync();
     AtomicBoolean served = new AtomicBoolean();
-    long serveDeadline = SystemClock.uptimeMillis() + 5000;
+    long serveStart = SystemClock.uptimeMillis(), serveDeadline = serveStart + 10000;
+    long nextDialogCheck = serveStart + 2000;
     do {
       instrumentation.runOnMainSync(() -> {
         EditText field = result.get();
@@ -148,6 +159,11 @@ public final class ImeCompatibilityTest {
         if (ready) manager.showSoftInput(field, 0);
       });
       if (served.get()) break;
+      // Walking every window's tree is heavy on slow emulators: only after 2 s, twice a second.
+      if (SystemClock.uptimeMillis() >= nextDialogCheck) {
+        dismissNotRespondingDialogs();
+        nextDialogCheck = SystemClock.uptimeMillis() + 500;
+      }
       SystemClock.sleep(30);
     } while (SystemClock.uptimeMillis() < serveDeadline);
     if (!served.get()) {
@@ -167,8 +183,16 @@ public final class ImeCompatibilityTest {
       }
       fail("Editor did not connect to the input method: " + state.get());
     }
-    // The window can be accessible while the IME/scroll animation is still moving it.
-    // Send touches only after the actual on-screen bounds have remained stable.
+    waitForSteadyKeyboard();
+    return result.get();
+  }
+
+  /**
+   * The window can be accessible while the IME/scroll animation is still moving it (also after
+   * switching to emoji search on a tablet). Send touches only after the on-screen bounds have
+   * remained stable.
+   */
+  private void waitForSteadyKeyboard() {
     Rect previous = keyboardBounds();
     long stableSince = SystemClock.uptimeMillis();
     long deadline = stableSince + 6000;
@@ -179,10 +203,33 @@ public final class ImeCompatibilityTest {
         previous = current;
         stableSince = SystemClock.uptimeMillis();
       }
-      if (SystemClock.uptimeMillis() - stableSince >= 350) return result.get();
+      if (SystemClock.uptimeMillis() - stableSince >= 350) return;
     }
     fail("IME bounds did not settle before typing");
-    return result.get();
+  }
+
+  /**
+   * CI emulators sometimes show a system "Pixel Launcher isn't responding" dialog, which takes
+   * the window focus from the test editor. Answer it with Wait, as a person would; it belongs
+   * to the system, never to this keyboard.
+   */
+  private void dismissNotRespondingDialogs() {
+    for (AccessibilityWindowInfo window : instrumentation.getUiAutomation().getWindows()) {
+      AccessibilityNodeInfo root = window.getRoot();
+      if (root == null || context.getPackageName().contentEquals(String.valueOf(root.getPackageName())))
+        continue;
+      for (AccessibilityNodeInfo wait : root.findAccessibilityNodeInfosByViewId("android:id/aerr_wait")) {
+        System.out.println("Dismissing a system not-responding dialog: " + root.getPackageName());
+        wait.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+      }
+    }
+  }
+
+  private static void collectTexts(AccessibilityNodeInfo node, StringBuilder out) {
+    if (node == null || out.length() > 600) return;
+    CharSequence text = node.getText();
+    if (text != null && text.length() > 0) out.append('[').append(text).append(']');
+    for (int i = 0; i < node.getChildCount(); i++) collectTexts(node.getChild(i), out);
   }
 
   private AccessibilityNodeInfo findNode(AccessibilityNodeInfo node, String text) {
@@ -418,10 +465,45 @@ public final class ImeCompatibilityTest {
     tap(127.5f, 2436);
     assertTrue(imeNode(context.getString(R.string.search_emoji))
         .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    instrumentation.waitForIdleSync();
+    imeNode(context.getString(R.string.keyboard_description));
+    waitForSteadyKeyboard();
     for (char ch : "HEART".toCharArray()) key(String.valueOf(ch), false);
-    AccessibilityNodeInfo heart = imeNode("❤️");
+    AccessibilityNodeInfo heart;
+    try {
+      heart = imeNode("❤️");
+    } catch (AssertionError missing) {
+      screenshot("emoji-search-failed");
+      StringBuilder texts = new StringBuilder();
+      for (AccessibilityWindowInfo window : instrumentation.getUiAutomation().getWindows())
+        if (window.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) collectTexts(window.getRoot(), texts);
+      throw new AssertionError(missing.getMessage() + "; IME texts: " + texts, missing);
+    }
     assertTrue(heart.performAction(AccessibilityNodeInfo.ACTION_CLICK));
     expect(message, "❤️");
+  }
+
+  @Test
+  public void lateDeliveredEmojiTapStillOpensEmojiNotTheKeyboardPicker() throws Exception {
+    focus(R.id.test_message);
+    Rect rect = keyboardBounds();
+    float x = rect.left + 127.5f * rect.width() / 1179f;
+    float y = rect.top + (2436f - 1650f) * rect.height() / 906f;
+    long down = SystemClock.uptimeMillis();
+    // A 30 ms tap whose release reaches the keyboard 700 ms late, as on a busy device.
+    MotionEvent press = MotionEvent.obtain(down, down, MotionEvent.ACTION_DOWN, x, y, 0);
+    MotionEvent release = MotionEvent.obtain(down, down + 30, MotionEvent.ACTION_UP, x, y, 0);
+    for (MotionEvent event : new MotionEvent[] {press, release}) {
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      if (event == release) SystemClock.sleep(700);
+      assertTrue("Touch injection rejected", instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+    }
+    instrumentation.waitForIdleSync();
+    assertNotNull(imeNode(context.getString(R.string.search_emoji)));
+    AtomicBoolean focused = new AtomicBoolean();
+    instrumentation.runOnMainSync(() -> focused.set(activity.hasWindowFocus()));
+    assertTrue("A keyboard picker took the window focus", focused.get());
   }
 
   @Test

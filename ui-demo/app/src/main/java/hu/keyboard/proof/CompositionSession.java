@@ -187,32 +187,55 @@ final class CompositionSession {
     return autocorrect ? bestCorrection() : null;
   }
 
-  /** A confident nearby replacement for an unknown word, regardless of the autocorrect setting. */
+  /** Engine scores this high come from the dictionary's own whitelist of corrections. */
+  static final float WHITELIST = 100f;
+
+  /**
+   * A confident replacement, regardless of the autocorrect setting. Unknown words take a nearby
+   * word (one edit) or the same word with its accents. A known word is changed only when the
+   * dictionary clearly prefers its accented form ("szivesen", "perche") or when the whitelist
+   * only adds an apostrophe ("cant", "im"); its other whitelist entries ("hid" to "his") would
+   * rewrite real words, so they are left as suggestions.
+   */
   private String bestCorrection() {
     String original = word.toString();
-    if (!original.isEmpty()
-        && ready != null
-        && !ready.originalKnown()
-        && !ready.candidates().isEmpty()) {
-      Map<String, Candidate> distinct = new HashMap<>();
-      for (Candidate c : ready.candidates()) {
-        if (!c.known()
-            || !Float.isFinite(c.confidence())
-            || c.confidence() < 0.185f
-            || !oneEdit(original, c.text())) continue;
-        String key = c.text().toLowerCase(Locale.ROOT);
-        Candidate existing = distinct.get(key);
-        if (existing == null || c.confidence() > existing.confidence()) distinct.put(key, c);
-      }
-      List<Candidate> eligible = new ArrayList<>(distinct.values());
-      eligible.sort(Comparator.comparingDouble(Candidate::confidence).reversed());
-      if (original.codePointCount(0, original.length()) >= 3
-          && !eligible.isEmpty()
-          && (eligible.size() == 1
-              || eligible.get(0).confidence() - eligible.get(1).confidence() >= 0.02f))
-        return matchCase(original, eligible.get(0).text());
+    if (original.isEmpty() || ready == null || ready.candidates().isEmpty()) return null;
+    boolean known = ready.originalKnown();
+    int length = original.codePointCount(0, original.length());
+    float own = -1;
+    for (Candidate c : ready.candidates())
+      if (c.text().equalsIgnoreCase(original) && Float.isFinite(c.confidence()))
+        own = Math.max(own, c.confidence());
+    Map<String, Candidate> distinct = new HashMap<>();
+    for (Candidate c : ready.candidates()) {
+      if (!c.known() || !Float.isFinite(c.confidence()) || c.confidence() < 0.185f) continue;
+      boolean whitelist = c.confidence() >= WHITELIST, accents = accentsOnly(original, c.text());
+      boolean eligible;
+      if (whitelist) eligible = !known || apostropheOnly(original, c.text());
+      else if (known) eligible = accents && own >= 0 && c.confidence() - own >= 0.1f;
+      else eligible = oneEdit(original, c.text()) || accents;
+      if (!eligible || length < (whitelist || accents ? 2 : 3)) continue;
+      String key = c.text().toLowerCase(Locale.ROOT);
+      Candidate existing = distinct.get(key);
+      if (existing == null || c.confidence() > existing.confidence()) distinct.put(key, c);
     }
-    return null;
+    List<Candidate> eligible = new ArrayList<>(distinct.values());
+    if (eligible.isEmpty()) return null;
+    eligible.sort(Comparator.comparingDouble(Candidate::confidence).reversed());
+    Candidate top = eligible.get(0);
+    // Two accented forms of one word ("dziękuje", "dziękuję") both beat the bare one.
+    boolean clear =
+        eligible.size() == 1
+            || top.confidence() >= WHITELIST
+            || top.confidence() - eligible.get(1).confidence() >= 0.02f
+            || (accentsOnly(original, top.text()) && accentsOnly(original, eligible.get(1).text()));
+    return clear ? matchCase(original, top.text()) : null;
+  }
+
+  /** "cant" and "can't", "im" and "I'm": the same letters, only an apostrophe added. */
+  static boolean apostropheOnly(String typed, String candidate) {
+    String bare = candidate.replace("'", "").replace("\u2019", "");
+    return !bare.equals(candidate) && bare.equalsIgnoreCase(typed);
   }
 
   private void boundary(String separator) {
@@ -299,6 +322,16 @@ final class CompositionSession {
     if (Character.isUpperCase(original.codePointAt(0)))
       return replacement.substring(0, 1).toUpperCase(Locale.ROOT) + replacement.substring(1);
     return replacement;
+  }
+
+  /** True when two different words match once accents are removed ("koszonom" and "köszönöm"). */
+  static boolean accentsOnly(String a, String b) {
+    return !a.equalsIgnoreCase(b) && fold(a).equals(fold(b));
+  }
+
+  private static String fold(String s) {
+    return java.text.Normalizer.normalize(s.toLowerCase(Locale.ROOT), java.text.Normalizer.Form.NFD)
+        .replaceAll("\\p{M}+", "");
   }
 
   /** Bounded Unicode edit distance, also accepting an adjacent transposition. */

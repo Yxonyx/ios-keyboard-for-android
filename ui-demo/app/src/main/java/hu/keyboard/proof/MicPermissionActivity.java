@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ public final class MicPermissionActivity extends Activity {
     super.onCreate(state);
     KeyboardSettings settings = new KeyboardSettings(this);
     if (!settings.enabled(CONSENT_KEY, false)) {
-      new AlertDialog.Builder(this)
+      new AlertDialog.Builder(this, dialogTheme())
           .setTitle(R.string.speech_consent_title)
           .setMessage(R.string.speech_consent_message)
           .setPositiveButton(R.string.speech_consent_allow, (dialog, which) -> {
@@ -28,6 +29,15 @@ public final class MicPermissionActivity extends Activity {
           .setOnCancelListener(dialog -> finish())
           .show();
     } else if (state == null) askPermission();
+  }
+
+  /** The phone's own dialog style; the translucent host activity would otherwise give a legacy look. */
+  private int dialogTheme() {
+    boolean night = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+        == Configuration.UI_MODE_NIGHT_YES;
+    return night
+        ? android.R.style.Theme_DeviceDefault_Dialog_Alert
+        : android.R.style.Theme_DeviceDefault_Light_Dialog_Alert;
   }
 
   private void askPermission() {
