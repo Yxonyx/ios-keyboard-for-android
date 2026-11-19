@@ -138,7 +138,7 @@ public final class ImeCompatibilityTest {
     // A premature showSoftInput is ignored, so wait for the real window/editor connection.
     instrumentation.waitForIdleSync();
     AtomicBoolean served = new AtomicBoolean();
-    long serveDeadline = SystemClock.uptimeMillis() + 5000;
+    long serveDeadline = SystemClock.uptimeMillis() + 10000;
     do {
       instrumentation.runOnMainSync(() -> {
         EditText field = result.get();
@@ -148,6 +148,7 @@ public final class ImeCompatibilityTest {
         if (ready) manager.showSoftInput(field, 0);
       });
       if (served.get()) break;
+      dismissNotRespondingDialogs();
       SystemClock.sleep(30);
     } while (SystemClock.uptimeMillis() < serveDeadline);
     if (!served.get()) {
@@ -183,6 +184,23 @@ public final class ImeCompatibilityTest {
     }
     fail("IME bounds did not settle before typing");
     return result.get();
+  }
+
+  /**
+   * CI emulators sometimes show a system "Pixel Launcher isn't responding" dialog, which takes
+   * the window focus from the test editor. Answer it with Wait, as a person would; it belongs
+   * to the system, never to this keyboard.
+   */
+  private void dismissNotRespondingDialogs() {
+    for (AccessibilityWindowInfo window : instrumentation.getUiAutomation().getWindows()) {
+      AccessibilityNodeInfo root = window.getRoot();
+      if (root == null || context.getPackageName().contentEquals(String.valueOf(root.getPackageName())))
+        continue;
+      for (AccessibilityNodeInfo wait : root.findAccessibilityNodeInfosByViewId("android:id/aerr_wait")) {
+        System.out.println("Dismissing a system not-responding dialog: " + root.getPackageName());
+        wait.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+      }
+    }
   }
 
   private AccessibilityNodeInfo findNode(AccessibilityNodeInfo node, String text) {
