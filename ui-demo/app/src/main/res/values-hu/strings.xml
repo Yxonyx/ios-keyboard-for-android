@@ -211,10 +211,10 @@
     <string name="paste_preview">"Beillesztés: %1$s"</string>
     <string name="preview_input_description">"Billentyűzet. Beírt szöveg: %1$s"</string>
     <string name="settings_preview">"Beállítások · %1$s ms hosszú nyomás · mikrofon: diktálás · szóköz hosszan: váltás"</string>
-    <string name="speech_consent_title">"Külső beszédfelismerés"</string>
-    <string name="speech_consent_message">"A telepített beszédfelismerő, általában a Google, rögzítheti és feltöltheti a mikrofon hangját. A billentyűzetnek nincs internetengedélye, a felismerő azonban elküldheti a hangot.\n\nA gépelés és a javítás e nélkül is helyben működik. A jóváhagyást a diktálás beállításainál visszavonhatod. Engedélyezed a külső beszédfelismerést?"</string>
-    <string name="speech_consent_allow">"Külső beszédfelismerés engedélyezése"</string>
-    <string name="speech_consent_decline">"Maradjon a helyi gépelés"</string>
+    <string name="speech_consent_title">"Engedélyezed a diktálást?"</string>
+    <string name="speech_consent_message">"A diktálás a telefon beszédfelismerőjét használja, általában a Google-t, amely feltöltheti a mikrofon hangját. A billentyűzetnek nincs internetelérése, a gépelés a telefonon marad. A Diktálás beállításainál kikapcsolhatod."</string>
+    <string name="speech_consent_allow">"Engedélyezés"</string>
+    <string name="speech_consent_decline">"Most nem"</string>
     <string name="speech_ready">"Jóváhagyás mentve. Diktáláshoz koppints újra a mikrofonra."</string>
     <string name="privacy_summary">"Helyi gépelés\nA gépelés, javítás és emojikeresés az eszközön fut. Nincs internetengedély, fiók, analitika, fejlesztői szerver vagy háttérkapcsolat a GitHubhoz. A GitHub a forráskódot tárolja, nem gépelési szolgáltatás.\n\nVálasztható diktálás\nA külső felismerő, általában a Google, külön jóváhagyás és mikrofonengedély után rögzítheti és feltöltheti a hangot. A jóváhagyás a diktálás beállításainál visszavonható.\n\nAndroid-figyelmeztetések\nA billentyűzet hozzáférhet a beírt szöveghez. Az Android figyelmeztetése ezt a képességet jelzi; önmagában nem kártevőtalálat. A nyílt forráskód nem garantál biztonságos APK-t. A Play Protect, aláírási és módosítási riasztásokat külön vizsgáld meg. Ennek az előzetes verziónak nincs megbízható kiadási aláírása vagy független biztonsági garanciája.\n\nHelyi tárolás\nA beállítások, legutóbbi emojik, szótárak és az opcionális betűkészlet az alkalmazás privát tárhelyén maradnak. A vágólapajánlás alapból kikapcsolt. Gépelési előzményeket nem tárol. A szöveget fogadó alkalmazás saját adatvédelmi szabályai érvényesek."</string>
     <string name="emoji_panel">Panel</string>

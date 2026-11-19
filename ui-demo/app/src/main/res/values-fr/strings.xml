@@ -211,10 +211,10 @@
     <string name="paste_preview">"Coller : %1$s"</string>
     <string name="preview_input_description">"Clavier. Texte saisi : %1$s"</string>
     <string name="settings_preview">"Réglages · appui long %1$s ms · micro : dictée · espace maintenu : changer de langue"</string>
-    <string name="speech_consent_title">"Reconnaissance vocale externe"</string>
-    <string name="speech_consent_message">"Le service vocal installé, généralement Google, peut enregistrer et envoyer le son du micro. Le clavier n’a pas d’autorisation Internet, mais le service peut envoyer l’audio.\n\nLa saisie et la correction fonctionnent localement sans cette fonction. Vous pouvez retirer l’accord dans les réglages de dictée. Autoriser la reconnaissance externe ?"</string>
-    <string name="speech_consent_allow">"Autoriser la reconnaissance externe"</string>
-    <string name="speech_consent_decline">"Garder la saisie locale"</string>
+    <string name="speech_consent_title">"Autoriser la dictée ?"</string>
+    <string name="speech_consent_message">"La dictée utilise la reconnaissance vocale du téléphone, généralement Google, qui peut envoyer le son du micro. Le clavier n’a pas accès à Internet et la saisie reste sur ce téléphone. Vous pouvez la désactiver dans les réglages de dictée."</string>
+    <string name="speech_consent_allow">"Autoriser"</string>
+    <string name="speech_consent_decline">"Plus tard"</string>
     <string name="speech_ready">"Accord enregistré. Touchez à nouveau le micro pour dicter."</string>
     <string name="privacy_summary">"Saisie locale\nLa saisie, la correction et la recherche emoji fonctionnent sur cet appareil. Aucun accès Internet, compte, analyse, serveur du développeur ou connexion GitHub en arrière-plan. GitHub héberge le code, pas un service de saisie.\n\nDictée facultative\nUn service externe, généralement Google, peut enregistrer et envoyer l’audio après accord distinct et autorisation du micro. L’accord peut être retiré dans les réglages de dictée.\n\nAvertissements Android\nUn clavier peut recevoir vos saisies. L’avertissement Android décrit cette capacité ; il ne prouve pas à lui seul un logiciel malveillant. L’open source ne garantit pas un APK sûr. Examinez séparément les alertes Play Protect, de signature ou de modification. Cet aperçu n’a ni signature de production de confiance ni garantie de sécurité indépendante.\n\nStockage local\nRéglages, emojis récents, dictionnaires et police facultative restent dans le stockage privé. Les propositions du presse-papiers sont désactivées par défaut. Aucun historique de saisie n’est conservé. L’application recevant le texte a sa propre politique de confidentialité."</string>
     <string name="emoji_panel">Panneau</string>

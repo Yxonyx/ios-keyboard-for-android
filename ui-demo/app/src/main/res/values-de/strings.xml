@@ -211,10 +211,10 @@
     <string name="paste_preview">"Einfügen: %1$s"</string>
     <string name="preview_input_description">"Tastatur. Eingegebener Text: %1$s"</string>
     <string name="settings_preview">"Einstellungen · %1$s ms lang drücken · Mikrofon: Diktieren · Leertaste halten: Sprachwechsel"</string>
-    <string name="speech_consent_title">"Externe Spracherkennung"</string>
-    <string name="speech_consent_message">"Der installierte Spracherkenner, meist Google, kann Mikrofonaufnahmen erstellen und hochladen. Die Tastatur hat keine Internetberechtigung, aber der Erkenner kann Audio senden.\n\nTippen und Korrektur funktionieren ohne diese Funktion lokal. Die Freigabe lässt sich in den Diktiereinstellungen widerrufen. Externe Spracherkennung erlauben?"</string>
-    <string name="speech_consent_allow">"Externe Erkennung erlauben"</string>
-    <string name="speech_consent_decline">"Nur lokal tippen"</string>
+    <string name="speech_consent_title">"Diktieren erlauben?"</string>
+    <string name="speech_consent_message">"Diktieren nutzt die Spracherkennung des Telefons, meist Google, die Mikrofonaudio hochladen kann. Die Tastatur hat keinen Internetzugriff, und Tippen bleibt auf diesem Telefon. Das lässt sich in den Diktiereinstellungen ausschalten."</string>
+    <string name="speech_consent_allow">"Erlauben"</string>
+    <string name="speech_consent_decline">"Nicht jetzt"</string>
     <string name="speech_ready">"Freigabe gespeichert. Zum Diktieren erneut auf das Mikrofon tippen."</string>
     <string name="privacy_summary">"Lokales Tippen\nTippen, Korrektur und Emoji-Suche laufen auf diesem Gerät. Keine Internetberechtigung, Konten, Analyse, Entwicklerserver oder GitHub-Hintergrundverbindung. GitHub enthält den Quellcode, keinen Tippdienst.\n\nOptionales Diktieren\nEin externer Erkenner, meist Google, kann nach gesonderter Freigabe und Mikrofonberechtigung Audio aufnehmen und hochladen. Die Freigabe lässt sich in den Diktiereinstellungen widerrufen.\n\nAndroid-Warnungen\nEine Tastatur kann deine Eingaben empfangen. Androids Tastaturwarnung beschreibt diese Fähigkeit; sie ist allein kein Malwarebefund. Open Source garantiert keine sichere APK. Play-Protect-, Signatur- und Manipulationswarnungen separat prüfen. Diese Vorschau hat keine vertrauenswürdige Produktionssignatur oder unabhängige Sicherheitsgarantie.\n\nLokale Speicherung\nEinstellungen, letzte Emoji, Wörterbücher und eine optionale Schrift bleiben im privaten App-Speicher. Zwischenablagevorschläge sind standardmäßig aus. Es gibt keine Tippverlaufsdatenbank. Die empfangende App hat eigene Datenschutzregeln."</string>
     <string name="emoji_panel">Panel</string>

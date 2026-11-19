@@ -211,10 +211,10 @@
     <string name="paste_preview">"Colar: %1$s"</string>
     <string name="preview_input_description">"Teclado. Texto digitado: %1$s"</string>
     <string name="settings_preview">"Configurações · toque longo %1$s ms · microfone: ditado · segurar espaço: trocar idioma"</string>
-    <string name="speech_consent_title">"Reconhecimento de voz externo"</string>
-    <string name="speech_consent_message">"O reconhecedor instalado, geralmente Google, pode gravar e enviar áudio do microfone. O teclado não tem permissão de Internet, mas o reconhecedor pode enviar áudio.\n\nDigitação e correção funcionam localmente sem este recurso. Você pode revogar a aprovação nas configurações de ditado. Permitir reconhecimento externo?"</string>
-    <string name="speech_consent_allow">"Permitir reconhecimento externo"</string>
-    <string name="speech_consent_decline">"Manter digitação local"</string>
+    <string name="speech_consent_title">"Permitir o ditado?"</string>
+    <string name="speech_consent_message">"O ditado usa o reconhecedor de voz do celular, geralmente Google, que pode enviar o áudio do microfone. O teclado não tem acesso à Internet e a digitação fica neste celular. Você pode desativar nas configurações de ditado."</string>
+    <string name="speech_consent_allow">"Permitir"</string>
+    <string name="speech_consent_decline">"Agora não"</string>
     <string name="speech_ready">"Aprovação salva. Toque novamente no microfone para ditar."</string>
     <string name="privacy_summary">"Digitação local\nDigitação, correção e busca de emojis funcionam neste dispositivo. Sem permissão de Internet, conta, análise, servidor do desenvolvedor ou conexão ao GitHub em segundo plano. O GitHub hospeda o código, não um serviço de digitação.\n\nDitado opcional\nUm reconhecedor externo, geralmente Google, pode gravar e enviar áudio após aprovação separada e permissão do microfone. Você pode revogar a aprovação nas configurações de ditado.\n\nAvisos do Android\nUm teclado pode receber o que você digita. O aviso do Android descreve essa capacidade; sozinho não indica malware. Código aberto não garante um APK seguro. Avalie separadamente alertas do Play Protect, de assinatura e adulteração. Esta prévia não tem assinatura de produção confiável nem garantia independente de segurança.\n\nArmazenamento local\nConfigurações, emojis recentes, dicionários e uma fonte opcional ficam no armazenamento privado. Sugestões da área de transferência vêm desativadas. Não há histórico de digitação. O aplicativo que recebe o texto tem sua própria política de privacidade."</string>
     <string name="emoji_panel">Painel</string>

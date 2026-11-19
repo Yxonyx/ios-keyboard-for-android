@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Show the dictation approval in the phone's own dialog style (it used a legacy
+  look) with shorter wording and plain Allow / Not now buttons, in all nine languages.
+- Name the debug build "iOS Keyboard (debug)" so system keyboard lists, which merge
+  same-named keyboards on some phones, show it apart from the release build.
 - Keep the microphone key neutral while dictating, as iOS does: a key-coloured disc
   and a filled microphone glyph replace the red circle.
 - Redraw the emoji key's grinning face with iOS-like proportions (firmer outline,
