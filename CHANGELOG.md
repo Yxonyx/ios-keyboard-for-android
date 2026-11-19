@@ -4,7 +4,13 @@
 
 - Autocorrect words typed without their accents (koszonom → köszönöm, kesobb → később,
   manana → mañana); before, only one changed letter was allowed, so two missing accents
-  were offered in the bar but never applied.
+  were offered in the bar but never applied. A bare form that the dictionary also lists
+  is corrected only when its accented form is clearly preferred (szivesen, perche, wiec,
+  amanha, jo); words like schon, esta, el, tu, la and ou are kept.
+- Apply the dictionary's apostrophe corrections (im → I'm, cant → can't, ill → I'll,
+  lets → let's); its other whitelist entries that would rewrite real words (hid → his)
+  stay suggestions.
+- Add a nine-language correction check on the emulator (100 typed words).
 - Offer the lowercase form of a suggestion mid-sentence when the dictionary also lists a
   capitalised sentence-start form (köszönöm instead of Köszönöm); names stay capitalised.
 - Quote the typed word in the suggestion bar with the typing language's own marks

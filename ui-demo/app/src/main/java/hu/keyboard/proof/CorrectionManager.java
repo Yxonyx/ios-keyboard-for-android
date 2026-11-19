@@ -97,6 +97,7 @@ final class CorrectionManager implements AutoCloseable {
     if (text.codePointCount(0, text.length()) < 3 || !Character.isUpperCase(first)) return text;
     String rest = text.substring(Character.charCount(first));
     if (!rest.equals(rest.toLowerCase(Locale.ROOT))) return text;   // iPhone, McDonald
+    if (rest.startsWith("'") || rest.startsWith("\u2019")) return text;   // I'm, I'll
     String lower = new String(Character.toChars(first)).toLowerCase(Locale.forLanguageTag(language)) + rest;
     return engine.contains(lower) ? lower : text;
   }

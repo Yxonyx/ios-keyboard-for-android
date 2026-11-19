@@ -95,6 +95,51 @@ public final class CompositionSessionTest {
     assertEquals("köszönöm ", e.text);
   }
 
+  private static String boundaryAfter(boolean known, CompositionSession.Candidate... candidates) {
+    return boundaryAfter("im", known, candidates);
+  }
+
+  private static String boundaryAfter(
+      String typed, boolean known, CompositionSession.Candidate... candidates) {
+    Editor e = new Editor();
+    Pending p = new Pending();
+    var s = new CompositionSession(e, p);
+    s.reset(true);
+    for (char ch : typed.toCharArray()) s.type(String.valueOf(ch), 10, 20);
+    p.callbacks.get(p.callbacks.size() - 1)
+        .accept(new CompositionSession.Result(known, List.of(candidates)));
+    s.type(" ", 10, 20);
+    return e.text.trim();
+  }
+
+  private static CompositionSession.Candidate c(String text, float confidence) {
+    return new CompositionSession.Candidate(text, confidence, true);
+  }
+
+  @Test
+  public void whitelistOnlyAddsApostrophesToKnownWords() {
+    assertEquals("I'm", boundaryAfter(false, c("I'm", 1431f), c("in", .27f)));
+    assertEquals("can't", boundaryAfter("cant", true, c("can't", 1717f), c("cant", 1.5f)));
+    assertEquals("hid", boundaryAfter("hid", true, c("his", 900f), c("hid", 1.5f)));
+    assertTrue(CompositionSession.apostropheOnly("ill", "I'll"));
+    assertFalse(CompositionSession.apostropheOnly("hid", "his"));
+    assertFalse(CompositionSession.apostropheOnly("its", "its"));
+  }
+
+  @Test
+  public void knownWordTakesItsAccentsOnlyWhenClearlyPreferred() {
+    assertEquals("szívesen", boundaryAfter("szivesen", true, c("szívesen", 2.07f), c("szivesen", 1.78f)));
+    assertEquals("schon", boundaryAfter("schon", true, c("schon", 1.84f), c("schön", 1.69f)));
+    assertEquals("esta", boundaryAfter("esta", true, c("esta", 1.86f), c("está", 1.83f)));
+    assertEquals("jó", boundaryAfter("jo", true, c("jó", 2.08f), c("jo", 1.44f)));
+  }
+
+  @Test
+  public void closeAccentedFormsStillBeatTheBareWord() {
+    assertEquals("dziękuje", boundaryAfter("dziekuje", false, c("dziękuje", 1.673f), c("dziękuję", 1.659f)));
+    assertEquals("hogz", boundaryAfter("hogz", false, c("hogy", .346f), c("hoz", .34f)));
+  }
+
   @Test
   public void staleReplyCannotRewriteNewWord() {
     Editor e = new Editor();
