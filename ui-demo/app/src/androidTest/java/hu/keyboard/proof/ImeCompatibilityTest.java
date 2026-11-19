@@ -183,8 +183,16 @@ public final class ImeCompatibilityTest {
       }
       fail("Editor did not connect to the input method: " + state.get());
     }
-    // The window can be accessible while the IME/scroll animation is still moving it.
-    // Send touches only after the actual on-screen bounds have remained stable.
+    waitForSteadyKeyboard();
+    return result.get();
+  }
+
+  /**
+   * The window can be accessible while the IME/scroll animation is still moving it (also after
+   * switching to emoji search on a tablet). Send touches only after the on-screen bounds have
+   * remained stable.
+   */
+  private void waitForSteadyKeyboard() {
     Rect previous = keyboardBounds();
     long stableSince = SystemClock.uptimeMillis();
     long deadline = stableSince + 6000;
@@ -195,10 +203,9 @@ public final class ImeCompatibilityTest {
         previous = current;
         stableSince = SystemClock.uptimeMillis();
       }
-      if (SystemClock.uptimeMillis() - stableSince >= 350) return result.get();
+      if (SystemClock.uptimeMillis() - stableSince >= 350) return;
     }
     fail("IME bounds did not settle before typing");
-    return result.get();
   }
 
   /**
@@ -216,6 +223,13 @@ public final class ImeCompatibilityTest {
         wait.performAction(AccessibilityNodeInfo.ACTION_CLICK);
       }
     }
+  }
+
+  private static void collectTexts(AccessibilityNodeInfo node, StringBuilder out) {
+    if (node == null || out.length() > 600) return;
+    CharSequence text = node.getText();
+    if (text != null && text.length() > 0) out.append('[').append(text).append(']');
+    for (int i = 0; i < node.getChildCount(); i++) collectTexts(node.getChild(i), out);
   }
 
   private AccessibilityNodeInfo findNode(AccessibilityNodeInfo node, String text) {
@@ -451,8 +465,20 @@ public final class ImeCompatibilityTest {
     tap(127.5f, 2436);
     assertTrue(imeNode(context.getString(R.string.search_emoji))
         .performAction(AccessibilityNodeInfo.ACTION_CLICK));
+    instrumentation.waitForIdleSync();
+    imeNode(context.getString(R.string.keyboard_description));
+    waitForSteadyKeyboard();
     for (char ch : "HEART".toCharArray()) key(String.valueOf(ch), false);
-    AccessibilityNodeInfo heart = imeNode("❤️");
+    AccessibilityNodeInfo heart;
+    try {
+      heart = imeNode("❤️");
+    } catch (AssertionError missing) {
+      screenshot("emoji-search-failed");
+      StringBuilder texts = new StringBuilder();
+      for (AccessibilityWindowInfo window : instrumentation.getUiAutomation().getWindows())
+        if (window.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) collectTexts(window.getRoot(), texts);
+      throw new AssertionError(missing.getMessage() + "; IME texts: " + texts, missing);
+    }
     assertTrue(heart.performAction(AccessibilityNodeInfo.ACTION_CLICK));
     expect(message, "❤️");
   }
