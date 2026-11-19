@@ -78,6 +78,24 @@ public final class CompositionSessionTest {
   }
 
   @Test
+  public void missingAccentsAreCorrected() {
+    assertTrue(CompositionSession.accentsOnly("koszonom", "köszönöm"));
+    assertTrue(CompositionSession.accentsOnly("kesobb", "később"));
+    assertTrue(CompositionSession.accentsOnly("manana", "mañana"));
+    assertFalse(CompositionSession.accentsOnly("kosz", "kosz"));
+    assertFalse(CompositionSession.accentsOnly("Kosz", "kosz"));
+    assertFalse(CompositionSession.accentsOnly("koszonom", "köszöntöm"));
+    Editor e = new Editor();
+    Pending p = new Pending();
+    var s = new CompositionSession(e, p);
+    s.reset(true);
+    for (char ch : "koszonom".toCharArray()) s.type(String.valueOf(ch), 10, 20);
+    p.answer(p.callbacks.size() - 1, "köszönöm");
+    s.type(" ", 10, 20);
+    assertEquals("köszönöm ", e.text);
+  }
+
+  @Test
   public void staleReplyCannotRewriteNewWord() {
     Editor e = new Editor();
     Pending p = new Pending();

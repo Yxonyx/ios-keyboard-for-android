@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Autocorrect words typed without their accents (koszonom → köszönöm, kesobb → később,
+  manana → mañana); before, only one changed letter was allowed, so two missing accents
+  were offered in the bar but never applied.
+- Offer the lowercase form of a suggestion mid-sentence when the dictionary also lists a
+  capitalised sentence-start form (köszönöm instead of Köszönöm); names stay capitalised.
 - Quote the typed word in the suggestion bar with the typing language's own marks
   (“word” in English, „szó” in Hungarian, „Wort“ in German, « mot » in French and so on);
   it used Hungarian quotes in every language.

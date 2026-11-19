@@ -199,7 +199,7 @@ final class CompositionSession {
         if (!c.known()
             || !Float.isFinite(c.confidence())
             || c.confidence() < 0.185f
-            || !oneEdit(original, c.text())) continue;
+            || !(oneEdit(original, c.text()) || accentsOnly(original, c.text()))) continue;
         String key = c.text().toLowerCase(Locale.ROOT);
         Candidate existing = distinct.get(key);
         if (existing == null || c.confidence() > existing.confidence()) distinct.put(key, c);
@@ -299,6 +299,16 @@ final class CompositionSession {
     if (Character.isUpperCase(original.codePointAt(0)))
       return replacement.substring(0, 1).toUpperCase(Locale.ROOT) + replacement.substring(1);
     return replacement;
+  }
+
+  /** True when two different words match once accents are removed ("koszonom" and "köszönöm"). */
+  static boolean accentsOnly(String a, String b) {
+    return !a.equalsIgnoreCase(b) && fold(a).equals(fold(b));
+  }
+
+  private static String fold(String s) {
+    return java.text.Normalizer.normalize(s.toLowerCase(Locale.ROOT), java.text.Normalizer.Form.NFD)
+        .replaceAll("\\p{M}+", "");
   }
 
   /** Bounded Unicode edit distance, also accepting an adjacent transposition. */
