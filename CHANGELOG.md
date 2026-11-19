@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Quote the typed word in the suggestion bar with the typing language's own marks
+  (“word” in English, „szó” in Hungarian, „Wort“ in German, « mot » in French and so on);
+  it used Hungarian quotes in every language.
+- Leave an empty suggestion cell without a divider, as on iOS; dividers only separate words.
 - Show the dictation approval in the phone's own dialog style (it used a legacy
   look) with shorter wording and plain Allow / Not now buttons, in all nine languages.
 - Name the debug build "iOS Keyboard (debug)" so system keyboard lists, which merge

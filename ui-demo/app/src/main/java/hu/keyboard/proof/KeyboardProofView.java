@@ -571,7 +571,7 @@ public final class KeyboardProofView extends View {
             ? suggestions.correction()
             : rest.isEmpty() ? null : rest.remove(0);
     return new String[] {
-      "„" + suggestions.typed() + "”", middle, rest.isEmpty() ? null : rest.get(0)
+      settings.current().quote(suggestions.typed()), middle, rest.isEmpty() ? null : rest.get(0)
     };
   }
 
@@ -614,7 +614,9 @@ public final class KeyboardProofView extends View {
             (suggestions.correction() != null && (i == 1 || i == 2))
                 || stripSlot == i
                 || stripSlot == i - 1;
-        if (besideHighlight) continue;
+        // As on iOS, a divider only separates two words; an empty cell gets none.
+        boolean emptyNeighbours = slots[i - 1] == null || slots[i] == null;
+        if (besideHighlight || emptyNeighbours) continue;
         fill(dark ? 0x665a5b5e : 0xffbfc0c5);
         c.drawRect(i * slot - 1, top + 34, i * slot + 1, bottom - 34, paint);
       }
