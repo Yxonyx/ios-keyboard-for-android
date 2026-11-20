@@ -61,6 +61,9 @@ public final class KeyboardProofView extends View {
 
     /** Holding the emoji key lists the other keyboards, like holding the iOS globe key. */
     default void keyboardPicker() {}
+
+    /** A downward swipe on the keyboard asks to hide it. */
+    default void hideKeyboard() {}
   }
 
   private Output output;
@@ -174,7 +177,8 @@ public final class KeyboardProofView extends View {
     else input.append(value);
   }
 
-  private boolean drawingBoard, emojiMode, slidingText, emojiDown;
+  private boolean drawingBoard, emojiMode, slidingText, emojiDown, swipeHidden;
+  private float swipeStartX, swipeStartY;
   private float boardHeight = 1;
   private final Typeface font;
   private final StringBuilder input = new StringBuilder();
@@ -1063,8 +1067,12 @@ public final class KeyboardProofView extends View {
         y = (screenY - shiftY - H * (1 - boardHeight)) / boardHeight;
     touchX = x;
     touchY = y;
+    if (swipeHidden && action != MotionEvent.ACTION_DOWN) return true;
     if (action == MotionEvent.ACTION_DOWN) {
       activePointer = e.getPointerId(index);
+      swipeHidden = false;
+      swipeStartX = x;
+      swipeStartY = screenY;
       if (!imeMode && screenY >= 650 && screenY <= 750) {
         getContext()
             .startActivity(new android.content.Intent(getContext(), SettingsActivity.class));
@@ -1160,6 +1168,22 @@ public final class KeyboardProofView extends View {
       return true;
     }
     if (action == MotionEvent.ACTION_MOVE) {
+      // Drag down to hide, as dragging the page does on iOS. Not while an accent popup is open
+      // or after a long press (space language switch, held keys) has taken the touch.
+      if (imeMode
+          && popupKey == null
+          && !longPressed
+          && SwipeDown.hides(x - swipeStartX, screenY - swipeStartY)) {
+        handler.removeCallbacksAndMessages(null);
+        pressed = null;
+        stripSlot = -1;
+        emojiDown = false;
+        swipeHidden = true;
+        activePointer = -1;
+        invalidate();
+        output.hideKeyboard();
+        return true;
+      }
       if (stripSlot >= 0) {
         if (stripSlotAt(x, y) != stripSlot) {
           stripSlot = -1;
@@ -1240,6 +1264,7 @@ public final class KeyboardProofView extends View {
       return true;
     }
     if (action == MotionEvent.ACTION_CANCEL) {
+      swipeHidden = false;
       handler.removeCallbacksAndMessages(null);
       emojiDown = false;
       stripSlot = -1;

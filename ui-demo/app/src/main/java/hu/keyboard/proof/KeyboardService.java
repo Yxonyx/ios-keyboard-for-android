@@ -240,6 +240,13 @@ public final class KeyboardService extends InputMethodService implements Keyboar
     if (manager != null) manager.showInputMethodPicker();
   }
 
+  @Override
+  public void hideKeyboard() {
+    endDictation();
+    if (composition != null) composition.finish();
+    requestHideSelf(0);
+  }
+
   private boolean stripEnabled() {
     return settings.enabled("suggestions", true);
   }

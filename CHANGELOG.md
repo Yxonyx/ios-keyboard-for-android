@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Swipe down on the keyboard (letters or suggestion bar) to hide it, as dragging the page
+  does on iOS. Since 0.8.3 hides the Android 16 system bar that held the hide arrow, this
+  is the quick way to read with the keyboard out of the way. A drag of more than about
+  one and a half key rows is needed, so sliding to the key below still types it; accent
+  popups and long presses are unaffected.
+
 ## 0.8.3-preview — 2026-11-19
 
 - Decide between an emoji tap and a hold (keyboard picker) from the touch's own

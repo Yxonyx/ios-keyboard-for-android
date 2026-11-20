@@ -506,6 +506,53 @@ public final class ImeCompatibilityTest {
     assertTrue("A keyboard picker took the window focus", focused.get());
   }
 
+  /** Drags on the keyboard from one design point to another, as a finger would. */
+  private void drag(float fromX, float fromY, float toX, float toY) {
+    Rect rect = keyboardBounds();
+    long down = SystemClock.uptimeMillis();
+    for (int i = 0; i <= 10; i++) {
+      float progress = i / 10f;
+      float dx = fromX + (toX - fromX) * progress, dy = fromY + (toY - fromY) * progress;
+      float x = rect.left + dx * rect.width() / 1179f;
+      float y = rect.top + (dy - 1650) * rect.height() / 906f;
+      int action = i == 0 ? MotionEvent.ACTION_DOWN : i == 10 ? MotionEvent.ACTION_UP : MotionEvent.ACTION_MOVE;
+      MotionEvent event = MotionEvent.obtain(down, SystemClock.uptimeMillis(), action, x, y, 0);
+      event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+      assertTrue("Touch injection rejected", instrumentation.getUiAutomation().injectInputEvent(event, true));
+      event.recycle();
+      SystemClock.sleep(16);
+    }
+    instrumentation.waitForIdleSync();
+  }
+
+  private boolean keyboardShown() {
+    for (AccessibilityWindowInfo window : instrumentation.getUiAutomation().getWindows())
+      if (window.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) return true;
+    return false;
+  }
+
+  @Test
+  public void swipingDownHidesTheKeyboardWithoutTyping() throws Exception {
+    EditText field = focus(R.id.test_message);
+    key("A", false);
+    expect(field, "a");
+    // From the G key straight down, past the bottom of the keyboard.
+    drag(590, 1956, 600, 2420);
+    long deadline = SystemClock.uptimeMillis() + 4000;
+    while (keyboardShown() && SystemClock.uptimeMillis() < deadline) SystemClock.sleep(50);
+    assertFalse("Keyboard still shown after a downward swipe", keyboardShown());
+    expect(field, "a");
+  }
+
+  @Test
+  public void slidingToTheKeyBelowStillTypesIt() throws Exception {
+    EditText field = focus(R.id.test_message);
+    // From T down to G, one row: the release types G and the keyboard stays.
+    drag(531, 1794, 590, 1956);
+    expect(field, "g");
+    assertTrue(keyboardShown());
+  }
+
   @Test
   public void emojiGridSwipesBothWaysWithoutInserting() throws Exception {
     EditText message = focus(R.id.test_message);

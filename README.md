@@ -43,6 +43,8 @@ To build it yourself, follow the [pinned toolchain instructions](docs/BUILD.md).
 - Offline AOSP LatinIME correction, a suggestion strip and immediate Backspace undo.
 - Emoji categories, recents, skin-tone choices and CLDR search keywords. Swipe the
   grid in either direction to change pages; hold an emoji to see its skin-tone variants.
+- Swipe down on the keyboard to hide it while you read, close to dragging the page on iOS;
+  tap the text field to bring it back.
 - Theme, feedback, keyboard-height and typing-behavior settings.
 - Optional speech recognition through Google's installed recognizer or the system
   fallback. **Audio may leave the phone.** See [privacy](PRIVACY.md).
